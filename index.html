@@ -689,6 +689,88 @@ function objectivesCard(c){
  </div>
  `;
 }
+/* RÉCORDS PERSONALES */
+
+function calculatePersonalRecords(c){
+
+ const records={};
+
+ (c.sessions||[]).forEach(session=>{
+
+  (session.exercises||[]).forEach(exercise=>{
+
+   const name=String(exercise.name||"").trim();
+   if(!name)return;
+
+   const key=name.toLowerCase();
+
+   (exercise.series||[]).forEach(series=>{
+
+    if(series.type==="Aproximación"||series.type==="Descarga")return;
+
+    const weight=Number(series.weight);
+    const reps=Number(series.reps);
+
+    if(!Number.isFinite(weight)||!Number.isFinite(reps)||weight<0||reps<=0)return;
+
+    const previous=records[key];
+
+    if(!previous||weight>previous.weight||(weight===previous.weight&&reps>previous.reps)){
+
+     records[key]={
+      name,
+      weight,
+      reps,
+      date:session.date||"Sin fecha"
+     };
+
+    }
+
+   });
+
+  });
+
+ });
+
+ return Object.values(records).sort((a,b)=>a.name.localeCompare(b.name));
+
+}
+
+function personalRecordsCard(c){
+
+ const records=calculatePersonalRecords(c);
+
+ return `
+ <div class="card">
+
+  <div class="between">
+   <div>
+    <h2>Récords personales</h2>
+    <p>Mejores marcas registradas en los entrenamientos.</p>
+   </div>
+   <span class="tag">${records.length} ejercicios</span>
+  </div>
+
+  ${records.length?records.map(r=>`
+   <div class="exercise">
+    <div class="between">
+     <b>${esc(r.name)}</b>
+     <span class="tag">Mejor marca</span>
+    </div>
+
+    <div class="stat">${fmt(r.weight)} kg × ${fmt(r.reps)}</div>
+
+    <p>Fecha del récord: ${esc(r.date)}</p>
+   </div>
+  `).join(""):`
+   <div class="empty">
+    Todavía no hay récords registrados. Se generarán al guardar entrenamientos.
+   </div>
+  `}
+
+ </div>
+ `;
+}
 function clientProfile(c){
 
  const p=ensureClientPlan(c);
@@ -722,11 +804,13 @@ function clientProfile(c){
  <div class="notice">Al asignar una planificación se crea una copia exclusiva para este cliente. Los cambios que hagas en su rutina no modifican el plan general ni a otros clientes.</div>
  </div>
 
- ${objectivesCard(c)}
+${objectivesCard(c)}
 
- <div class="card">
- <div class="between">
- <h2>Entrenamiento personal</h2>
+${personalRecordsCard(c)}
+
+<div class="card">
+<div class="between">
+<h2>Entrenamiento personal</h2>
  <button class="btn" data-action="edit-client-plan" data-id="${c.id}">Editar entrenamiento</button>
  </div>
 
