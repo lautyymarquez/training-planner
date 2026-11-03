@@ -500,7 +500,60 @@ function planExerciseCard(e,j){
 
 /* CLIENTES */
 
-function pageClients(){
+ if(selectedClient){
+
+  const c=getClient(selectedClient);
+
+  if(!c){selectedClient=null;return pageClients()}
+
+  return clientProfile(c);
+
+ }
+
+ return `${pageTitle("Clientes","Perfiles, planificaciones y seguimiento.")}
+
+ <div class="card"><h2>Agregar cliente</h2>
+
+ <form id="clientForm">
+
+ <div class="row">
+ ${field("Nombre","name","","text","required")}
+ ${field("Edad","age","","number",'min="1" max="110"')}
+ ${field("Teléfono / WhatsApp","phone")}
+ </div>
+
+ <div class="row">
+ ${field("Fecha de inicio","start",dateNow(),"date")}
+ <div class="field"><label>Objetivo</label>
+ <select name="goal">${options(["Hipertrofia","Fuerza","Salud general","Resistencia","Rendimiento deportivo","Recomposición corporal","Otro"])}</select>
+ </div>
+ </div>
+
+ <div class="row">
+ <div class="field"><label>Nivel de experiencia</label>
+ <select name="experience">${options(["Principiante","Intermedio","Avanzado"])}</select>
+ </div>
+ ${field("Disponibilidad semanal","availability","","text")}
+ </div>
+
+ <div class="field"><label>Observaciones iniciales</label>
+ <textarea name="notes"></textarea>
+ </div>
+
+ <button class="btn">Guardar cliente</button>
+ </form></div>
+
+ ${clients.length?clients.map(c=>`<div class="card">
+ <div class="between">
+ <div>
+ <h3>${esc(c.name)}</h3>
+ <p>${esc(c.goal||"Sin objetivo")} · Desde ${esc(c.start||"—")}</p>
+ </div>
+ <button class="btn" data-action="open-client" data-id="${c.id}">Ver ficha</button>
+ </div>
+ </div>`).join(""):`<div class="empty">Todavía no agregaste clientes.</div>`}`;
+
+}
 
  if(selectedClient){
 
