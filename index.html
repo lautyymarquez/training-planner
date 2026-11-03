@@ -500,14 +500,18 @@ function planExerciseCard(e,j){
 
 /* CLIENTES */
 
+function pageClients(){
+
  if(selectedClient){
 
   const c=getClient(selectedClient);
 
-  if(!c){selectedClient=null;return pageClients()}
+  if(!c){
+   selectedClient=null;
+   return pageClients();
+  }
 
   return clientProfile(c);
-
  }
 
  return `${pageTitle("Clientes","Perfiles, planificaciones y seguimiento.")}
@@ -554,38 +558,6 @@ function planExerciseCard(e,j){
  </div>`).join(""):`<div class="empty">Todavía no agregaste clientes.</div>`}`;
 
 }
-
- if(selectedClient){
-
-  const c=getClient(selectedClient);
-
-  if(!c){selectedClient=null;return pageClients()}
-
-  return clientProfile(c);
-
- }
-
- return `${pageTitle("Clientes","Perfiles, planificaciones y seguimiento.")}
-
- <div class="card"><h2>Agregar cliente</h2>
-
- <form id="clientForm"><div class="row">
-
- ${field("Nombre","name","","text","required")}
-
- ${field("Fecha de inicio","start",dateNow(),"date")}
-
- <div class="field"><label>Objetivo</label><select name="goal">${options(["Hipertrofia","Fuerza","Salud general","Resistencia","Rendimiento deportivo","Recomposición corporal","Otro"])}</select></div></div>
-
- <div class="field"><label>Observaciones iniciales</label><textarea name="notes"></textarea></div>
-
- <button class="btn">Guardar cliente</button></form></div>
-
- ${clients.length?clients.map(c=>`<div class="card"><div class="between"><div><h3>${esc(c.name)}</h3><p>${esc(c.goal||"Sin objetivo")} · Desde ${esc(c.start||"—")}</p></div><button class="btn" data-action="open-client" data-id="${c.id}">Ver ficha</button></div></div>`).join(""):`<div class="empty">Todavía no agregaste clientes.</div>`}`;
-
-}
-
-function clientProfile(c){
 
  const p=ensureClientPlan(c);
 
@@ -975,63 +947,50 @@ document.addEventListener("click",e=>{
 
  if(a==="open-client"){selectedClient=id;page="clientes";render();return}
 
- if(a==="edit-client"){
+if(a==="edit-client"){
 
-  const c=getClient(id);
-  if(!c)return;
+ const c=getClient(id);
+ if(!c)return;
 
-  const name=prompt("Nombre",c.name||"");
-  if(name===null)return;
+ const name=prompt("Nombre",c.name||"");
+ if(name===null)return;
 
-  const age=prompt("Edad",c.age||"");
-  if(age===null)return;
+ const age=prompt("Edad",c.age||"");
+ if(age===null)return;
 
-  const phone=prompt("Teléfono / WhatsApp",c.phone||"");
-  if(phone===null)return;
+ const phone=prompt("Teléfono / WhatsApp",c.phone||"");
+ if(phone===null)return;
 
-  const goal=prompt("Objetivo",c.goal||"");
-  if(goal===null)return;
+ const goal=prompt("Objetivo",c.goal||"");
+ if(goal===null)return;
 
-  const experience=prompt(
-    "Nivel de experiencia (Principiante, Intermedio o Avanzado)",
-    c.experience||"Principiante"
-  );
-  if(experience===null)return;
+ const experience=prompt(
+  "Nivel de experiencia (Principiante, Intermedio o Avanzado)",
+  c.experience||"Principiante"
+ );
+ if(experience===null)return;
 
-  const availability=prompt(
-    "Disponibilidad semanal",
-    c.availability||""
-  );
-  if(availability===null)return;
+ const availability=prompt(
+  "Disponibilidad semanal",
+  c.availability||""
+ );
+ if(availability===null)return;
 
-  const notes=prompt("Observaciones",c.notes||"");
-  if(notes===null)return;
+ const notes=prompt("Observaciones",c.notes||"");
+ if(notes===null)return;
 
-  c.name=name;
-  c.age=age;
-  c.phone=phone;
-  c.goal=goal;
-  c.experience=experience;
-  c.availability=availability;
-  c.notes=notes;
+ c.name=name;
+ c.age=age;
+ c.phone=phone;
+ c.goal=goal;
+ c.experience=experience;
+ c.availability=availability;
+ c.notes=notes;
 
-  save();
-  render();
-  return;
-
+ save();
+ render();
+ return;
 }
-
-  const c=getClient(id);if(!c)return;
-
-  const name=prompt("Nombre",c.name);if(name!==null)c.name=name;
-
-  const goal=prompt("Objetivo",c.goal||"");if(goal!==null)c.goal=goal;
-
-  const notes=prompt("Observaciones",c.notes||"");if(notes!==null)c.notes=notes;
-
-  save();render();return;
-
- }
 
  if(a==="delete-client"){
 
@@ -1219,34 +1178,28 @@ document.addEventListener("submit",e=>{
 
  }
 
- if(f.id==="clientForm"){
+if(f.id==="clientForm"){
 
-  clients.push({
-    id:uid(),
-    name:d.name,
-    age:d.age,
-    phone:d.phone,
-    start:d.start,
-    goal:d.goal,
-    experience:d.experience,
-    availability:d.availability,
-    notes:d.notes,
-    planId:null,
-    trainingPlan:null,
-    sessions:[],
-    evaluations:[]
-  });
+ clients.push({
+  id:uid(),
+  name:d.name,
+  age:d.age,
+  phone:d.phone,
+  start:d.start,
+  goal:d.goal,
+  experience:d.experience,
+  availability:d.availability,
+  notes:d.notes,
+  planId:null,
+  trainingPlan:null,
+  sessions:[],
+  evaluations:[]
+ });
 
-  save();
-  render();
-
+ save();
+ render();
+ return;
 }
-
-  clients.push({id:uid(),name:d.name,start:d.start,goal:d.goal,notes:d.notes,planId:null,trainingPlan:null,sessions:[],evaluations:[]});
-
-  save();render();
-
- }
 
  if(f.id==="exerciseForm"){
 
