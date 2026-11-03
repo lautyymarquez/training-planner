@@ -144,7 +144,7 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 
 "use strict";
 
-/* DATOS Y COMPATIBILIDAD CON VERSIONES ANTERIORES */
+/* DATOS Y COMPATIBILIDAD */
 
 const KEYS={
 
@@ -208,6 +208,8 @@ const getPlan=id=>plans.find(p=>p.id===id);
 
 const getClient=id=>clients.find(c=>c.id===id);
 
+const clone=data=>JSON.parse(JSON.stringify(data));
+
 function normalize(){
 
  plans.forEach(p=>{
@@ -232,9 +234,31 @@ function normalize(){
 
  clients.forEach(c=>{
 
-  c.id=c.id||uid();c.sessions=Array.isArray(c.sessions)?c.sessions:[];
+  c.id=c.id||uid();
+
+  c.sessions=Array.isArray(c.sessions)?c.sessions:[];
 
   c.evaluations=Array.isArray(c.evaluations)?c.evaluations:[];
+
+  /* Compatibilidad con clientes de versiones anteriores */
+
+  if(c.trainingPlan&&Array.isArray(c.trainingPlan.days)){
+
+   c.trainingPlan.days.forEach(d=>{
+
+    d.id=d.id||uid();d.exercises=Array.isArray(d.exercises)?d.exercises:[];
+
+    d.exercises.forEach(e=>{
+
+     e.id=e.id||uid();e.series=Array.isArray(e.series)?e.series:[];
+
+     e.series=e.series.map(s=>({...s,type:s.type||"Efectiva"}));
+
+    });
+
+   });
+
+  }
 
  });
 
@@ -244,7 +268,71 @@ function normalize(){
 
 normalize();
 
-function pageTitle(title,desc=""){return `<div class="between"><div><h1>${title}</h1><p>${desc}</p></div></div>`}
+/* CADA CLIENTE TIENE SU PROPIA COPIA DE LA PLANIFICACIÓN */
+
+function ensureClientPlan(c){
+
+ if(!c)return null;
+
+ if(c.trainingPlan&&Array.isArray(c.trainingPlan.days))return c.trainingPlan;
+
+ const original=getPlan(c.planId);
+
+ if(original){
+
+  c.trainingPlan=clone(original);
+
+  c.trainingPlan.id=uid();
+
+  c.trainingPlan.sourcePlanId=original.id;
+
+  save();
+
+  return c.trainingPlan;
+
+ }
+
+ return null;
+
+}
+
+function assignPlanToClient(c,planId){
+
+ if(!c)return;
+
+ if(!planId){
+
+  c.planId=null;
+
+  c.trainingPlan=null;
+
+  save();
+
+  return;
+
+ }
+
+ const original=getPlan(planId);
+
+ if(!original)return;
+
+ c.planId=original.id;
+
+ c.trainingPlan=clone(original);
+
+ c.trainingPlan.id=uid();
+
+ c.trainingPlan.sourcePlanId=original.id;
+
+ save();
+
+}
+
+function pageTitle(title,desc=""){
+
+ return `<div class="between"><div><h1>${title}</h1><p>${desc}</p></div></div>`;
+
+}
 
 function field(label,name,value="",type="text",extra=""){
 
@@ -252,9 +340,9 @@ function field(label,name,value="",type="text",extra=""){
 
 }
 
-function selectField(label,name,options,value=""){
+function selectField(label,name,arr,value=""){
 
- return `<div class="field"><label>${label}</label><select name="${name}">${options.map(x=>`<option ${x===value?"selected":""}>${esc(x)}</option>`).join("")}</select></div>`;
+ return `<div class="field"><label>${label}</label><select name="${name}">${arr.map(x=>`<option ${x===value?"selected":""}>${esc(x)}</option>`).join("")}</select></div>`;
 
 }
 
@@ -272,17 +360,21 @@ function render(){
 
  root.innerHTML=(pages[page]||inicio)();
 
+ if(page==="ejercicios")updateExerciseResults();
+
+ if(page==="herramientas")updateCalculators();
+
 }
+
+/* INICIO */
 
 function inicio(){
 
  const sessions=clients.reduce((n,c)=>n+c.sessions.length,0);
 
- const upcoming=clients.length;
-
  const totalEffective=clients.reduce((n,c)=>n+c.sessions.reduce((a,s)=>a+s.exercises.reduce((b,e)=>b+e.series.filter(x=>x.type==="Efectiva").length,0),0),0);
 
- return `${pageTitle("Panel principal","Resumen de tu actividad como entrenador.") }
+ return `${pageTitle("Panel principal","Resumen de tu actividad como entrenador.")}
 
  <div class="grid">
 
@@ -326,13 +418,15 @@ function recentSessions(){
 
 }
 
-/* PLANIFICACIONES */
+/* PLANIFICACIONES GENERALES */
 
 function pagePlans(){
 
  if(selectedPlan){
 
-  const p=getPlan(selectedPlan);if(!p){selectedPlan=null;return pagePlans()}
+  const p=getPlan(selectedPlan);
+
+  if(!p){selectedPlan=null;return pagePlans()}
 
   return planEditor(p);
 
@@ -340,13 +434,11 @@ function pagePlans(){
 
  return `${pageTitle("Planificaciones","Creá y organizá programas de entrenamiento.")}
 
- <div class="card">
-
-  <h2>Nueva planificación</h2>
+ <div class="card"><h2>Nueva planificación</h2>
 
   <form id="planForm">
 
-   <div class="row">${field("Nombre","name","","text",'required')}
+   <div class="row">${field("Nombre","name","","text","required")}
 
    <div class="field"><label>Objetivo</label><select name="goal">${options(["Hipertrofia","Fuerza","Resistencia","Salud general","Recomposición corporal","Rendimiento deportivo","Readaptación","Otro"])}</select></div>
 
@@ -364,17 +456,13 @@ function pagePlans(){
 
 function planEditor(p){
 
- return `${pageTitle(p.name,"Editor de planificación")}
+ return `${pageTitle(p.name,"Editor de planificación general")}
 
- <div class="card">
-
- <div class="row"><button class="btn secondary" data-action="back-plans">← Volver</button><button class="btn secondary" data-action="rename-plan" data-id="${p.id}">Editar datos</button><button class="btn danger" data-action="delete-plan" data-id="${p.id}">Eliminar</button></div>
+ <div class="card"><div class="row"><button class="btn secondary" data-action="back-plans">← Volver</button><button class="btn secondary" data-action="rename-plan" data-id="${p.id}">Editar datos</button><button class="btn danger" data-action="delete-plan" data-id="${p.id}">Eliminar</button></div>
 
  <p>Objetivo: ${esc(p.goal)} · Frecuencia: ${p.frequency} días</p>
 
- <button class="btn" data-action="add-day" data-id="${p.id}">+ Agregar día</button>
-
- </div>
+ <button class="btn" data-action="add-day" data-id="${p.id}">+ Agregar día</button></div>
 
  ${p.days.map((d,i)=>`<div class="card">
 
@@ -382,7 +470,7 @@ function planEditor(p){
 
  ${d.notes?`<p>${esc(d.notes)}</p>`:""}
 
- ${d.exercises.map((e,j)=>planExerciseCard(e,j,d)).join("")}
+ ${d.exercises.map((e,j)=>planExerciseCard(e,j)).join("")}
 
  <button class="btn secondary" data-action="add-exercise" data-id="${d.id}">+ Agregar ejercicio</button>
 
@@ -392,7 +480,7 @@ function planEditor(p){
 
 }
 
-function planExerciseCard(e,j,d){
+function planExerciseCard(e,j){
 
  return `<div class="exercise">
 
@@ -416,7 +504,9 @@ function pageClients(){
 
  if(selectedClient){
 
-  const c=getClient(selectedClient);if(!c){selectedClient=null;return pageClients()}
+  const c=getClient(selectedClient);
+
+  if(!c){selectedClient=null;return pageClients()}
 
   return clientProfile(c);
 
@@ -444,7 +534,7 @@ function pageClients(){
 
 function clientProfile(c){
 
- const p=getPlan(c.planId);
+ const p=ensureClientPlan(c);
 
  return `${pageTitle(c.name,"Ficha individual del cliente")}
 
@@ -452,15 +542,27 @@ function clientProfile(c){
 
  <p>Objetivo: <b>${esc(c.goal||"—")}</b> · Inicio: ${esc(c.start||"—")}</p><p>${esc(c.notes||"Sin observaciones")}</p>
 
- <div class="field"><label>Asignar planificación</label><select id="assignPlan"><option value="">Sin planificación</option>${plans.map(x=>`<option value="${x.id}" ${c.planId===x.id?"selected":""}>${esc(x.name)}</option>`).join("")}</select></div>
+ <div class="field"><label>Asignar una planificación como punto de partida</label><select id="assignPlan"><option value="">Sin planificación</option>${plans.map(x=>`<option value="${x.id}" ${c.planId===x.id?"selected":""}>${esc(x.name)}</option>`).join("")}</select></div>
 
- <button class="btn secondary" data-action="assign-plan" data-id="${c.id}">Guardar planificación</button>
+ <button class="btn secondary" data-action="assign-plan" data-id="${c.id}">Asignar / reemplazar planificación</button>
+
+ <div class="notice">Al asignar una planificación se crea una copia exclusiva para este cliente. Los cambios que hagas en su rutina no modifican el plan general ni a otros clientes.</div>
+
+ </div>
+
+ <div class="card"><div class="between"><h2>Entrenamiento personal</h2><button class="btn" data-action="edit-client-plan" data-id="${c.id}">Editar entrenamiento</button></div>
+
+ ${p?`<p><b>${esc(p.name||"Plan personalizado")}</b> · ${p.days.length} días · ${p.days.reduce((n,d)=>n+d.exercises.length,0)} ejercicios</p>
+
+ ${p.days.map(d=>`<div class="exercise"><b>${esc(d.name)}</b><p>${d.exercises.length} ejercicios</p></div>`).join("")||`<div class="empty">Todavía no agregaste días.</div>`}`:`<p>Este cliente todavía no tiene una rutina. Podés asignarle una planificación o crear una desde cero.</p>`}
+
+ <button class="btn secondary" data-action="create-client-plan" data-id="${c.id}">Crear rutina desde cero</button>
 
  </div>
 
  <div class="card"><h2>Registrar entrenamiento</h2>
 
- ${p?`<div class="field"><label>Día de la planificación</label><select id="sessionDay">${p.days.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")}</select></div><button class="btn" data-action="start-session" data-id="${c.id}">Iniciar entrenamiento</button>`:`<p>Asignale una planificación para registrar sesiones desde ella.</p>`}
+ ${p&&p.days.length?`<div class="field"><label>Día de la planificación personal</label><select id="sessionDay">${p.days.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")}</select></div><button class="btn" data-action="start-session" data-id="${c.id}">Iniciar entrenamiento</button>`:`<p>Agregá días a la rutina personal para poder registrar sesiones.</p>`}
 
  </div>
 
@@ -479,6 +581,102 @@ function clientProfile(c){
  </div>
 
  <div class="card"><h2>Historial de entrenamientos</h2>${c.sessions.length?c.sessions.slice().reverse().map(s=>`<div class="exercise"><div class="between"><div><b>${esc(s.dayName)}</b><p>${esc(s.date)}</p></div><div class="row"><button class="btn small secondary" data-action="view-session" data-client="${c.id}" data-id="${s.id}">Ver</button><button class="btn small danger" data-action="delete-session" data-client="${c.id}" data-id="${s.id}">×</button></div></div></div>`).join(""):`<div class="empty">Todavía no hay sesiones registradas.</div>`}</div>`;
+
+}
+
+/* EDITOR DE RUTINA PERSONAL DEL CLIENTE */
+
+function clientPlanEditor(c){
+
+ const p=ensureClientPlan(c);
+
+ if(!p)return `<div class="card"><button class="btn secondary" data-action="back-client-plan">← Volver</button><p>No hay una rutina cargada.</p></div>`;
+
+ return `${pageTitle("Rutina de "+c.name,"Esta planificación pertenece únicamente a este cliente.")}
+
+ <div class="card"><div class="row">
+
+ <button class="btn secondary" data-action="back-client-plan">← Volver a la ficha</button>
+
+ <button class="btn secondary" data-action="rename-client-plan" data-id="${c.id}">Editar datos</button>
+
+ <button class="btn" data-action="cp-add-day" data-id="${c.id}">+ Agregar día</button>
+
+ </div>
+
+ <div class="notice">Podés cambiar ejercicios, series, pesos, repeticiones, RIR, métodos y descansos. Los cambios se guardan en la ficha de este cliente.</div>
+
+ <div class="field"><label>Nombre de la rutina</label><input id="clientPlanName" value="${esc(p.name||"Plan personalizado")}"></div>
+
+ <button class="btn secondary" data-action="save-client-plan-name" data-id="${c.id}">Guardar nombre</button>
+
+ </div>
+
+ ${p.days.map((d,i)=>`<div class="card">
+
+ <div class="between"><div><h2>${esc(d.name||"Día "+(i+1))}</h2><span class="pill">${d.exercises.length} ejercicios</span></div>
+
+ <div class="row"><button class="btn small secondary" data-action="cp-edit-day" data-id="${d.id}">Editar día</button><button class="btn small danger" data-action="cp-delete-day" data-id="${d.id}">×</button></div></div>
+
+ ${d.notes?`<p>${esc(d.notes)}</p>`:""}
+
+ ${d.exercises.map((e,j)=>`<div class="exercise">
+
+ <div class="between"><div><b>${j+1}. ${esc(e.name)}</b><p>${esc(e.muscle||"Sin grupo")} · ${esc(e.technique||"Normal")}</p></div>
+
+ <div class="row"><button class="btn small secondary" data-action="cp-edit-exercise" data-day="${d.id}" data-id="${e.id}">Editar</button><button class="btn small danger" data-action="cp-delete-exercise" data-day="${d.id}" data-id="${e.id}">×</button></div></div>
+
+ <p>Descanso: ${esc(e.rest||"—")} · Tempo: ${esc(e.tempo||"—")} · Bloque: ${esc(e.block||"—")}</p>
+
+ ${e.series.map((s,k)=>`<div class="muted">Serie ${k+1}: ${esc(s.weight??0)} kg × ${esc(s.reps??0)} rep · RIR ${esc(s.rir??"—")} · ${esc(s.type||"Efectiva")}</div>`).join("")}
+
+ ${e.notes?`<p>${esc(e.notes)}</p>`:""}
+
+ </div>`).join("")}
+
+ <button class="btn secondary" data-action="cp-add-exercise" data-id="${d.id}">+ Agregar ejercicio</button>
+
+ </div>`).join("")}
+
+ ${!p.days.length?`<div class="empty">Todavía no hay días. Tocá “Agregar día” para empezar.</div>`:""}`;
+
+}
+
+function openClientExerciseEditor(clientId,dayId,exerciseId){
+
+ const c=getClient(clientId),p=ensureClientPlan(c);
+
+ const day=p?.days.find(d=>d.id===dayId);
+
+ if(!c||!day)return;
+
+ const existing=exerciseId?day.exercises.find(e=>e.id===exerciseId):null;
+
+ const ex=existing||{id:uid(),name:"",muscle:"Pectorales",series:[{weight:0,reps:10,rir:2,type:"Efectiva"}],rest:"90 s",tempo:"2-0-2",technique:"Normal",notes:"",block:"A1"};
+
+ const content=`<div class="card" id="clientExerciseEditor"><div class="between"><h2>${existing?"Editar ejercicio del cliente":"Agregar ejercicio al cliente"}</h2><button class="btn secondary" data-action="close-editor">Cerrar</button></div>
+
+ <form id="clientExerciseForm" data-client="${c.id}" data-day="${day.id}" data-exercise="${existing?.id||""}">
+
+ <div class="row"><div class="field"><label>Ejercicio</label><input name="name" list="clientExerciseOptions" value="${esc(ex.name)}" required><datalist id="clientExerciseOptions">${allExercises().map(x=>`<option value="${esc(x.name)}">`).join("")}</datalist></div>
+
+ <div class="field"><label>Grupo muscular</label><select name="muscle">${muscles.map(x=>`<option ${x===ex.muscle?"selected":""}>${x}</option>`).join("")}</select></div></div>
+
+ <div class="row">${field("Bloque","block",ex.block||"A1")}${field("Descanso","rest",ex.rest||"90 s")}${field("Tempo","tempo",ex.tempo||"2-0-2")}</div>
+
+ <div class="field"><label>Método de entrenamiento</label><select name="technique">${methods.map(x=>`<option ${x===ex.technique?"selected":""}>${x}</option>`).join("")}</select></div>
+
+ <div class="field"><label>Observaciones</label><textarea name="notes">${esc(ex.notes||"")}</textarea></div>
+
+ <h3>Series individuales</h3><div id="seriesEditor">${ex.series.map((s,i)=>seriesEditorRow(s,i)).join("")}</div>
+
+ <button type="button" class="btn secondary" data-action="add-series">+ Agregar serie</button>
+
+ <hr><button class="btn">Guardar ejercicio</button></form></div>`;
+
+ document.getElementById("app").insertAdjacentHTML("beforeend",content);
+
+ document.getElementById("clientExerciseEditor").scrollIntoView({behavior:"smooth"});
 
 }
 
@@ -502,7 +700,11 @@ const defaultExercises=[
 
 ];
 
-function allExercises(){return [...defaultExercises.map(x=>({name:x[0],muscle:x[1],equipment:x[2],custom:false})),...customExercises]}
+function allExercises(){
+
+ return [...defaultExercises.map(x=>({name:x[0],muscle:x[1],equipment:x[2],custom:false})),...customExercises];
+
+}
 
 function pageExercises(){
 
@@ -570,7 +772,7 @@ function estadisticas(){
 
  <div class="card"><h2>Actividad por cliente</h2>${clients.map(c=>`<div class="between"><span>${esc(c.name)}</span><b>${c.sessions.length} sesiones</b></div><hr>`).join("")||`<div class="empty">Sin clientes.</div>`}</div>
 
- <div class="notice">Las series de aproximación y descarga se muestran en el historial, pero no se suman al total de series efectivas. El volumen y las comparaciones se pueden ampliar con más registros.</div>`;
+ <div class="notice">Las series de aproximación y descarga se muestran en el historial, pero no se suman al total de series efectivas.</div>`;
 
 }
 
@@ -608,13 +810,13 @@ function formatTime(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+Strin
 
 function updateTimer(){const el=document.getElementById("timerDisplay");if(el)el.textContent=formatTime(timerSeconds)}
 
-/* DATOS Y COPIAS DE SEGURIDAD */
+/* DATOS */
 
 function datos(){
 
  return `${pageTitle("Datos y configuración","Administrá tus copias de seguridad.")}
 
- <div class="card"><h2>Exportar copia de seguridad</h2><p>Descarga clientes, planificaciones, ejercicios personalizados e historiales en un archivo JSON.</p><button class="btn" data-action="export">Exportar datos</button></div>
+ <div class="card"><h2>Exportar copia de seguridad</h2><p>Descarga clientes, rutinas personales, planificaciones generales, ejercicios personalizados e historiales en un archivo JSON.</p><button class="btn" data-action="export">Exportar datos</button></div>
 
  <div class="card"><h2>Importar copia de seguridad</h2><p>La importación reemplaza los datos actuales. Exportá primero una copia de seguridad.</p><input type="file" id="importFile" accept=".json,application/json"><button class="btn secondary" data-action="import">Importar archivo</button></div>
 
@@ -624,7 +826,7 @@ function datos(){
 
 }
 
-/* ACCIONES */
+/* ACCIONES GENERALES */
 
 document.addEventListener("click",e=>{
 
@@ -646,7 +848,7 @@ document.addEventListener("click",e=>{
 
  if(a==="back-clients"){selectedClient=null;render();return}
 
- if(a==="delete-plan"){if(confirm("¿Eliminar esta planificación?")){plans=plans.filter(p=>p.id!==id);selectedPlan=null;save();render()}return}
+ if(a==="delete-plan"){if(confirm("¿Eliminar esta planificación general? Las copias personales de los clientes no se modifican.")){plans=plans.filter(p=>p.id!==id);selectedPlan=null;save();render()}return}
 
  if(a==="rename-plan"){
 
@@ -692,19 +894,13 @@ document.addEventListener("click",e=>{
 
  }
 
- if(a==="add-exercise"){
-
-  const d=plans.flatMap(p=>p.days).find(x=>x.id===id);if(!d)return;
-
-  openExerciseEditor(null,d.id);return;
-
- }
+ if(a==="add-exercise"){const d=plans.flatMap(p=>p.days).find(x=>x.id===id);if(d)openExerciseEditor(null,d.id);return}
 
  if(a==="edit-exercise"){
 
-  const e=plans.flatMap(p=>p.days).flatMap(d=>d.exercises).find(x=>x.id===id);
+  const ex=plans.flatMap(p=>p.days).flatMap(d=>d.exercises).find(x=>x.id===id);
 
-  if(e)openExerciseEditor(e.id);return;
+  if(ex)openExerciseEditor(ex.id);return;
 
  }
 
@@ -712,9 +908,11 @@ document.addEventListener("click",e=>{
 
   if(!confirm("¿Eliminar este ejercicio?"))return;
 
-  plans.forEach(p=>p.days.forEach(d=>d.exercises=d.exercises.filter(e=>e.id!==id)));save();render();return;
+  plans.forEach(p=>p.days.forEach(d=>d.exercises=d.exercises.filter(x=>x.id!==id)));save();render();return;
 
  }
+
+ /* CLIENTES */
 
  if(a==="open-client"){selectedClient=id;page="clientes";render();return}
 
@@ -742,7 +940,113 @@ document.addEventListener("click",e=>{
 
  if(a==="assign-plan"){
 
-  const c=getClient(id);if(c){c.planId=document.getElementById("assignPlan").value||null;save();render()}return;
+  const c=getClient(id),chosen=document.getElementById("assignPlan")?.value||"";
+
+  if(!c)return;
+
+  if(chosen&&c.planId===chosen&&c.trainingPlan){
+
+   if(!confirm("Este cliente ya tiene una copia de esa planificación. ¿Querés reemplazar su rutina personal por una copia nueva?"))return;
+
+  }
+
+  assignPlanToClient(c,chosen);render();return;
+
+ }
+
+ if(a==="edit-client-plan"){
+
+  const c=getClient(id);if(!c)return;
+
+  ensureClientPlan(c);
+
+  if(!c.trainingPlan)c.trainingPlan={id:uid(),name:"Plan personalizado",goal:c.goal||"Otro",frequency:3,days:[]};
+
+  save();clientPlanEditing=true;renderClientPlan();return;
+
+ }
+
+ if(a==="create-client-plan"){
+
+  const c=getClient(id);if(!c)return;
+
+  if(c.trainingPlan&&!confirm("Esto reemplazará la rutina personal actual de este cliente. ¿Continuar?"))return;
+
+  c.planId=null;c.trainingPlan={id:uid(),name:"Plan personalizado",goal:c.goal||"Otro",frequency:3,days:[]};
+
+  save();clientPlanEditing=true;renderClientPlan();return;
+
+ }
+
+ if(a==="back-client-plan"){clientPlanEditing=false;render();return}
+
+ if(a==="save-client-plan-name"){
+
+  const c=getClient(id),p=ensureClientPlan(c);if(p){p.name=document.getElementById("clientPlanName")?.value.trim()||"Plan personalizado";save();renderClientPlan()}return;
+
+ }
+
+ if(a==="rename-client-plan"){
+
+  const c=getClient(id),p=ensureClientPlan(c);if(!p)return;
+
+  const name=prompt("Nombre de la rutina",p.name||"Plan personalizado");
+
+  if(name!==null){p.name=name.trim()||p.name;save();renderClientPlan()}return;
+
+ }
+
+ if(a==="cp-add-day"){
+
+  const c=getClient(id),p=ensureClientPlan(c);if(!p)return;
+
+  const name=prompt("Nombre del nuevo día","Día "+(p.days.length+1));if(name===null)return;
+
+  p.days.push({id:uid(),name:name||"Día "+(p.days.length+1),notes:"",exercises:[]});
+
+  save();renderClientPlan();return;
+
+ }
+
+ if(a==="cp-edit-day"){
+
+  const c=getClient(selectedClient),p=ensureClientPlan(c),d=p?.days.find(x=>x.id===id);if(!d)return;
+
+  const name=prompt("Nombre del día",d.name);if(name!==null)d.name=name;
+
+  const notes=prompt("Notas del día",d.notes||"");if(notes!==null)d.notes=notes;
+
+  save();renderClientPlan();return;
+
+ }
+
+ if(a==="cp-delete-day"){
+
+  const c=getClient(selectedClient),p=ensureClientPlan(c);if(!p||!confirm("¿Eliminar este día y sus ejercicios?"))return;
+
+  p.days=p.days.filter(d=>d.id!==id);save();renderClientPlan();return;
+
+ }
+
+ if(a==="cp-add-exercise"){
+
+  const c=getClient(selectedClient);openClientExerciseEditor(c.id,id,null);return;
+
+ }
+
+ if(a==="cp-edit-exercise"){
+
+  const c=getClient(selectedClient);openClientExerciseEditor(c.id,b.dataset.day,id);return;
+
+ }
+
+ if(a==="cp-delete-exercise"){
+
+  const c=getClient(selectedClient),p=ensureClientPlan(c),d=p?.days.find(x=>x.id===b.dataset.day);
+
+  if(!d||!confirm("¿Eliminar este ejercicio de la rutina personal?"))return;
+
+  d.exercises=d.exercises.filter(x=>x.id!==id);save();renderClientPlan();return;
 
  }
 
@@ -778,11 +1082,29 @@ document.addEventListener("click",e=>{
 
 });
 
-/* FORMULARIOS */
+/* ESTADO DEL EDITOR PERSONAL */
+
+let clientPlanEditing=false;
+
+function renderClientPlan(){
+
+ const c=getClient(selectedClient);if(!c)return;
+
+ page="clientes";
+
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page==="clientes"));
+
+ document.getElementById("app").innerHTML=clientPlanEditor(c);
+
+}
+
+/* FORMULARIOS PRINCIPALES */
 
 document.addEventListener("submit",e=>{
 
- e.preventDefault();const f=e.target,d=Object.fromEntries(new FormData(f).entries());
+ e.preventDefault();
+
+ const f=e.target,d=Object.fromEntries(new FormData(f).entries());
 
  if(f.id==="planForm"){
 
@@ -796,7 +1118,7 @@ document.addEventListener("submit",e=>{
 
  if(f.id==="clientForm"){
 
-  clients.push({id:uid(),name:d.name,start:d.start,goal:d.goal,notes:d.notes,planId:null,sessions:[],evaluations:[]});
+  clients.push({id:uid(),name:d.name,start:d.start,goal:d.goal,notes:d.notes,planId:null,trainingPlan:null,sessions:[],evaluations:[]});
 
   save();render();
 
@@ -820,7 +1142,7 @@ document.addEventListener("submit",e=>{
 
 });
 
-/* EDITOR DE EJERCICIOS: FORMULARIO COMPLETO EN PANTALLA */
+/* EDITOR DE EJERCICIOS DE PLAN GENERAL */
 
 function openExerciseEditor(exerciseId,dayId){
 
@@ -854,7 +1176,7 @@ function openExerciseEditor(exerciseId,dayId){
 
  <hr><button class="btn">Guardar ejercicio</button></form></div>`;
 
- const root=document.getElementById("app");root.insertAdjacentHTML("beforeend",content);
+ document.getElementById("app").insertAdjacentHTML("beforeend",content);
 
  document.getElementById("exerciseEditor").scrollIntoView({behavior:"smooth"});
 
@@ -884,11 +1206,23 @@ document.addEventListener("click",e=>{
 
  const b=e.target.closest("[data-action]");if(!b)return;
 
- if(b.dataset.action==="close-editor"){document.getElementById("exerciseEditor")?.remove();return}
+ if(b.dataset.action==="close-editor"){
+
+  document.getElementById("exerciseEditor")?.remove();
+
+  document.getElementById("clientExerciseEditor")?.remove();
+
+  return;
+
+ }
 
  if(b.dataset.action==="add-series"){
 
-  const box=document.getElementById("seriesEditor");if(box)box.insertAdjacentHTML("beforeend",seriesEditorRow({weight:0,reps:10,rir:2,type:"Efectiva"},box.children.length));return;
+  const box=document.getElementById("seriesEditor");
+
+  if(box)box.insertAdjacentHTML("beforeend",seriesEditorRow({weight:0,reps:10,rir:2,type:"Efectiva"},box.children.length));
+
+  return;
 
  }
 
@@ -896,11 +1230,17 @@ document.addEventListener("click",e=>{
 
 });
 
+/* GUARDADO DE EJERCICIOS: GENERAL Y PERSONAL */
+
 document.addEventListener("submit",e=>{
 
- if(e.target.id!=="planExerciseForm")return;
+ const f=e.target;
 
- e.preventDefault();const f=e.target,d=Object.fromEntries(new FormData(f).entries());
+ if(f.id!=="planExerciseForm"&&f.id!=="clientExerciseForm")return;
+
+ e.preventDefault();
+
+ const d=Object.fromEntries(new FormData(f).entries());
 
  const series=[...f.querySelectorAll(".series-row")].map(row=>({
 
@@ -918,33 +1258,57 @@ document.addEventListener("submit",e=>{
 
  const ex={id:f.dataset.exercise||uid(),name:d.name,muscle:d.muscle,block:d.block,rest:d.rest,tempo:d.tempo,technique:d.technique,notes:d.notes,series};
 
- let found=false;
+ if(f.id==="planExerciseForm"){
 
- plans.forEach(p=>p.days.forEach(day=>{
+  let found=false;
 
-  const i=day.exercises.findIndex(x=>x.id===ex.id);
+  plans.forEach(p=>p.days.forEach(day=>{
 
-  if(i>=0){day.exercises[i]=ex;found=true}
+   const i=day.exercises.findIndex(x=>x.id===ex.id);
 
- }));
+   if(i>=0){day.exercises[i]=ex;found=true}
 
- if(!found){const day=plans.flatMap(p=>p.days).find(x=>x.id===f.dataset.day);if(day)day.exercises.push(ex)}
+  }));
 
- save();document.getElementById("exerciseEditor")?.remove();render();
+  if(!found){
+
+   const day=plans.flatMap(p=>p.days).find(x=>x.id===f.dataset.day);
+
+   if(day)day.exercises.push(ex);
+
+  }
+
+  save();document.getElementById("exerciseEditor")?.remove();render();
+
+ }
+
+ if(f.id==="clientExerciseForm"){
+
+  const c=getClient(f.dataset.client),p=ensureClientPlan(c),day=p?.days.find(x=>x.id===f.dataset.day);
+
+  if(!day)return;
+
+  const index=day.exercises.findIndex(x=>x.id===ex.id);
+
+  if(index>=0)day.exercises[index]=ex;else day.exercises.push(ex);
+
+  save();document.getElementById("clientExerciseEditor")?.remove();renderClientPlan();
+
+ }
 
 });
 
-/* SESIONES: SE COPIAN LOS EJERCICIOS DEL DÍA Y SE PUEDEN EDITAR */
+/* SESIONES: SE USA LA RUTINA PERSONAL DEL CLIENTE */
 
 function startSession(clientId){
 
- const c=getClient(clientId),p=getPlan(c?.planId);if(!c||!p)return;
+ const c=getClient(clientId),p=ensureClientPlan(c);if(!c||!p)return;
 
  const day=p.days.find(d=>d.id===document.getElementById("sessionDay")?.value)||p.days[0];
 
- if(!day){alert("La planificación no tiene días.");return}
+ if(!day){alert("La rutina personal no tiene días.");return}
 
- editingSession={id:uid(),date:dateNow(),planId:p.id,dayName:day.name,notes:"",exercises:JSON.parse(JSON.stringify(day.exercises))};
+ editingSession={id:uid(),date:dateNow(),planId:p.id,dayName:day.name,notes:"",exercises:clone(day.exercises)};
 
  showSessionEditor(c);
 
@@ -1004,9 +1368,13 @@ function viewSession(clientId,sessionId){
 
  const detail=s.exercises.map(e=>`<div class="exercise"><b>${esc(e.name)}</b>${e.series.map((x,i)=>`<p>Serie ${i+1}: ${esc(x.weight)} kg × ${esc(x.reps)} rep · RIR ${esc(x.rir)} · ${esc(x.type||"Efectiva")}</p>`).join("")}</div>`).join("");
 
- const box=document.createElement("div");box.className="card";box.innerHTML=`<h2>${esc(s.dayName)} · ${esc(s.date)}</h2>${detail}<p>${esc(s.notes||"Sin observaciones")}</p><button class="btn secondary">Cerrar</button>`;
+ const box=document.createElement("div");box.className="card";
 
- box.querySelector("button").onclick=()=>box.remove();document.getElementById("app").appendChild(box);box.scrollIntoView({behavior:"smooth"});
+ box.innerHTML=`<h2>${esc(s.dayName)} · ${esc(s.date)}</h2>${detail}<p>${esc(s.notes||"Sin observaciones")}</p><button class="btn secondary">Cerrar</button>`;
+
+ box.querySelector("button").onclick=()=>box.remove();
+
+ document.getElementById("app").appendChild(box);box.scrollIntoView({behavior:"smooth"});
 
 }
 
@@ -1014,13 +1382,15 @@ function viewSession(clientId,sessionId){
 
 function exportData(){
 
- const data={version:3,exportedAt:new Date().toISOString(),plans,customExercises,clients};
+ const data={version:4,exportedAt:new Date().toISOString(),plans,customExercises,clients};
 
  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
 
  const url=URL.createObjectURL(blob),a=document.createElement("a");
 
- a.href=url;a.download="TP-Training-Planner-respaldo-"+dateNow()+".json";a.click();URL.revokeObjectURL(url);
+ a.href=url;a.download="TP-Training-Planner-respaldo-"+dateNow()+".json";a.click();
+
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
 
 }
 
@@ -1052,7 +1422,9 @@ function importData(){
 
    }
 
-   normalize();selectedPlan=null;selectedClient=null;alert("Copia de seguridad importada.");render();
+   normalize();selectedPlan=null;selectedClient=null;clientPlanEditing=false;
+
+   alert("Copia de seguridad importada.");render();
 
   }catch(err){alert("El archivo no es válido o está dañado.")}
 
@@ -1116,7 +1488,7 @@ function startCircuit(){
 
 }
 
-/* NAVEGACIÓN Y ACTUALIZACIONES */
+/* ACTUALIZACIONES */
 
 document.addEventListener("input",e=>{
 
@@ -1131,10 +1503,6 @@ document.addEventListener("change",e=>{
  if(["exerciseSearch","muscleFilter"].includes(e.target.id))updateExerciseResults();
 
 });
-
-const originalRender=render;
-
-render=function(){originalRender();if(page==="ejercicios")updateExerciseResults();if(page==="herramientas")updateCalculators();};
 
 render();
 
