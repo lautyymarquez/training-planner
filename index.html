@@ -593,7 +593,13 @@ function clientProfile(c){
 
  <div class="card"><div class="row"><button class="btn secondary" data-action="back-clients">← Volver</button><button class="btn secondary" data-action="edit-client" data-id="${c.id}">Editar ficha</button><button class="btn danger" data-action="delete-client" data-id="${c.id}">Eliminar</button></div>
 
- <p>Objetivo: <b>${esc(c.goal||"—")}</b> · Inicio: ${esc(c.start||"—")}</p><p>${esc(c.notes||"Sin observaciones")}</p>
+<p><b>Edad:</b> ${esc(c.age||"No registrada")} años</p>
+<p><b>Teléfono / WhatsApp:</b> ${esc(c.phone||"No registrado")}</p>
+<p><b>Objetivo:</b> ${esc(c.goal||"—")}</p>
+<p><b>Experiencia:</b> ${esc(c.experience||"No registrada")}</p>
+<p><b>Disponibilidad:</b> ${esc(c.availability||"No registrada")}</p>
+<p><b>Fecha de inicio:</b> ${esc(c.start||"—")}</p>
+<p><b>Observaciones:</b> ${esc(c.notes||"Sin observaciones")}</p>
 
  <div class="field"><label>Asignar una planificación como punto de partida</label><select id="assignPlan"><option value="">Sin planificación</option>${plans.map(x=>`<option value="${x.id}" ${c.planId===x.id?"selected":""}>${esc(x.name)}</option>`).join("")}</select></div>
 
