@@ -44,8 +44,6 @@ button{border:0;border-radius:10px;padding:12px 15px;font-weight:700;cursor:poin
 
 .danger{background:#382020;color:#ff8b8b}
 
-button:active{opacity:.75}
-
 input,select,textarea{width:100%;background:#11130f;color:var(--text);border:1px solid var(--border);border-radius:9px;padding:11px;margin-top:6px;font-size:14px}
 
 label{font-size:12px;color:var(--muted);display:block;margin-top:12px}
@@ -92,9 +90,7 @@ hr{border:0;border-top:1px solid var(--border);margin:15px 0}
 
 .item-line:last-child{border:0}
 
-textarea{resize:vertical}
-
-@media(min-width:600px){main{padding:25px}.series-grid{grid-template-columns:repeat(3,1fr)}}
+@media(min-width:600px){main{padding:25px}}
 
 </style>
 
@@ -122,7 +118,7 @@ textarea{resize:vertical}
 
   <div class="row">
 
-   <div><div class="stat" id="planCount">0</div><div class="small">PLANIFICACIONES</div></div>
+   <div><div class="stat" id="planCount">0</div><div class="small">PLANES</div></div>
 
    <div><div class="stat" id="clientCount">0</div><div class="small">CLIENTES</div></div>
 
@@ -136,13 +132,9 @@ textarea{resize:vertical}
 
  <button class="secondary" onclick="newClient()">+ Nuevo cliente</button>
 
- <h3 style="margin-top:25px">Mis planificaciones</h3>
+ <h3 style="margin-top:25px">Mis planificaciones</h3><div id="homePlans"></div>
 
- <div id="homePlans"></div>
-
- <h3 style="margin-top:22px">Mis clientes</h3>
-
- <div id="homeClients"></div>
+ <h3 style="margin-top:22px">Mis clientes</h3><div id="homeClients"></div>
 
 </section>
 
@@ -168,7 +160,7 @@ textarea{resize:vertical}
 
  <h2>Mis clientes</h2>
 
- <p>Fichas individuales y seguimiento de cada persona.</p>
+ <p>Fichas individuales y seguimiento.</p>
 
  <button class="primary" onclick="newClient()">+ Agregar cliente</button>
 
@@ -206,23 +198,15 @@ textarea{resize:vertical}
 
  <div class="card">
 
-  <div class="stat" id="totalPlans">0</div><div class="small">PLANIFICACIONES CREADAS</div>
+  <div class="stat" id="totalPlans">0</div><div class="small">PLANIFICACIONES</div><hr>
 
-  <hr>
+  <div class="stat" id="totalClients">0</div><div class="small">CLIENTES</div><hr>
 
-  <div class="stat" id="totalClients">0</div><div class="small">CLIENTES REGISTRADOS</div>
-
-  <hr>
-
-  <div class="stat" id="totalExercises">0</div><div class="small">EJERCICIOS PLANIFICADOS</div>
-
-  <hr>
+  <div class="stat" id="totalExercises">0</div><div class="small">EJERCICIOS PLANIFICADOS</div><hr>
 
   <div class="stat" id="totalSessions">0</div><div class="small">ENTRENAMIENTOS REGISTRADOS</div>
 
  </div>
-
- <p>Los datos se actualizan según tus registros guardados.</p>
 
 </section>
 
@@ -234,7 +218,7 @@ textarea{resize:vertical}
 
   <h3>Guardar una copia</h3>
 
-  <p>Exportá tus planificaciones, clientes, ejercicios propios e historiales.</p>
+  <p>Exportá planes, clientes, ejercicios e historiales.</p>
 
   <button class="primary" onclick="exportBackup()">Exportar copia</button>
 
@@ -244,11 +228,9 @@ textarea{resize:vertical}
 
   <h3>Recuperar una copia</h3>
 
-  <p>Seleccioná un archivo de copia de seguridad para recuperar tus datos.</p>
-
   <input type="file" id="backupFile" accept=".json">
 
-  <button class="secondary" onclick="importBackup()">Importar copia</button>
+  <button class="secondary" style="margin-top:10px" onclick="importBackup()">Importar copia</button>
 
  </div>
 
@@ -256,15 +238,9 @@ textarea{resize:vertical}
 
   <h3>Guardado automático</h3>
 
-  <p id="saveStatus">Tus cambios se guardan en este dispositivo y navegador.</p>
+  <p id="saveStatus">Los datos se guardan en este navegador.</p>
 
- </div>
-
- <div class="card">
-
-  <h3>Privacidad</h3>
-
-  <p>Los datos se guardan en el almacenamiento local de este navegador. No se sincronizan con otros dispositivos. Evitá guardar información médica o datos sensibles de tus clientes.</p>
+  <p>Los datos no se sincronizan con otros dispositivos. Evitá almacenar información médica o datos sensibles de clientes.</p>
 
  </div>
 
@@ -318,25 +294,15 @@ const defaultLibrary=[
 
 ];
 
-let plans=[];
+let plans=[],customExercises=[],clients=[];
 
-let customExercises=[];
-
-let clients=[];
-
-let currentPlan=null;
-
-let currentClientId=null;
+let currentPlan=null,currentClientId=null,sessionDraft=null;
 
 function makeId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
-function allExercises(){
-
- return [...defaultLibrary.map(x=>({name:x[0],muscle:x[1],builtin:true})),...customExercises];
-
-}
+function allExercises(){return [...defaultLibrary.map(x=>({name:x[0],muscle:x[1],builtin:true})),...customExercises]}
 
 function saveAll(){
 
@@ -352,7 +318,7 @@ function saveAll(){
 
   if(el)el.textContent='✓ Guardado automáticamente en este dispositivo.';
 
- }catch(e){alert('No se pudieron guardar los datos. Exportá una copia y revisá el espacio disponible del navegador.')}
+ }catch(e){alert('No se pudieron guardar los datos. Exportá una copia de seguridad.')}
 
  updateStats();
 
@@ -360,17 +326,11 @@ function saveAll(){
 
 function normalize(){
 
- try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');plans=Array.isArray(x)?x:[]}catch(e){plans=[]}
+ try{let x=JSON.parse(localStorage.getItem(KEY)||'[]');plans=Array.isArray(x)?x:[]}catch(e){plans=[]}
 
- try{
+ try{let x=JSON.parse(localStorage.getItem(LIBKEY)||'[]');customExercises=Array.isArray(x)?x.map(v=>Array.isArray(v)?{id:makeId(),name:v[0],muscle:v[1]||'General'}:v):[]}catch(e){customExercises=[]}
 
-  const x=JSON.parse(localStorage.getItem(LIBKEY)||'[]');
-
-  customExercises=Array.isArray(x)?x.map(v=>Array.isArray(v)?{id:makeId(),name:v[0],muscle:v[1]||'General',description:'',technique:'',errors:''}:v):[];
-
- }catch(e){customExercises=[]}
-
- try{const x=JSON.parse(localStorage.getItem(CLIENTKEY)||'[]');clients=Array.isArray(x)?x:[]}catch(e){clients=[]}
+ try{let x=JSON.parse(localStorage.getItem(CLIENTKEY)||'[]');clients=Array.isArray(x)?x:[]}catch(e){clients=[]}
 
  plans.forEach(p=>{
 
@@ -384,13 +344,9 @@ function normalize(){
 
     if(!Array.isArray(e.series)){
 
-     const n=Math.max(1,Number(e.sets)||3);
-
-     e.series=Array.from({length:n},()=>({weight:e.weight??0,reps:e.reps??10,rir:e.rir??2}));
+     e.series=Array.from({length:Math.max(1,Number(e.sets)||3)},()=>({weight:e.weight??0,reps:e.reps??10,rir:e.rir??2}));
 
     }
-
-    e.series.forEach(s=>{if(s.weight===undefined)s.weight=0;if(s.reps===undefined)s.reps=10;if(s.rir===undefined)s.rir=2});
 
    });
 
@@ -410,15 +366,13 @@ function updateStats(){
 
  const sessions=clients.reduce((a,c)=>a+(c.history||[]).length,0);
 
- const ids=['planCount','totalPlans'];
+ ['planCount','totalPlans'].forEach(id=>{let e=document.getElementById(id);if(e)e.textContent=plans.length});
 
- ids.forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=plans.length});
+ ['clientCount','totalClients'].forEach(id=>{let e=document.getElementById(id);if(e)e.textContent=clients.length});
 
- ['clientCount','totalClients'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=clients.length});
+ ['exerciseCount','totalExercises'].forEach(id=>{let e=document.getElementById(id);if(e)e.textContent=ex});
 
- ['exerciseCount','totalExercises'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=ex});
-
- const s=document.getElementById('totalSessions');if(s)s.textContent=sessions;
+ let s=document.getElementById('totalSessions');if(s)s.textContent=sessions;
 
 }
 
@@ -452,7 +406,7 @@ function newPlan(){
 
  if(!name||!name.trim())return;
 
- const goal=prompt('Objetivo: Hipertrofia, Fuerza, Resistencia o Rendimiento','Hipertrofia')||'Hipertrofia';
+ const goal=prompt('Objetivo:','Hipertrofia')||'Hipertrofia';
 
  const freq=Math.min(7,Math.max(1,Number(prompt('¿Cuántos días por semana?','4'))||4));
 
@@ -494,7 +448,7 @@ function renderPlans(){
 
  const box=document.getElementById('plansList');box.innerHTML='';
 
- if(!plans.length)box.innerHTML='<div class="empty">No hay planificaciones creadas.</div>';
+ if(!plans.length)box.innerHTML='<div class="empty">No hay planificaciones.</div>';
 
  plans.forEach(p=>box.appendChild(planCard(p)));
 
@@ -508,23 +462,17 @@ function renderEditor(){
 
  const box=document.getElementById('editorContent');
 
- box.innerHTML=`
-
- <h2>${esc(p.name)}</h2>
+ box.innerHTML=`<h2>${esc(p.name)}</h2>
 
  <div class="card">
 
-  <label>Nombre</label><input id="planName" value="${esc(p.name)}">
+ <label>Nombre</label><input id="planName" value="${esc(p.name)}">
 
-  <label>Objetivo</label><select id="planGoal">${['Hipertrofia','Fuerza','Resistencia','Rendimiento','Salud general'].map(x=>`<option ${p.goal===x?'selected':''}>${x}</option>`).join('')}</select>
+ <label>Objetivo</label><select id="planGoal">${['Hipertrofia','Fuerza','Resistencia','Rendimiento','Salud general'].map(x=>`<option ${p.goal===x?'selected':''}>${x}</option>`).join('')}</select>
 
-  <button class="secondary" style="margin-top:12px" onclick="updatePlan()">Guardar cambios</button>
+ <button class="secondary" style="margin-top:12px" onclick="updatePlan()">Guardar cambios</button></div>
 
- </div>
-
- <div class="row" style="margin:20px 0 12px"><h3 style="margin:0">Días de entrenamiento</h3><button class="secondary" onclick="addDay()">+ Día</button></div>
-
- <div id="daysBox"></div>
+ <div class="row" style="margin:20px 0 12px"><h3>Días de entrenamiento</h3><button class="secondary" onclick="addDay()">+ Día</button></div><div id="daysBox"></div>
 
  <button class="danger" style="margin-top:15px" onclick="deletePlan()">Eliminar planificación</button>`;
 
@@ -538,7 +486,7 @@ function renderEditor(){
 
   const rename=document.createElement('button');rename.className='secondary';rename.textContent='Renombrar día';
 
-  rename.onclick=()=>{const n=prompt('Nombre del día:',d.name);if(n&&n.trim()){d.name=n.trim();saveAll();renderEditor()}};
+  rename.onclick=()=>{let n=prompt('Nombre del día:',d.name);if(n&&n.trim()){d.name=n.trim();saveAll();renderEditor()}};
 
   card.appendChild(rename);
 
@@ -580,11 +528,11 @@ function exerciseCard(day,e,di,ei){
 
   <label>RIR<input type="number" min="0" max="10" value="${esc(s.rir)}" data-field="rir"></label></div>`;
 
-  row.querySelectorAll('input').forEach(input=>input.addEventListener('change',()=>{const f=input.dataset.field;s[f]=f==='weight'||f==='rir'?Number(input.value):input.value;saveAll()}));
+  row.querySelectorAll('input').forEach(input=>input.addEventListener('change',()=>{let f=input.dataset.field;s[f]=f==='weight'||f==='rir'?Number(input.value):input.value;saveAll()}));
 
   const remove=document.createElement('button');remove.className='danger';remove.style.marginTop='8px';remove.textContent='Eliminar serie';
 
-  remove.onclick=()=>{if(e.series.length<=1){alert('El ejercicio debe tener al menos una serie.');return}e.series.splice(si,1);saveAll();renderEditor()};
+  remove.onclick=()=>{if(e.series.length<=1){alert('Debe quedar al menos una serie.');return}e.series.splice(si,1);saveAll();renderEditor()};
 
   row.appendChild(remove);div.appendChild(row);
 
@@ -608,11 +556,11 @@ function exerciseCard(day,e,di,ei){
 
  const add=document.createElement('button');add.className='primary';add.textContent='+ Agregar serie';
 
- add.onclick=()=>{const last=e.series[e.series.length-1];e.series.push({weight:last?.weight??0,reps:last?.reps??10,rir:last?.rir??2});saveAll();renderEditor()};
+ add.onclick=()=>{let last=e.series[e.series.length-1];e.series.push({...last});saveAll();renderEditor()};
 
  const edit=document.createElement('button');edit.className='secondary';edit.textContent='Cambiar ejercicio';
 
- edit.onclick=()=>{const n=prompt('Nombre del ejercicio:',e.name);if(n&&n.trim()){e.name=n.trim();saveAll();renderEditor()}};
+ edit.onclick=()=>{let n=prompt('Nombre del ejercicio:',e.name);if(n&&n.trim()){e.name=n.trim();saveAll();renderEditor()}};
 
  const del=document.createElement('button');del.className='danger';del.textContent='Eliminar ejercicio';
 
@@ -624,7 +572,7 @@ function exerciseCard(day,e,di,ei){
 
 function updatePlan(){currentPlan.name=document.getElementById('planName').value.trim()||currentPlan.name;currentPlan.goal=document.getElementById('planGoal').value;saveAll();renderEditor()}
 
-function addDay(){const name=prompt('Nombre del nuevo día:','Día '+(currentPlan.days.length+1));if(!name||!name.trim())return;currentPlan.days.push({id:makeId(),name:name.trim(),exercises:[]});saveAll();renderEditor()}
+function addDay(){let name=prompt('Nombre del nuevo día:','Día '+(currentPlan.days.length+1));if(!name||!name.trim())return;currentPlan.days.push({id:makeId(),name:name.trim(),exercises:[]});saveAll();renderEditor()}
 
 function addExercise(di){
 
@@ -632,7 +580,7 @@ function addExercise(di){
 
  const options=list.map((x,i)=>(i+1)+'. '+x.name+' ('+x.muscle+')').join('\n');
 
- const answer=prompt('Elegí un ejercicio escribiendo su número:\n\n'+options+'\n\nTambién podés cancelar y agregarlo primero desde la biblioteca.');
+ const answer=prompt('Elegí un ejercicio escribiendo su número:\n\n'+options);
 
  if(!answer)return;
 
@@ -640,7 +588,7 @@ function addExercise(di){
 
  if(!Number.isInteger(index)||index<0||index>=list.length){alert('Número no válido.');return}
 
- const item=list[index];const count=Math.max(1,Math.min(20,Number(prompt('Cantidad inicial de series:','3'))||3));
+ const item=list[index],count=Math.max(1,Math.min(20,Number(prompt('Cantidad inicial de series:','3'))||3));
 
  currentPlan.days[di].exercises.push({id:makeId(),name:item.name,muscle:item.muscle,series:Array.from({length:count},()=>({weight:0,reps:10,rir:2})),rest:90,tempo:'2-0-2',technique:'Normal',notes:''});
 
@@ -648,23 +596,23 @@ function addExercise(di){
 
 }
 
-function deletePlan(){if(!confirm('¿Seguro que querés eliminar toda esta planificación?'))return;plans=plans.filter(p=>p.id!==currentPlan.id);currentPlan=null;saveAll();showPage('plans')}
+function deletePlan(){if(!confirm('¿Eliminar toda esta planificación?'))return;plans=plans.filter(p=>p.id!==currentPlan.id);currentPlan=null;saveAll();showPage('plans')}
 
 /* BIBLIOTECA */
 
 function newCustomExercise(existing){
 
- const name=prompt('Nombre del ejercicio:',existing?.name||'');if(!name||!name.trim())return;
+ let name=prompt('Nombre del ejercicio:',existing?.name||'');if(!name||!name.trim())return;
 
- const muscle=prompt('Grupo muscular:',existing?.muscle||'General')||'General';
+ let muscle=prompt('Grupo muscular:',existing?.muscle||'General')||'General';
 
- const description=prompt('Descripción del ejercicio:',existing?.description||'')||'';
+ let description=prompt('Descripción:',existing?.description||'')||'';
 
- const technique=prompt('Indicaciones técnicas:',existing?.technique||'')||'';
+ let technique=prompt('Indicaciones técnicas:',existing?.technique||'')||'';
 
- const errors=prompt('Errores comunes:',existing?.errors||'')||'';
+ let errors=prompt('Errores comunes:',existing?.errors||'')||'';
 
- if(existing){Object.assign(existing,{name:name.trim(),muscle,description,technique,errors})}
+ if(existing)Object.assign(existing,{name:name.trim(),muscle,description,technique,errors});
 
  else customExercises.push({id:makeId(),name:name.trim(),muscle,description,technique,errors});
 
@@ -674,7 +622,7 @@ function newCustomExercise(existing){
 
 function renderLibrary(){
 
- const q=(document.getElementById('searchExercise')?.value||'').toLowerCase();
+ let q=(document.getElementById('searchExercise')?.value||'').toLowerCase();
 
  const box=document.getElementById('libraryList');box.innerHTML='';
 
@@ -686,13 +634,7 @@ function renderLibrary(){
 
   const d=document.createElement('div');d.className='card';
 
-  d.innerHTML=`<strong>${esc(x.name)}</strong><div class="small">${esc(x.muscle)}</div>
-
-  ${x.description?`<p>${esc(x.description)}</p>`:''}
-
-  ${x.technique?`<p><b>Técnica:</b> ${esc(x.technique)}</p>`:''}
-
-  ${x.errors?`<p><b>Errores comunes:</b> ${esc(x.errors)}</p>`:''}`;
+  d.innerHTML=`<strong>${esc(x.name)}</strong><div class="small">${esc(x.muscle)}</div>${x.description?`<p>${esc(x.description)}</p>`:''}${x.technique?`<p><b>Técnica:</b> ${esc(x.technique)}</p>`:''}${x.errors?`<p><b>Errores:</b> ${esc(x.errors)}</p>`:''}`;
 
   if(!x.builtin){
 
@@ -700,15 +642,11 @@ function renderLibrary(){
 
    const edit=document.createElement('button');edit.className='secondary';edit.textContent='Editar';edit.onclick=()=>newCustomExercise(x);
 
-   const del=document.createElement('button');del.className='danger';del.textContent='Eliminar';del.onclick=()=>{if(confirm('¿Eliminar este ejercicio de tu biblioteca?')){customExercises=customExercises.filter(v=>v.id!==x.id);saveAll();renderLibrary()}};
+   const del=document.createElement('button');del.className='danger';del.textContent='Eliminar';del.onclick=()=>{if(confirm('¿Eliminar este ejercicio?')){customExercises=customExercises.filter(v=>v.id!==x.id);saveAll();renderLibrary()}};
 
    actions.append(edit,del);d.appendChild(actions);
 
-  }else{
-
-   const tag=document.createElement('span');tag.className='tag';tag.textContent='Ejercicio incluido';d.appendChild(tag);
-
-  }
+  }else{const tag=document.createElement('span');tag.className='tag';tag.textContent='Ejercicio incluido';d.appendChild(tag)}
 
   box.appendChild(d);
 
@@ -720,15 +658,13 @@ function renderLibrary(){
 
 function newClient(){
 
- const name=prompt('Nombre del cliente:');if(!name||!name.trim())return;
+ let name=prompt('Nombre del cliente:');if(!name||!name.trim())return;
 
- const goal=prompt('Objetivo de entrenamiento:','Salud general')||'Salud general';
+ let goal=prompt('Objetivo de entrenamiento:','Salud general')||'Salud general';
 
- const start=new Date().toISOString().slice(0,10);
+ let notes=prompt('Notas generales (evitá datos sensibles):','')||'';
 
- const notes=prompt('Notas generales (evitá datos médicos o sensibles):','')||'';
-
- const c={id:makeId(),name:name.trim(),goal,startDate:start,notes,planId:'',history:[]};
+ let c={id:makeId(),name:name.trim(),goal,startDate:new Date().toISOString().slice(0,10),notes,planId:'',history:[]};
 
  clients.push(c);saveAll();openClient(c.id);
 
@@ -740,11 +676,7 @@ function clientCard(c){
 
  const plan=plans.find(p=>p.id===c.planId);
 
- d.innerHTML=`<h3>${esc(c.name)}</h3><span class="tag">${esc(c.goal||'Sin objetivo')}</span>
-
- <p>${plan?'Plan asignado: '+esc(plan.name):'Todavía no tiene una planificación asignada.'}</p>
-
- <p>${(c.history||[]).length} entrenamientos registrados</p><button class="primary">Ver ficha</button>`;
+ d.innerHTML=`<h3>${esc(c.name)}</h3><span class="tag">${esc(c.goal||'Sin objetivo')}</span><p>${plan?'Plan asignado: '+esc(plan.name):'Sin planificación asignada'}</p><p>${(c.history||[]).length} entrenamientos registrados</p><button class="primary">Ver ficha</button>`;
 
  d.querySelector('button').onclick=()=>openClient(c.id);return d;
 
@@ -752,7 +684,7 @@ function clientCard(c){
 
 function renderClients(){
 
- const q=(document.getElementById('searchClient')?.value||'').toLowerCase();
+ let q=(document.getElementById('searchClient')?.value||'').toLowerCase();
 
  const box=document.getElementById('clientsList');box.innerHTML='';
 
@@ -770,71 +702,35 @@ function renderClientDetail(){
 
  const c=clients.find(x=>x.id===currentClientId);if(!c)return;
 
- const box=document.getElementById('clientContent');
+ const box=document.getElementById('clientContent'),plan=plans.find(p=>p.id===c.planId);
 
- const plan=plans.find(p=>p.id===c.planId);
+ box.innerHTML=`<h2>${esc(c.name)}</h2>
 
- box.innerHTML=`
+ <div class="card"><span class="tag">${esc(c.goal||'Sin objetivo')}</span><p>Fecha de inicio: ${esc(c.startDate||'Sin fecha')}</p><p>${esc(c.notes||'Sin notas generales')}</p>
 
- <h2>${esc(c.name)}</h2>
+ <div class="actions"><button class="secondary" onclick="editClient()">Editar ficha</button><button class="danger" onclick="deleteClient()">Eliminar cliente</button></div></div>
 
- <div class="card">
+ <div class="card"><h3>Planificación asignada</h3><label>Elegir planificación</label>
 
-  <span class="tag">${esc(c.goal||'Sin objetivo')}</span>
+ <select id="clientPlan"><option value="">Sin planificación</option>${plans.map(p=>`<option value="${esc(p.id)}" ${c.planId===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>
 
-  <p>Fecha de inicio: ${esc(c.startDate||'Sin fecha')}</p>
+ <button class="secondary" style="margin-top:10px" onclick="assignPlan()">Guardar asignación</button>
 
-  <p>${esc(c.notes||'Sin notas generales.')}</p>
+ ${plan?`<p>Plan actual: <b>${esc(plan.name)}</b></p>`:'<p>Sin plan asignado.</p>'}</div>
 
-  <div class="actions">
+ <div class="card" id="sessionArea"><h3>Registrar entrenamiento</h3>
 
-   <button class="secondary" onclick="editClient()">Editar ficha</button>
+ <p>Las series aparecerán en pantalla para que puedas editarlas directamente.</p>
 
-   <button class="danger" onclick="deleteClient()">Eliminar cliente</button>
+ <button class="primary" onclick="addSession()">+ Nuevo entrenamiento</button></div>
 
-  </div>
-
- </div>
-
- <div class="card">
-
-  <h3>Planificación asignada</h3>
-
-  <label>Elegir planificación</label>
-
-  <select id="clientPlan">
-
-   <option value="">Sin planificación asignada</option>
-
-   ${plans.map(p=>`<option value="${esc(p.id)}" ${c.planId===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}
-
-  </select>
-
-  <button class="secondary" style="margin-top:10px" onclick="assignPlan()">Guardar asignación</button>
-
-  ${plan?`<p>Actualmente asignada: <b>${esc(plan.name)}</b></p>`:'<p>Este cliente todavía no tiene una planificación asignada.</p>'}
-
- </div>
-
- <div class="card">
-
-  <h3>Registrar entrenamiento</h3>
-
-  <p>Guardá la fecha, los ejercicios realizados y el rendimiento de cada serie.</p>
-
-  <button class="primary" onclick="addSession()">+ Registrar entrenamiento</button>
-
- </div>
-
- <h3>Historial de entrenamientos</h3>
-
- <div id="clientHistory"></div>`;
+ <h3>Historial de entrenamientos</h3><div id="clientHistory"></div>`;
 
  const hist=document.getElementById('clientHistory');
 
  if(!c.history.length)hist.innerHTML='<div class="empty">Todavía no hay entrenamientos registrados.</div>';
 
- [...c.history].reverse().forEach((h)=>{
+ [...c.history].reverse().forEach(h=>{
 
   const d=document.createElement('div');d.className='card';
 
@@ -852,7 +748,7 @@ function renderClientDetail(){
 
   const del=document.createElement('button');del.className='danger';del.style.marginTop='10px';del.textContent='Eliminar registro';
 
-  del.onclick=()=>{if(confirm('¿Eliminar este entrenamiento del historial?')){c.history=c.history.filter(x=>x.id!==h.id);saveAll();renderClientDetail()}};
+  del.onclick=()=>{if(confirm('¿Eliminar este entrenamiento?')){c.history=c.history.filter(x=>x.id!==h.id);saveAll();renderClientDetail()}};
 
   d.appendChild(del);hist.appendChild(d);
 
@@ -864,7 +760,7 @@ function editClient(){
 
  const c=clients.find(x=>x.id===currentClientId);if(!c)return;
 
- const name=prompt('Nombre:',c.name);if(!name||!name.trim())return;
+ let name=prompt('Nombre:',c.name);if(!name||!name.trim())return;
 
  c.name=name.trim();c.goal=prompt('Objetivo:',c.goal)||c.goal;
 
@@ -874,71 +770,163 @@ function editClient(){
 
 }
 
-function assignPlan(){
+function assignPlan(){const c=clients.find(x=>x.id===currentClientId);if(!c)return;c.planId=document.getElementById('clientPlan').value;saveAll();renderClientDetail()}
 
- const c=clients.find(x=>x.id===currentClientId);if(!c)return;
+function deleteClient(){if(!confirm('¿Eliminar esta ficha y su historial?'))return;clients=clients.filter(c=>c.id!==currentClientId);currentClientId=null;saveAll();showPage('clients')}
 
- c.planId=document.getElementById('clientPlan').value;saveAll();renderClientDetail();
-
-}
-
-function deleteClient(){
-
- if(!confirm('¿Eliminar esta ficha y todo su historial? Esta acción no se puede deshacer.'))return;
-
- clients=clients.filter(c=>c.id!==currentClientId);currentClientId=null;saveAll();showPage('clients');
-
-}
+/* REGISTRO VISUAL DE ENTRENAMIENTO */
 
 function addSession(){
 
  const c=clients.find(x=>x.id===currentClientId);if(!c)return;
 
- const date=prompt('Fecha del entrenamiento (AAAA-MM-DD):',new Date().toISOString().slice(0,10));
+ const plan=plans.find(p=>p.id===c.planId);
 
- if(!date)return;
+ sessionDraft={
 
- const note=prompt('Notas de la sesión:','')||'';
+  date:new Date().toISOString().slice(0,10),
 
- const exercises=[];
+  note:'',
 
- let more=true;
+  exercises:plan?plan.days.flatMap(d=>d.exercises.map(e=>({
 
- while(more){
+   id:makeId(),name:e.name,muscle:e.muscle,
 
-  const name=prompt('Nombre del ejercicio (Cancelar para terminar):');
+   series:e.series.map(s=>({...s}))
 
-  if(name===null)break;
+  }))):[]
 
-  if(!name.trim())continue;
+ };
 
-  const count=Math.max(1,Math.min(20,Number(prompt('Cantidad de series:', '3'))||3));
+ renderSessionBuilder();
 
-  const series=[];
+}
 
-  for(let i=0;i<count;i++){
+function renderSessionBuilder(){
 
-   const weight=prompt('Serie '+(i+1)+' - Peso en kg:','0');
+ const area=document.getElementById('sessionArea');
 
-   const reps=prompt('Serie '+(i+1)+' - Repeticiones:','10');
+ if(!area||!sessionDraft)return;
 
-   const rir=prompt('Serie '+(i+1)+' - RIR:','2');
+ area.innerHTML=`<h3>Nuevo entrenamiento</h3>
 
-   series.push({weight:weight||'0',reps:reps||'0',rir:rir||'0'});
+ <label>Fecha</label><input type="date" id="sessionDate" value="${esc(sessionDraft.date)}">
 
-  }
+ <label>Observaciones</label><textarea id="sessionNote" rows="2">${esc(sessionDraft.note)}</textarea>
 
-  exercises.push({name:name.trim(),series});
+ <div class="row" style="margin-top:18px"><h3>Ejercicios</h3><button class="primary" onclick="sessionAddExercise()">+ Ejercicio</button></div>
 
-  more=confirm('¿Querés agregar otro ejercicio a este entrenamiento?');
+ <div id="sessionExercises"></div><hr>
 
- }
+ <button class="primary" style="width:100%" onclick="saveSessionDraft()">GUARDAR ENTRENAMIENTO</button>
 
- if(!exercises.length&&!note){alert('No se registró ningún dato.');return}
+ <button class="secondary" style="width:100%;margin-top:8px" onclick="cancelSessionDraft()">Cancelar</button>`;
 
- c.history.push({id:makeId(),date,note,exercises});
+ renderSessionExercises();
 
- saveAll();renderClientDetail();alert('Entrenamiento guardado en el historial.');
+}
+
+function renderSessionExercises(){
+
+ const box=document.getElementById('sessionExercises');if(!box||!sessionDraft)return;
+
+ box.innerHTML='';
+
+ sessionDraft.exercises.forEach((e,ei)=>{
+
+  const card=document.createElement('div');card.className='exercise';
+
+  const title=document.createElement('h3');title.textContent=e.name;card.appendChild(title);
+
+  e.series.forEach((s,si)=>{
+
+   const row=document.createElement('div');row.className='series';
+
+   row.innerHTML=`<div class="series-title">SERIE ${si+1}</div>
+
+   <div class="series-grid">
+
+   <label>Peso (kg)<input type="number" min="0" step="0.5" value="${esc(s.weight??0)}" data-field="weight"></label>
+
+   <label>Repeticiones<input type="text" value="${esc(s.reps??10)}" data-field="reps"></label>
+
+   <label>RIR<input type="number" min="0" max="10" value="${esc(s.rir??2)}" data-field="rir"></label>
+
+   </div>`;
+
+   row.querySelectorAll('input').forEach(input=>{
+
+    input.addEventListener('input',()=>{const f=input.dataset.field;s[f]=f==='reps'?input.value:Number(input.value)});
+
+   });
+
+   const remove=document.createElement('button');remove.className='danger';remove.style.marginTop='8px';remove.textContent='Eliminar serie';
+
+   remove.onclick=()=>{if(e.series.length<=1){alert('Debe quedar al menos una serie.');return}e.series.splice(si,1);renderSessionExercises()};
+
+   row.appendChild(remove);card.appendChild(row);
+
+  });
+
+  const actions=document.createElement('div');actions.className='actions';
+
+  const add=document.createElement('button');add.className='primary';add.textContent='+ Agregar serie';
+
+  add.onclick=()=>{const last=e.series[e.series.length-1];e.series.push({...last});renderSessionExercises()};
+
+  const remove=document.createElement('button');remove.className='danger';remove.textContent='Eliminar ejercicio';
+
+  remove.onclick=()=>{sessionDraft.exercises.splice(ei,1);renderSessionExercises()};
+
+  actions.append(add,remove);card.appendChild(actions);box.appendChild(card);
+
+ });
+
+}
+
+function sessionAddExercise(){
+
+ const list=allExercises();
+
+ const options=list.map((x,i)=>(i+1)+'. '+x.name+' ('+x.muscle+')').join('\n');
+
+ const answer=prompt('Elegí el número del ejercicio:\n\n'+options);
+
+ if(!answer)return;
+
+ const index=Number(answer)-1;if(!Number.isInteger(index)||index<0||index>=list.length){alert('Número no válido.');return}
+
+ const x=list[index];
+
+ sessionDraft.exercises.push({id:makeId(),name:x.name,muscle:x.muscle,series:[{weight:0,reps:10,rir:2}]});
+
+ renderSessionExercises();
+
+}
+
+function saveSessionDraft(){
+
+ const c=clients.find(x=>x.id===currentClientId);if(!c||!sessionDraft)return;
+
+ const date=document.getElementById('sessionDate').value;
+
+ if(!date){alert('Seleccioná una fecha.');return}
+
+ sessionDraft.date=date;
+
+ sessionDraft.note=document.getElementById('sessionNote').value;
+
+ c.history.push({id:makeId(),date:sessionDraft.date,note:sessionDraft.note,exercises:sessionDraft.exercises});
+
+ sessionDraft=null;saveAll();renderClientDetail();alert('¡Entrenamiento guardado correctamente!');
+
+}
+
+function cancelSessionDraft(){
+
+ if(!confirm('¿Cancelar este entrenamiento?'))return;
+
+ sessionDraft=null;renderClientDetail();
 
 }
 
@@ -946,15 +934,13 @@ function addSession(){
 
 function exportBackup(){
 
- const data={version:2,plans,customExercises,clients};
+ const data={version:3,plans,customExercises,clients};
 
  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
 
- const url=URL.createObjectURL(blob);
+ const url=URL.createObjectURL(blob),a=document.createElement('a');
 
- const a=document.createElement('a');a.href=url;a.download='TP-copia-seguridad.json';a.click();
-
- URL.revokeObjectURL(url);
+ a.href=url;a.download='TP-copia-seguridad.json';a.click();URL.revokeObjectURL(url);
 
 }
 
@@ -972,13 +958,11 @@ function importBackup(){
 
    const data=JSON.parse(reader.result);
 
-   if(!confirm('La importación reemplazará los datos actuales. ¿Querés continuar?'))return;
+   if(!confirm('La importación reemplazará los datos actuales. ¿Continuar?'))return;
 
-   if(Array.isArray(data)){
+   if(Array.isArray(data))plans=data;
 
-    plans=data;
-
-   }else if(data&&Array.isArray(data.plans)){
+   else if(data&&Array.isArray(data.plans)){
 
     plans=data.plans;
 
