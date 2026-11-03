@@ -977,6 +977,50 @@ document.addEventListener("click",e=>{
 
  if(a==="edit-client"){
 
+  const c=getClient(id);
+  if(!c)return;
+
+  const name=prompt("Nombre",c.name||"");
+  if(name===null)return;
+
+  const age=prompt("Edad",c.age||"");
+  if(age===null)return;
+
+  const phone=prompt("Teléfono / WhatsApp",c.phone||"");
+  if(phone===null)return;
+
+  const goal=prompt("Objetivo",c.goal||"");
+  if(goal===null)return;
+
+  const experience=prompt(
+    "Nivel de experiencia (Principiante, Intermedio o Avanzado)",
+    c.experience||"Principiante"
+  );
+  if(experience===null)return;
+
+  const availability=prompt(
+    "Disponibilidad semanal",
+    c.availability||""
+  );
+  if(availability===null)return;
+
+  const notes=prompt("Observaciones",c.notes||"");
+  if(notes===null)return;
+
+  c.name=name;
+  c.age=age;
+  c.phone=phone;
+  c.goal=goal;
+  c.experience=experience;
+  c.availability=availability;
+  c.notes=notes;
+
+  save();
+  render();
+  return;
+
+}
+
   const c=getClient(id);if(!c)return;
 
   const name=prompt("Nombre",c.name);if(name!==null)c.name=name;
@@ -1176,6 +1220,27 @@ document.addEventListener("submit",e=>{
  }
 
  if(f.id==="clientForm"){
+
+  clients.push({
+    id:uid(),
+    name:d.name,
+    age:d.age,
+    phone:d.phone,
+    start:d.start,
+    goal:d.goal,
+    experience:d.experience,
+    availability:d.availability,
+    notes:d.notes,
+    planId:null,
+    trainingPlan:null,
+    sessions:[],
+    evaluations:[]
+  });
+
+  save();
+  render();
+
+}
 
   clients.push({id:uid(),name:d.name,start:d.start,goal:d.goal,notes:d.notes,planId:null,trainingPlan:null,sessions:[],evaluations:[]});
 
