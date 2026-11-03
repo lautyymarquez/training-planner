@@ -917,7 +917,6 @@ function datos(){
 document.addEventListener("click",e=>{
 
  const navBtn=e.target.closest("[data-page]");
-alert("EL MENÚ ESTÁ DETECTANDO EL TOQUE");
  if(navBtn){page=navBtn.dataset.page;selectedPlan=null;selectedClient=null;render();return}
 
  const b=e.target.closest("[data-action]");if(!b)return;
