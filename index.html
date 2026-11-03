@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#10120f">
+  <title>TP. Training Planner</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #10120f;
+      color: #f5f5f5;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      padding: 25px 20px;
+      border-bottom: 1px solid #292d27;
+    }
+    .logo { font-size: 23px; font-weight: bold; }
+    .logo span { color: #b6f34a; }
+    main { padding: 25px 20px 100px; }
+    .welcome { color: #aaa; font-size: 14px; }
+    h1 { font-size: 27px; margin-top: 8px; }
+    .highlight { color: #b6f34a; }
+    .card {
+      background: #1b1e19;
+      border: 1px solid #30352d;
+      border-radius: 14px;
+      padding: 18px;
+      margin-top: 18px;
+    }
+    button {
+      background: #b6f34a;
+      color: #10120f;
+      border: 0;
+      border-radius: 9px;
+      padding: 14px;
+      font-weight: bold;
+      width: 100%;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #191c17;
+      border-top: 1px solid #30352d;
+      display: flex;
+      justify-content: space-around;
+      padding: 17px 5px;
+      color: #aaa;
+      font-size: 12px;
+    }
+    nav span { text-align: center; }
+    .active { color: #b6f34a; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">TP<span>.</span> TRAINING PLANNER</div>
+  </header>
+
+  <main>
+    <p class="welcome">TU ESPACIO DE ENTRENAMIENTO</p>
+    <h1>Planificá. Entrená.<br><span class="highlight">Evolucioná.</span></h1>
+
+    <div class="card">
+      <h3>Mis planificaciones</h3>
+      <p style="color:#aaa">Organizá tus entrenamientos y seguí tu progreso.</p>
+      <button onclick="crearPlan()">+ CREAR PLANIFICACIÓN</button>
+    </div>
+
+    <div class="card">
+      <h3>Tu entrenamiento</h3>
+      <p style="color:#aaa">Próximamente: ejercicios, estadísticas y análisis.</p>
+    </div>
+  </main>
+
+  <nav>
+    <span class="active">⌂<br>Inicio</span>
+    <span>▤<br>Rutinas</span>
+    <span>◎<br>Ejercicios</span>
+    <span>▥<br>Análisis</span>
+  </nav>
+
+  <script>
+    function crearPlan() {
+      alert("¡Próximamente podrás crear tu planificación!");
+    }
+  </script>
+</body>
+</html>
