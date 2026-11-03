@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 
 <html lang="es">
@@ -14,141 +16,93 @@
 
 <style>
 
-:root{
-
- --bg:#101411;--panel:#191f1b;--panel2:#202923;--line:#303b33;
-
- --green:#b5f36b;--green2:#8acb43;--text:#f2f5f1;--muted:#9ba79d;
-
- --red:#ff7777;--yellow:#f5ca67;--blue:#83baff;
-
-}
+:root{--bg:#101411;--panel:#191f1b;--panel2:#202923;--line:#303b33;--green:#b5f36b;--green2:#8acb43;--text:#f2f5f1;--muted:#9ba79d;--red:#ff7777;--yellow:#f5ca67}
 
 *{box-sizing:border-box}
 
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;font-size:14px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
 
 button,input,select,textarea{font:inherit}
 
 button{cursor:pointer}
 
-.app{max-width:1100px;margin:auto;padding:18px}
+header{padding:20px 18px 14px;background:#151b16;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
 
-header{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:22px}
+.brand{font-size:21px;font-weight:900;letter-spacing:1px}.brand span{color:var(--green)}
 
-.logo{font-size:20px;font-weight:900;letter-spacing:1px}
+.sub{font-size:11px;color:var(--muted);margin-top:5px;letter-spacing:2px}
 
-.logo span{color:var(--green)}
+nav{display:flex;gap:7px;overflow-x:auto;padding:12px 14px;background:#151b16;position:sticky;top:68px;z-index:4}
 
-.subtitle{color:var(--muted);font-size:12px;margin-top:4px}
+nav button{white-space:nowrap;border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:10px 13px;border-radius:10px;font-size:12px}
 
-.nav{display:flex;gap:7px;overflow-x:auto;padding:5px 0 14px;margin-bottom:15px}
+nav button.active{background:var(--green);color:#14200e;border-color:var(--green);font-weight:bold}
 
-.nav button{white-space:nowrap;border:1px solid var(--line);background:var(--panel);color:var(--muted);padding:10px 13px;border-radius:10px}
+main{max-width:1100px;margin:auto;padding:18px 14px 50px}
 
-.nav button.active{background:var(--green);color:#101411;border-color:var(--green);font-weight:800}
+h1{font-size:24px;margin:5px 0 6px}h2{font-size:18px;margin:0 0 14px}h3{font-size:15px;margin:0 0 10px}
 
-h1{font-size:24px;margin:5px 0 18px}
+p,.muted{color:var(--muted);font-size:13px;line-height:1.5}
 
-h2{font-size:18px;margin:0 0 13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:11px}
 
-h3{font-size:15px;margin:0 0 10px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:15px;margin-bottom:12px}
 
-p{line-height:1.5}
+.stat{font-size:27px;font-weight:800;color:var(--green);margin-top:7px}
 
-.muted{color:var(--muted)}
+.statlabel{font-size:12px;color:var(--muted)}
 
-.small{font-size:12px}
+.row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.between{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 
-.card{background:var(--panel);border:1px solid var(--line);border-radius:15px;padding:16px;margin-bottom:13px}
+.field{display:flex;flex-direction:column;gap:6px;margin:9px 0;flex:1;min-width:130px}
 
-.card.soft{background:var(--panel2)}
+label{font-size:12px;color:var(--muted)}
 
-.stat{font-size:27px;font-weight:900;color:var(--green);margin-top:7px}
-
-.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
-
-.between{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-
-.stack{display:grid;gap:10px}
-
-label{display:block;color:var(--muted);font-size:12px;margin-bottom:5px}
-
-input,select,textarea{width:100%;background:#111713;border:1px solid var(--line);color:var(--text);border-radius:9px;padding:10px;outline:none}
+input,select,textarea{width:100%;background:#101612;color:var(--text);border:1px solid var(--line);border-radius:9px;padding:11px;outline:none}
 
 input:focus,select:focus,textarea:focus{border-color:var(--green)}
 
 textarea{min-height:75px;resize:vertical}
 
-.field{min-width:130px;flex:1}
-
-.btn{border:0;border-radius:9px;padding:10px 14px;background:var(--green);color:#111710;font-weight:800}
+.btn{border:0;border-radius:9px;background:var(--green);color:#14200e;padding:11px 14px;font-weight:800;font-size:12px}
 
 .btn.secondary{background:var(--panel2);border:1px solid var(--line);color:var(--text)}
 
-.btn.danger{background:#512727;color:#ffb1b1}
+.btn.danger{background:#442323;color:#ffaaaa}
 
-.btn.smallbtn{padding:7px 10px;font-size:12px}
+.btn.small{padding:7px 10px;font-size:11px}
 
-.btn:disabled{opacity:.45;cursor:not-allowed}
+.tag{display:inline-block;padding:5px 8px;border-radius:7px;background:#293629;color:var(--green);font-size:11px}
 
-.tag{display:inline-block;border:1px solid var(--line);border-radius:30px;padding:4px 8px;color:var(--muted);font-size:11px}
+.exercise{border:1px solid var(--line);background:#151b16;border-radius:11px;padding:12px;margin:9px 0}
 
-.tag.green{color:var(--green);border-color:#55783c}
+.series{display:grid;grid-template-columns:repeat(4,minmax(60px,1fr));gap:6px;margin:8px 0}
 
-hr{border:0;border-top:1px solid var(--line);margin:15px 0}
+.series input,.series select{padding:8px;font-size:12px;min-width:0}
 
-.empty{padding:25px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:12px}
+table{width:100%;border-collapse:collapse;font-size:12px}
 
-.item{background:var(--panel2);border:1px solid var(--line);border-radius:11px;padding:12px;margin:8px 0}
+th,td{text-align:left;padding:9px 6px;border-bottom:1px solid var(--line)}
 
-.item-title{font-weight:800;margin-bottom:5px}
-
-.table-wrap{overflow-x:auto}
-
-table{border-collapse:collapse;width:100%;min-width:450px}
-
-th,td{text-align:left;padding:9px;border-bottom:1px solid var(--line);font-size:12px}
-
-th{color:var(--muted);font-weight:700}
+th{color:var(--muted)}
 
 .hidden{display:none!important}
 
-.notice{background:#263222;border:1px solid #55783c;color:#d8f4c0;padding:11px;border-radius:10px;margin:10px 0}
+.notice{border-left:3px solid var(--green);padding:10px 12px;background:#202a20;border-radius:7px;color:#c9d5c8;font-size:12px;margin:12px 0}
 
-.warning{background:#392f1d;border:1px solid #715b2e;color:#f5d995;padding:11px;border-radius:10px;margin:10px 0}
+.pill{font-size:10px;padding:4px 7px;border-radius:6px;background:#29332c;color:var(--muted)}
 
-.danger-text{color:var(--red)}
+hr{border:0;border-top:1px solid var(--line);margin:14px 0}
 
-.green-text{color:var(--green)}
+canvas{width:100%;max-height:230px}
 
-.progress-track{height:8px;background:#303b33;border-radius:10px;overflow:hidden}
+.empty{padding:20px;text-align:center;color:var(--muted);font-size:13px}
 
-.progress-fill{height:100%;background:var(--green);border-radius:10px}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 
-.chart-box{width:100%;overflow:hidden}
-
-.chart-box svg{width:100%;height:auto;display:block}
-
-footer{text-align:center;color:var(--muted);font-size:11px;padding:25px 0}
-
-@media(max-width:600px){
-
- .app{padding:12px}
-
- h1{font-size:21px}
-
- .card{padding:13px}
-
- header{align-items:flex-start}
-
- .logo{font-size:17px}
-
- .nav button{padding:9px 11px;font-size:12px}
-
-}
+@media(min-width:700px){main{padding:25px}.series{grid-template-columns:repeat(4,1fr)}}
 
 </style>
 
@@ -156,23 +110,15 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px 0}
 
 <body>
 
-<div class="app">
-
 <header>
 
- <div>
+ <div class="brand">TP <span>TRAINING PLANNER</span></div>
 
-  <div class="logo">TP <span>TRAINING</span> PLANNER</div>
-
-  <div class="subtitle">Planificación · Seguimiento · Progreso</div>
-
- </div>
-
- <span class="tag green">PRO</span>
+ <div class="sub">PLANIFICACIÓN · SEGUIMIENTO · RENDIMIENTO</div>
 
 </header>
 
-<nav class="nav" id="nav">
+<nav id="nav">
 
  <button data-page="inicio" class="active">Inicio</button>
 
@@ -190,21 +136,15 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:25px 0}
 
 </nav>
 
-<main id="root"></main>
+<main id="app"></main>
 
-<footer>TP TRAINING PLANNER · Tu espacio de planificación</footer>
-
-</div>
+<footer>TP TRAINING PLANNER · Tus datos se guardan en este navegador</footer>
 
 <script>
 
 "use strict";
 
-/* ==========================================
-
-   1. ALMACENAMIENTO Y VARIABLES PRINCIPALES
-
-========================================== */
+/* DATOS Y COMPATIBILIDAD */
 
 const KEYS={
 
@@ -216,41 +156,11 @@ const KEYS={
 
 };
 
-function read(key,fallback){
+const read=(key,fallback)=>{
 
- try{
+ try{const v=JSON.parse(localStorage.getItem(key));return v??fallback}catch(e){return fallback}
 
-  const value=localStorage.getItem(key);
-
-  return value?JSON.parse(value):fallback;
-
- }catch(error){
-
-  console.error("Error leyendo almacenamiento:",error);
-
-  return fallback;
-
- }
-
-}
-
-function save(key,value){
-
- try{
-
-  localStorage.setItem(key,JSON.stringify(value));
-
-  return true;
-
- }catch(error){
-
-  alert("No se pudieron guardar los datos. Revisá el espacio disponible del navegador.");
-
-  return false;
-
- }
-
-}
+};
 
 let plans=read(KEYS.plans,[]);
 
@@ -258,947 +168,63 @@ let customExercises=read(KEYS.exercises,[]);
 
 let clients=read(KEYS.clients,[]);
 
-let page="inicio";
+if(!Array.isArray(plans))plans=[];
 
-let selectedPlan=null;
+if(!Array.isArray(customExercises))customExercises=[];
 
-let selectedClient=null;
+if(!Array.isArray(clients))clients=[];
 
-let editingSession=null;
+let page="inicio",selectedPlan=null,selectedClient=null,editingSession=null;
 
-let timerInterval=null;
+let timerInterval=null,timerSeconds=0;
 
-let timerSeconds=0;
+const methods=["Normal","Serie descendente","Descanso-pausa","Superserie","Triserie","Circuito","Pirámide ascendente","Pirámide descendente","Pirámide doble","Repeticiones con pausa","Serie con ayuda"];
 
-const root=document.getElementById("root");
+const seriesTypes=["Efectiva","Aproximación","Descarga"];
 
-function uid(){
+const muscles=["Pectorales","Espalda","Hombros","Bíceps","Tríceps","Cuádriceps","Isquiotibiales","Glúteos","Gemelos","Abdominales","Antebrazos","Cuerpo completo"];
 
- return Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+const equipment=["Peso corporal","Mancuernas","Barra","Máquinas","Poleas","Bandas elásticas","Kettlebell","Otros"];
 
-}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 
-function esc(value){
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 
- return String(value??"").replace(/[&<>"']/g,char=>({
+const save=()=>{
 
-  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ localStorage.setItem(KEYS.plans,JSON.stringify(plans));
 
- }[char]));
+ localStorage.setItem(KEYS.exercises,JSON.stringify(customExercises));
 
-}
+ localStorage.setItem(KEYS.clients,JSON.stringify(clients));
 
-function today(){
+};
 
- const d=new Date();
+const fmt=n=>Number(n||0).toLocaleString("es-AR",{maximumFractionDigits:1});
 
- return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const dateNow=()=>new Date().toISOString().slice(0,10);
 
-}
+const getPlan=id=>plans.find(p=>p.id===id);
 
-function formatDate(value){
+const getClient=id=>clients.find(c=>c.id===id);
 
- if(!value)return "Sin fecha";
+const clone=data=>JSON.parse(JSON.stringify(data));
 
- const parts=String(value).split("-");
+function normalize(){
 
- return parts.length===3?parts[2]+"/"+parts[1]+"/"+parts[0]:value;
+ plans.forEach(p=>{
 
-}
+  p.id=p.id||uid();p.days=Array.isArray(p.days)?p.days:[];
 
-function number(value){
+  p.days.forEach(d=>{
 
- const n=Number(value);
+   d.id=d.id||uid();d.exercises=Array.isArray(d.exercises)?d.exercises:[];
 
- return Number.isFinite(n)?n:0;
+   d.exercises.forEach(e=>{
 
-}
+    e.id=e.id||uid();e.series=Array.isArray(e.series)?e.series:[];
 
-function persistAll(){
-
- save(KEYS.plans,plans);
-
- save(KEYS.exercises,customExercises);
-
- save(KEYS.clients,clients);
-
-}
-
-function normalizeName(value){
-
- return String(value||"").trim().toLocaleLowerCase("es");
-
-}
-
-function effectiveSets(exercise){
-
- return (exercise?.series||[]).filter(set=>set.type==="Efectiva");
-
-}
-
-function totalEffectiveSets(session){
-
- return (session?.exercises||[]).reduce((total,exercise)=>{
-
-  return total+effectiveSets(exercise).length;
-
- },0);
-
-}
-
-function getClient(id){
-
- return clients.find(client=>client.id===id);
-
-}
-
-function getPlan(id){
-
- return plans.find(plan=>plan.id===id);
-
-}
-
-function allExercises(){
-
- return [...customExercises];
-
-}
-
-function navigate(next){
-
- page=next;
-
- selectedPlan=null;
-
- selectedClient=null;
-
- editingSession=null;
-
- render();
-
-}
-
-document.getElementById("nav").addEventListener("click",event=>{
-
- const button=event.target.closest("[data-page]");
-
- if(!button)return;
-
- navigate(button.dataset.page);
-
-});
-
-function setActiveNav(){
-
- document.querySelectorAll("#nav button").forEach(button=>{
-
-  button.classList.toggle("active",button.dataset.page===page);
-
- });
-
-}
-
-/* ==========================================
-
-   2. FUNCIONES GENERALES DE INTERFAZ
-
-========================================== */
-
-function pageTitle(title,description=""){
-
- return `<div class="between">
-
-  <div><h1>${esc(title)}</h1>
-
-  ${description?`<div class="muted">${esc(description)}</div>`:""}</div>
-
- </div>`;
-
-}
-
-function emptyState(message){
-
- return `<div class="empty">${esc(message)}</div>`;
-
-}
-
-function button(label,action,kind=""){
-
- return `<button class="btn ${kind}" data-action="${esc(action)}">${esc(label)}</button>`;
-
-}
-
-function field(label,name,value="",type="text",placeholder=""){
-
- return `<div class="field">
-
-  <label>${esc(label)}</label>
-
-  <input name="${esc(name)}" type="${esc(type)}" value="${esc(value)}" placeholder="${esc(placeholder)}">
-
- </div>`;
-
-}
-
-function selectField(label,name,options,value=""){
-
- return `<div class="field"><label>${esc(label)}</label>
-
- <select name="${esc(name)}">
-
- ${options.map(option=>`<option value="${esc(option)}" ${option===value?"selected":""}>${esc(option)}</option>`).join("")}
-
- </select></div>`;
-
-}
-
-function card(title,content,extra=""){
-
- return `<section class="card">
-
-  <div class="between"><h2>${esc(title)}</h2>${extra}</div>
-
-  ${content}
-
- </section>`;
-
-}
-
-function confirmDelete(message){
-
- return window.confirm(message||"¿Seguro que querés eliminar este elemento?");
-
-}
-
-function downloadFile(filename,content,type="application/json"){
-
- const blob=new Blob([content],{type});
-
- const url=URL.createObjectURL(blob);
-
- const a=document.createElement("a");
-
- a.href=url;
-
- a.download=filename;
-
- a.click();
-
- URL.revokeObjectURL(url);
-
-}
-
-/* ==========================================
-
-   3. INICIO DE LA APLICACIÓN
-
-   Las pantallas y funciones continúan
-
-   en las siguientes partes.
-
-========================================== *//* ==========================================
-
-   3. INICIO Y NAVEGACIÓN DE LA APLICACIÓN
-
-========================================== */
-
-function render(){
-
- setActiveNav();
-
- const pages={
-
-  inicio:homePage,
-
-  planes:plansPage,
-
-  clientes:clientsPage,
-
-  ejercicios:exercisesPage,
-
-  estadisticas:statsPage,
-
-  herramientas:toolsPage,
-
-  datos:dataPage
-
- };
-
- root.innerHTML=(pages[page]||homePage)();
-
-}
-
-function homePage(){
-
- const totalSessions=clients.reduce((n,c)=>n+(c.sessions||[]).length,0);
-
- const totalPlans=plans.length;
-
- const totalSets=clients.reduce((n,c)=>{
-
-  return n+(c.sessions||[]).reduce((s,session)=>s+totalEffectiveSets(session),0);
-
- },0);
-
- return `
-
- ${pageTitle("Inicio","Panel general de TP Training Planner")}
-
- <div class="grid">
-
-  <div class="card">
-
-   <div class="muted">Clientes registrados</div>
-
-   <div class="stat">${clients.length}</div>
-
-  </div>
-
-  <div class="card">
-
-   <div class="muted">Planificaciones</div>
-
-   <div class="stat">${totalPlans}</div>
-
-  </div>
-
-  <div class="card">
-
-   <div class="muted">Entrenamientos registrados</div>
-
-   <div class="stat">${totalSessions}</div>
-
-  </div>
-
-  <div class="card">
-
-   <div class="muted">Series efectivas registradas</div>
-
-   <div class="stat">${totalSets}</div>
-
-  </div>
-
- </div>
-
- ${card("Accesos rápidos",`
-
-  <div class="grid">
-
-   <button class="btn" data-action="go-clients">Ver clientes</button>
-
-   <button class="btn secondary" data-action="go-plans">Crear planificación</button>
-
-   <button class="btn secondary" data-action="go-exercises">Biblioteca de ejercicios</button>
-
-   <button class="btn secondary" data-action="go-stats">Ver estadísticas</button>
-
-  </div>
-
- `)}
-
- ${card("Últimos entrenamientos",recentSessionsHTML())}
-
- ${card("Clientes",clients.length?clients.slice(0,5).map(c=>`
-
-  <div class="item between">
-
-   <div>
-
-    <div class="item-title">${esc(c.name||"Sin nombre")}</div>
-
-    <div class="small muted">${(c.sessions||[]).length} entrenamientos registrados</div>
-
-   </div>
-
-   <button class="btn secondary smallbtn" data-action="open-client" data-id="${esc(c.id)}">Abrir</button>
-
-  </div>
-
- `).join(""):emptyState("Todavía no agregaste clientes.")}
-
- `)}
-
- `;
-
-}
-
-function recentSessionsHTML(){
-
- const sessions=[];
-
- clients.forEach(c=>{
-
-  (c.sessions||[]).forEach(s=>sessions.push({...s,clientName:c.name,clientId:c.id}));
-
- });
-
- sessions.sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
-
- if(!sessions.length)return emptyState("Todavía no hay entrenamientos registrados.");
-
- return sessions.slice(0,5).map(s=>`
-
-  <div class="item between">
-
-   <div>
-
-    <div class="item-title">${esc(s.clientName||"Cliente")} · ${esc(s.dayName||"Entrenamiento")}</div>
-
-    <div class="small muted">${formatDate(s.date)} · ${s.exercises?.length||0} ejercicios</div>
-
-   </div>
-
-   <button class="btn secondary smallbtn" data-action="open-session" data-client="${esc(s.clientId)}" data-id="${esc(s.id)}">Ver</button>
-
-  </div>
-
- `).join("");
-
-}
-
-/* ==========================================
-
-   4. PLANIFICACIONES
-
-========================================== */
-
-function plansPage(){
-
- if(selectedPlan){
-
-  const plan=getPlan(selectedPlan);
-
-  if(plan)return planEditorPage(plan);
-
-  selectedPlan=null;
-
- }
-
- return `
-
- ${pageTitle("Planificaciones","Creá y organizá tus rutinas de entrenamiento.")}
-
- <div class="row" style="margin-bottom:14px">
-
-  <button class="btn" data-action="new-plan">+ Nueva planificación</button>
-
- </div>
-
- ${plans.length?plans.map(p=>`
-
-  <div class="card">
-
-   <div class="between">
-
-    <div>
-
-     <h2>${esc(p.name||"Plan sin nombre")}</h2>
-
-     <div class="muted small">${(p.days||[]).length} días de entrenamiento</div>
-
-     ${p.description?`<p class="small">${esc(p.description)}</p>`:""}
-
-    </div>
-
-    <div class="row">
-
-     <button class="btn secondary smallbtn" data-action="edit-plan" data-id="${esc(p.id)}">Editar</button>
-
-     <button class="btn danger smallbtn" data-action="delete-plan" data-id="${esc(p.id)}">Eliminar</button>
-
-    </div>
-
-   </div>
-
-   ${(p.days||[]).map((d,i)=>`
-
-    <div class="item">
-
-     <div class="item-title">Día ${i+1}: ${esc(d.name||"Sin nombre")}</div>
-
-     <div class="small muted">${(d.exercises||[]).length} ejercicios</div>
-
-    </div>
-
-   `).join("")}
-
-  </div>
-
- `).join(""):emptyState("Todavía no creaste planificaciones.")}
-
- `;
-
-}
-
-function planEditorPage(plan){
-
- return `
-
- ${pageTitle(plan.id?"Editar planificación":"Nueva planificación")}
-
- <div class="card">
-
-  <div class="stack">
-
-   <div>
-
-    <label>Nombre de la planificación</label>
-
-    <input id="plan-name" value="${esc(plan.name||"")}" placeholder="Ej. Fuerza e hipertrofia">
-
-   </div>
-
-   <div>
-
-    <label>Descripción</label>
-
-    <textarea id="plan-description" placeholder="Objetivo y características">${esc(plan.description||"")}</textarea>
-
-   </div>
-
-  </div>
-
-  <hr>
-
-  <div class="between">
-
-   <h2>Días de entrenamiento</h2>
-
-   <button class="btn smallbtn" data-action="add-day" data-id="${esc(plan.id)}">+ Agregar día</button>
-
-  </div>
-
-  ${(plan.days||[]).map((day,index)=>`
-
-   <div class="item">
-
-    <div class="between">
-
-     <strong>Día ${index+1}</strong>
-
-     <button class="btn danger smallbtn" data-action="delete-day" data-plan="${esc(plan.id)}" data-index="${index}">Eliminar día</button>
-
-    </div>
-
-    <label>Nombre del día</label>
-
-    <input class="day-name" data-index="${index}" value="${esc(day.name||"")}" placeholder="Ej. Tren inferior">
-
-    <div class="between" style="margin-top:12px">
-
-     <span class="small muted">${(day.exercises||[]).length} ejercicios</span>
-
-     <button class="btn secondary smallbtn" data-action="add-plan-exercise" data-plan="${esc(plan.id)}" data-index="${index}">+ Agregar ejercicio</button>
-
-    </div>
-
-    ${(day.exercises||[]).map((ex,j)=>`
-
-     <div class="item">
-
-      <div class="between">
-
-       <div>
-
-        <strong>${esc(ex.name||"Ejercicio")}</strong>
-
-        <div class="small muted">${esc(ex.muscle||"Sin grupo muscular")}</div>
-
-       </div>
-
-       <button class="btn danger smallbtn" data-action="remove-plan-exercise" data-plan="${esc(plan.id)}" data-day="${index}" data-index="${j}">Quitar</button>
-
-      </div>
-
-      <div class="grid">
-
-       <div class="field"><label>Series</label><input type="number" min="1" class="plan-ex-series" data-day="${index}" data-index="${j}" value="${number(ex.sets)||3}"></div>
-
-       <div class="field"><label>Repeticiones</label><input class="plan-ex-reps" data-day="${index}" data-index="${j}" value="${esc(ex.reps||"8-12")}"></div>
-
-       <div class="field"><label>Descanso (seg.)</label><input type="number" min="0" class="plan-ex-rest" data-day="${index}" data-index="${j}" value="${number(ex.rest)||90}"></div>
-
-       <div class="field"><label>RIR objetivo</label><input type="number" min="0" max="5" class="plan-ex-rir" data-day="${index}" data-index="${j}" value="${ex.rir??2}"></div>
-
-      </div>
-
-     </div>
-
-    `).join("")}
-
-   </div>
-
-  `).join("")}
-
-  <div class="row">
-
-   <button class="btn" data-action="save-plan" data-id="${esc(plan.id)}">Guardar planificación</button>
-
-   <button class="btn secondary" data-action="cancel-plan">Volver</button>
-
-  </div>
-
- </div>
-
- `;
-
-}
-
-/* ==========================================
-
-   5. CLIENTES
-
-========================================== */
-
-function clientsPage(){
-
- if(selectedClient){
-
-  const client=getClient(selectedClient);
-
-  if(client)return clientProfilePage(client);
-
-  selectedClient=null;
-
- }
-
- return `
-
- ${pageTitle("Clientes","Administrá sus planificaciones y evolución.")}
-
- <div class="row" style="margin-bottom:14px">
-
-  <button class="btn" data-action="new-client">+ Agregar cliente</button>
-
- </div>
-
- ${clients.length?clients.map(c=>`
-
-  <div class="card">
-
-   <div class="between">
-
-    <div>
-
-     <h2>${esc(c.name||"Sin nombre")}</h2>
-
-     <div class="small muted">${esc(c.goal||"Sin objetivo definido")}</div>
-
-     <div class="small muted">${(c.sessions||[]).length} entrenamientos · ${(c.evaluations||[]).length} evaluaciones</div>
-
-    </div>
-
-    <div class="row">
-
-     <button class="btn smallbtn" data-action="open-client" data-id="${esc(c.id)}">Abrir perfil</button>
-
-     <button class="btn danger smallbtn" data-action="delete-client" data-id="${esc(c.id)}">Eliminar</button>
-
-    </div>
-
-   </div>
-
-  </div>
-
- `).join(""):emptyState("Todavía no agregaste clientes.")}
-
- `;
-
-}
-
-function clientProfilePage(c){
-
- const assignedPlan=c.trainingPlan;
-
- const sessions=(c.sessions||[]).slice().sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
-
- const evaluations=(c.evaluations||[]).slice().sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
-
- return `
-
- ${pageTitle(c.name||"Cliente","Perfil y seguimiento individual")}
-
- <div class="row" style="margin-bottom:12px">
-
-  <button class="btn secondary" data-action="back-clients">← Volver a clientes</button>
-
-  <button class="btn secondary" data-action="edit-client" data-id="${esc(c.id)}">Editar datos</button>
-
- </div>
-
- <div class="grid">
-
-  <div class="card">
-
-   <div class="muted small">Objetivo</div>
-
-   <h2>${esc(c.goal||"Sin definir")}</h2>
-
-  </div>
-
-  <div class="card">
-
-   <div class="muted small">Entrenamientos</div>
-
-   <div class="stat">${sessions.length}</div>
-
-  </div>
-
-  <div class="card">
-
-   <div class="muted small">Evaluaciones</div>
-
-   <div class="stat">${evaluations.length}</div>
-
-  </div>
-
- </div>
-
- ${card("Datos del cliente",`
-
-  <div class="grid">
-
-   <div><span class="muted small">Edad</span><div>${esc(c.age||"No registrada")}</div></div>
-
-   <div><span class="muted small">Actividad</span><div>${esc(c.activity||"No registrada")}</div></div>
-
-   <div><span class="muted small">Observaciones</span><div>${esc(c.notes||"Sin observaciones")}</div></div>
-
-  </div>
-
- `)}
-
- ${card("Planificación individual",`
-
-  <div class="muted small">Esta planificación pertenece a este cliente y puede modificarse sin alterar la planificación general.</div>
-
-  ${assignedPlan?`
-
-   <div class="item">
-
-    <strong>${esc(assignedPlan.name||"Plan individual")}</strong>
-
-    <div class="small muted">${(assignedPlan.days||[]).length} días</div>
-
-   </div>
-
-   <button class="btn" data-action="edit-client-plan" data-id="${esc(c.id)}">Editar rutina del cliente</button>
-
-  `:`
-
-   <p class="muted">Todavía no tiene una planificación asignada.</p>
-
-   <button class="btn" data-action="assign-plan" data-id="${esc(c.id)}">Asignar planificación</button>
-
-  `}
-
- `)}
-
- ${card("Registrar entrenamiento",`
-
-  <p class="muted small">Elegí un día de su planificación para registrar los ejercicios y las series realizadas.</p>
-
-  <button class="btn" data-action="new-session" data-id="${esc(c.id)}" ${assignedPlan?"":"disabled"}>+ Nuevo entrenamiento</button>
-
- `)}
-
- ${card("Evaluaciones",`
-
-  <div class="grid">
-
-   <div class="field"><label>Fecha</label><input id="evaluation-date" type="date" value="${today()}"></div>
-
-   <div class="field"><label>Peso corporal (kg)</label><input id="evaluation-weight" type="number" min="0" step="0.1" placeholder="Ej. 70.5"></div>
-
-  </div>
-
-  <div style="margin-top:10px">
-
-   <label>Observaciones</label>
-
-   <textarea id="evaluation-note" placeholder="Anotaciones de la evaluación"></textarea>
-
-  </div>
-
-  <button class="btn" style="margin-top:10px" data-action="save-evaluation" data-id="${esc(c.id)}">Guardar evaluación</button>
-
-  <hr>
-
-  ${evaluations.length?evaluations.map(e=>`
-
-   <div class="item between">
-
-    <div>
-
-     <strong>${formatDate(e.date)}</strong>
-
-     <div class="small muted">${e.weight!==undefined&&e.weight!==""?esc(e.weight)+" kg":""} ${esc(e.note||"")}</div>
-
-    </div>
-
-    <button class="btn danger smallbtn" data-action="delete-evaluation" data-client="${esc(c.id)}" data-id="${esc(e.id)}">Eliminar</button>
-
-   </div>
-
-  `).join(""):emptyState("Todavía no hay evaluaciones.")}
-
- `)}
-
- ${card("Historial de entrenamientos",`
-
-  ${sessions.length?sessions.map(s=>`
-
-   <div class="item between">
-
-    <div>
-
-     <strong>${formatDate(s.date)} · ${esc(s.dayName||"Entrenamiento")}</strong>
-
-     <div class="small muted">${s.exercises?.length||0} ejercicios · ${totalEffectiveSets(s)} series efectivas</div>
-
-    </div>
-
-    <div class="row">
-
-     <button class="btn secondary smallbtn" data-action="open-session" data-client="${esc(c.id)}" data-id="${esc(s.id)}">Ver</button>
-
-     <button class="btn danger smallbtn" data-action="delete-session" data-client="${esc(c.id)}" data-id="${esc(s.id)}">Eliminar</button>
-
-    </div>
-
-   </div>
-
-  `).join(""):emptyState("Todavía no hay entrenamientos registrados.")}
-
- `)}
-
- `;
-
-}
-
-/* ==========================================
-
-   6. BIBLIOTECA DE EJERCICIOS
-
-========================================== */
-
-function exercisesPage(){
-
- const groups=["Todos","Pectoral","Espalda","Hombros","Bíceps","Tríceps","Cuádriceps","Isquiosurales","Glúteos","Pantorrillas","Core","Otros"];
-
- const exercises=allExercises();
-
- return `
-
- ${pageTitle("Ejercicios","Tu biblioteca personal de ejercicios.")}
-
- <div class="card">
-
-  <div class="grid">
-
-   <div class="field">
-
-    <label>Buscar ejercicio</label>
-
-    <input id="exercise-search" placeholder="Escribí un nombre...">
-
-   </div>
-
-   <div class="field">
-
-    <label>Grupo muscular</label>
-
-    <select id="exercise-filter">
-
-     ${groups.map(g=>`<option>${g}</option>`).join("")}
-
-    </select>
-
-   </div>
-
-  </div>
-
-  <div class="row" style="margin-top:12px">
-
-   <button class="btn" data-action="new-exercise">+ Crear ejercicio</button>
-
-  </div>
-
- </div>
-
- <div id="exercise-results">
-
-  ${exerciseListHTML(exercises)}
-
- </div>
-
- `;
-
-}
-
-function exerciseListHTML(exercises){
-
- if(!exercises.length)return emptyState("No hay ejercicios para mostrar.");
-
- return exercises.map(ex=>`
-
-  <div class="item between">
-
-   <div>
-
-    <div class="item-title">${esc(ex.name)}</div>
-
-    <div class="small muted">${esc(ex.muscle||"Sin grupo muscular")}</div>
-
-    ${ex.description?`<div class="small muted">${esc(ex.description)}</div>`:""}
-
-   </div>
-
-   ${ex.custom?`
-
-    <div class="row">
-
-     <button class="btn secondary smallbtn" data-action="edit-exercise" data-id="${esc(ex.id)}">Editar</button>
-
-     <button class="btn danger smallbtn" data-action="delete-exercise" data-id="${esc(ex.id)}">Eliminar</button>
-
-    </div>
-
-   `:`<span class="tag">Biblioteca</span>`}
-
-  </div>
-
- `).join("");
-
-}
-
-/* ==========================================
-
-   7. ESTADÍSTICAS GENERALES
-
-========================================== */
-
-function statsPage(){
-
- const muscleTotals={};
-
- let totalSessions=0;
-
- let totalEffective=0;
-
- clients.forEach(c=>{
-
-  (c.sessions||[]).forEach(s=>{
-
-   totalSessions++;
-
-   (s.exercises||[]).forEach(ex=>{
-
-    const muscle=ex.muscle||"Otros";
-
-    muscleTotals[muscle]=(muscleTotals[muscle]||0)+effectiveSets(ex).length;
-
-    totalEffective+=effectiveSets(ex).length;
+    e.series=e.series.map(s=>({...s,type:s.type||"Efectiva"}));
 
    });
 
@@ -1206,1915 +232,1173 @@ function statsPage(){
 
  });
 
- const muscles=Object.entries(muscleTotals).sort((a,b)=>b[1]-a[1]);
+ clients.forEach(c=>{
 
- return `
+  c.id=c.id||uid();
 
- ${pageTitle("Estadísticas","Resumen del trabajo registrado.")}
+  c.sessions=Array.isArray(c.sessions)?c.sessions:[];
 
- <div class="grid">
+  c.evaluations=Array.isArray(c.evaluations)?c.evaluations:[];
 
-  <div class="card"><div class="muted">Clientes</div><div class="stat">${clients.length}</div></div>
+  /* Compatibilidad con clientes de versiones anteriores */
 
-  <div class="card"><div class="muted">Entrenamientos</div><div class="stat">${totalSessions}</div></div>
+  if(c.trainingPlan&&Array.isArray(c.trainingPlan.days)){
 
-  <div class="card"><div class="muted">Series efectivas</div><div class="stat">${totalEffective}</div></div>
+   c.trainingPlan.days.forEach(d=>{
 
- </div>
+    d.id=d.id||uid();d.exercises=Array.isArray(d.exercises)?d.exercises:[];
 
- ${card("Series efectivas por grupo muscular",muscles.length?muscles.map(([muscle,total])=>`
+    d.exercises.forEach(e=>{
 
-  <div class="item">
+     e.id=e.id||uid();e.series=Array.isArray(e.series)?e.series:[];
 
-   <div class="between"><strong>${esc(muscle)}</strong><strong>${total}</strong></div>
+     e.series=e.series.map(s=>({...s,type:s.type||"Efectiva"}));
 
-   <div class="progress-track" style="margin-top:8px">
+    });
 
-    <div class="progress-fill" style="width:${Math.max(2,total/Math.max(...muscles.map(x=>x[1]))*100)}%"></div>
+   });
 
-   </div>
+  }
 
-  </div>
+ });
 
- `).join(""):emptyState("Todavía no hay series registradas.")}
-
- `)}
-
- ${card("Progreso individual",`
-
-  <div class="field">
-
-   <label>Seleccionar cliente</label>
-
-   <select id="stats-client">
-
-    <option value="">Seleccioná un cliente</option>
-
-    ${clients.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join("")}
-
-   </select>
-
-  </div>
-
-  <div id="client-stats-results" class="muted small" style="margin-top:12px">Elegí un cliente para consultar sus datos.</div>
-
- `)}
-
- `;
+ save();
 
 }
 
-/* ==========================================
+normalize();
 
-   8. FIN DE LA PARTE 2
+/* CADA CLIENTE TIENE SU PROPIA COPIA DE LA PLANIFICACIÓN */
 
-   La parte 3 continúa con los formularios,
+function ensureClientPlan(c){
 
-   el registro de entrenamientos y el historial.
+ if(!c)return null;
 
-========================================== *//* ==========================================
+ if(c.trainingPlan&&Array.isArray(c.trainingPlan.days))return c.trainingPlan;
 
-   9. FORMULARIOS DE CLIENTES
+ const original=getPlan(c.planId);
 
-========================================== */
+ if(original){
 
-function newClientForm(client=null){
+  c.trainingPlan=clone(original);
 
- const editing=!!client;
+  c.trainingPlan.id=uid();
 
- root.innerHTML=`
+  c.trainingPlan.sourcePlanId=original.id;
 
- ${pageTitle(editing?"Editar cliente":"Nuevo cliente")}
+  save();
 
- <div class="card stack">
-
-  <div><label>Nombre y apellido</label><input id="client-name" value="${esc(client?.name||"")}" placeholder="Nombre del cliente"></div>
-
-  <div class="grid">
-
-   <div class="field"><label>Edad</label><input id="client-age" type="number" min="1" value="${esc(client?.age||"")}"></div>
-
-   <div class="field"><label>Objetivo</label><input id="client-goal" value="${esc(client?.goal||"")}" placeholder="Ej. Fuerza, salud, rendimiento"></div>
-
-  </div>
-
-  <div><label>Actividad habitual</label><input id="client-activity" value="${esc(client?.activity||"")}"></div>
-
-  <div><label>Observaciones</label><textarea id="client-notes">${esc(client?.notes||"")}</textarea></div>
-
-  <div class="row">
-
-   <button class="btn" data-action="save-client" data-id="${esc(client?.id||"")}">Guardar cliente</button>
-
-   <button class="btn secondary" data-action="cancel-client">Cancelar</button>
-
-  </div>
-
- </div>`;
-
-}
-
-function saveClient(id=""){
-
- const name=document.getElementById("client-name").value.trim();
-
- if(!name)return alert("Ingresá el nombre del cliente.");
-
- const data={
-
-  name,
-
-  age:document.getElementById("client-age").value,
-
-  goal:document.getElementById("client-goal").value.trim(),
-
-  activity:document.getElementById("client-activity").value.trim(),
-
-  notes:document.getElementById("client-notes").value.trim()
-
- };
-
- if(id){
-
-  const c=getClient(id);
-
-  if(c)Object.assign(c,data);
-
- }else{
-
-  clients.push({
-
-   id:uid(),...data,trainingPlan:null,sessions:[],evaluations:[]
-
-  });
+  return c.trainingPlan;
 
  }
 
- persistAll();
-
- selectedClient=id||clients[clients.length-1].id;
-
- page="clientes";
-
- render();
+ return null;
 
 }
 
-/* ==========================================
-
-   10. CREACIÓN Y EDICIÓN DE EJERCICIOS
-
-========================================== */
-
-function exerciseForm(exercise=null){
-
- root.innerHTML=`
-
- ${pageTitle(exercise?"Editar ejercicio":"Nuevo ejercicio")}
-
- <div class="card stack">
-
-  <div><label>Nombre del ejercicio</label><input id="custom-ex-name" value="${esc(exercise?.name||"")}" placeholder="Ej. Sentadilla búlgara"></div>
-
-  <div class="field">
-
-   <label>Grupo muscular</label>
-
-   <select id="custom-ex-muscle">
-
-    ${["Pectoral","Espalda","Hombros","Bíceps","Tríceps","Cuádriceps","Isquiosurales","Glúteos","Pantorrillas","Core","Otros"].map(m=>`<option ${exercise?.muscle===m?"selected":""}>${m}</option>`).join("")}
-
-   </select>
-
-  </div>
-
-  <div><label>Descripción o indicaciones</label><textarea id="custom-ex-description">${esc(exercise?.description||"")}</textarea></div>
-
-  <div class="row">
-
-   <button class="btn" data-action="save-exercise" data-id="${esc(exercise?.id||"")}">Guardar ejercicio</button>
-
-   <button class="btn secondary" data-action="cancel-exercise">Cancelar</button>
-
-  </div>
-
- </div>`;
-
-}
-
-function saveExercise(id=""){
-
- const name=document.getElementById("custom-ex-name").value.trim();
-
- if(!name)return alert("Ingresá el nombre del ejercicio.");
-
- const data={
-
-  name,
-
-  muscle:document.getElementById("custom-ex-muscle").value,
-
-  description:document.getElementById("custom-ex-description").value.trim(),
-
-  custom:true
-
- };
-
- if(id){
-
-  const ex=customExercises.find(x=>x.id===id);
-
-  if(ex)Object.assign(ex,data);
-
- }else{
-
-  customExercises.push({id:uid(),...data});
-
- }
-
- persistAll();
-
- page="ejercicios";
-
- render();
-
-}
-
-/* ==========================================
-
-   11. ASIGNACIÓN Y EDICIÓN DE RUTINAS
-
-========================================== */
-
-function assignPlan(clientId){
-
- const c=getClient(clientId);
+function assignPlanToClient(c,planId){
 
  if(!c)return;
 
- if(!plans.length)return alert("Primero tenés que crear una planificación.");
+ if(!planId){
 
- const options=plans.map((p,i)=>`${i+1}. ${p.name}`).join("\n");
+  c.planId=null;
 
- const answer=prompt("Elegí una planificación escribiendo su número:\n"+options);
+  c.trainingPlan=null;
 
- if(answer===null)return;
+  save();
 
- const index=Number(answer)-1;
+  return;
 
- if(!plans[index])return alert("Número incorrecto.");
+ }
 
- c.trainingPlan=JSON.parse(JSON.stringify(plans[index]));
+ const original=getPlan(planId);
+
+ if(!original)return;
+
+ c.planId=original.id;
+
+ c.trainingPlan=clone(original);
 
  c.trainingPlan.id=uid();
 
- persistAll();
+ c.trainingPlan.sourcePlanId=original.id;
 
- selectedClient=clientId;
-
- page="clientes";
-
- render();
+ save();
 
 }
 
-function editClientPlan(clientId){
+function pageTitle(title,desc=""){
 
- const c=getClient(clientId);
-
- if(!c||!c.trainingPlan)return;
-
- selectedClient=clientId;
-
- selectedPlan=c.trainingPlan.id;
-
- root.innerHTML=planEditorPage(c.trainingPlan);
+ return `<div class="between"><div><h1>${title}</h1><p>${desc}</p></div></div>`;
 
 }
 
-function savePlan(id){
+function field(label,name,value="",type="text",extra=""){
 
- const name=document.getElementById("plan-name").value.trim();
-
- if(!name)return alert("Ingresá un nombre para la planificación.");
-
- const existing=getPlan(id);
-
- const client=clients.find(c=>c.trainingPlan?.id===id);
-
- const plan=client?client.trainingPlan:existing;
-
- if(!plan)return;
-
- plan.name=name;
-
- plan.description=document.getElementById("plan-description").value.trim();
-
- document.querySelectorAll(".day-name").forEach(input=>{
-
-  const index=Number(input.dataset.index);
-
-  if(plan.days[index])plan.days[index].name=input.value.trim();
-
- });
-
- document.querySelectorAll(".plan-ex-series").forEach(input=>{
-
-  const day=Number(input.dataset.day),index=Number(input.dataset.index);
-
-  const ex=plan.days[day]?.exercises[index];
-
-  if(ex)ex.sets=Math.max(1,number(input.value));
-
- });
-
- document.querySelectorAll(".plan-ex-reps").forEach(input=>{
-
-  const ex=plan.days[Number(input.dataset.day)]?.exercises[Number(input.dataset.index)];
-
-  if(ex)ex.reps=input.value;
-
- });
-
- document.querySelectorAll(".plan-ex-rest").forEach(input=>{
-
-  const ex=plan.days[Number(input.dataset.day)]?.exercises[Number(input.dataset.index)];
-
-  if(ex)ex.rest=number(input.value);
-
- });
-
- document.querySelectorAll(".plan-ex-rir").forEach(input=>{
-
-  const ex=plan.days[Number(input.dataset.day)]?.exercises[Number(input.dataset.index)];
-
-  if(ex)ex.rir=number(input.value);
-
- });
-
- persistAll();
-
- selectedPlan=null;
-
- page=client?"clientes":"planes";
-
- render();
+ return `<div class="field"><label>${label}</label><input type="${type}" name="${name}" value="${esc(value)}" ${extra}></div>`;
 
 }
 
-function addDay(planId){
+function selectField(label,name,arr,value=""){
 
- const client=clients.find(c=>c.trainingPlan?.id===planId);
-
- const plan=client?client.trainingPlan:getPlan(planId);
-
- if(!plan)return;
-
- plan.days=plan.days||[];
-
- plan.days.push({id:uid(),name:"Nuevo día",exercises:[]});
-
- persistAll();
-
- render();
+ return `<div class="field"><label>${label}</label><select name="${name}">${arr.map(x=>`<option ${x===value?"selected":""}>${esc(x)}</option>`).join("")}</select></div>`;
 
 }
 
-function addPlanExercise(planId,dayIndex){
+function options(arr){return arr.map(x=>`<option>${esc(x)}</option>`).join("")}
 
- const client=clients.find(c=>c.trainingPlan?.id===planId);
+function render(){
 
- const plan=client?client.trainingPlan:getPlan(planId);
+ save();
 
- if(!plan)return;
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page===page));
 
- const name=prompt("Nombre del ejercicio:");
+ const root=document.getElementById("app");
 
- if(!name?.trim())return;
+ const pages={inicio,planes:pagePlans,clientes:pageClients,ejercicios:pageExercises,estadisticas,herramientas,datos};
 
- const muscle=prompt("Grupo muscular:","Otros")||"Otros";
+ root.innerHTML=(pages[page]||inicio)();
 
- plan.days[dayIndex].exercises.push({
+ if(page==="ejercicios")updateExerciseResults();
 
-  id:uid(),name:name.trim(),muscle,sets:3,reps:"8-12",rest:90,rir:2
-
- });
-
- persistAll();
-
- render();
+ if(page==="herramientas")updateCalculators();
 
 }
 
-/* ==========================================
+/* INICIO */
 
-   12. REGISTRO DE ENTRENAMIENTOS
+function inicio(){
 
-========================================== */
+ const sessions=clients.reduce((n,c)=>n+c.sessions.length,0);
 
-function startNewSession(clientId){
+ const totalEffective=clients.reduce((n,c)=>n+c.sessions.reduce((a,s)=>a+s.exercises.reduce((b,e)=>b+e.series.filter(x=>x.type==="Efectiva").length,0),0),0);
 
- const c=getClient(clientId);
+ return `${pageTitle("Panel principal","Resumen de tu actividad como entrenador.")}
 
- if(!c?.trainingPlan)return;
+ <div class="grid">
 
- const days=c.trainingPlan.days||[];
+  <div class="card"><div class="statlabel">Clientes</div><div class="stat">${clients.length}</div></div>
 
- if(!days.length)return alert("La planificación no tiene días.");
+  <div class="card"><div class="statlabel">Planificaciones</div><div class="stat">${plans.length}</div></div>
 
- const options=days.map((d,i)=>`${i+1}. ${d.name}`).join("\n");
+  <div class="card"><div class="statlabel">Entrenamientos registrados</div><div class="stat">${sessions}</div></div>
 
- const answer=prompt("Elegí el día que vas a registrar:\n"+options);
-
- if(answer===null)return;
-
- const index=Number(answer)-1;
-
- const day=days[index];
-
- if(!day)return alert("Día incorrecto.");
-
- editingSession={
-
-  id:uid(),
-
-  clientId,
-
-  date:today(),
-
-  planId:c.trainingPlan.id,
-
-  dayName:day.name,
-
-  notes:"",
-
-  exercises:(day.exercises||[]).map(ex=>({
-
-   id:uid(),
-
-   name:ex.name,
-
-   muscle:ex.muscle||"Otros",
-
-   block:"",
-
-   rest:ex.rest||90,
-
-   tempo:"",
-
-   technique:"Normal",
-
-   notes:"",
-
-   series:Array.from({length:Math.max(1,number(ex.sets)||3)},()=>({
-
-    weight:0,reps:0,rir:2,type:"Efectiva"
-
-   }))
-
-  }))
-
- };
-
- sessionEditorPage();
-
-}
-
-function sessionEditorPage(){
-
- if(!editingSession)return;
-
- const s=editingSession;
-
- root.innerHTML=`
-
- ${pageTitle("Registrar entrenamiento",s.dayName)}
-
- <div class="card">
-
-  <div class="grid">
-
-   <div class="field"><label>Fecha</label><input id="session-date" type="date" value="${esc(s.date)}"></div>
-
-   <div class="field"><label>Nombre del día</label><input id="session-day" value="${esc(s.dayName)}"></div>
-
-  </div>
-
-  <label style="margin-top:10px">Observaciones generales</label>
-
-  <textarea id="session-notes">${esc(s.notes||"")}</textarea>
+  <div class="card"><div class="statlabel">Series efectivas registradas</div><div class="stat">${totalEffective}</div></div>
 
  </div>
 
- ${s.exercises.map((ex,i)=>`
+ <div class="card"><h2>Accesos rápidos</h2><div class="row">
 
-  <div class="card">
+  <button class="btn" data-action="new-plan">+ Nueva planificación</button>
 
-   <div class="between">
+  <button class="btn secondary" data-action="new-client">+ Nuevo cliente</button>
 
-    <h2>${esc(ex.name)}</h2>
+  <button class="btn secondary" data-page="herramientas">Herramientas</button>
 
-    <span class="tag">${esc(ex.muscle)}</span>
+ </div></div>
 
-   </div>
+ <div class="card"><h2>Últimos entrenamientos</h2>${recentSessions()}</div>
 
-   <div class="grid">
-
-    <div class="field"><label>Descanso (seg.)</label><input type="number" data-ex="${i}" data-prop="rest" value="${number(ex.rest)}"></div>
-
-    <div class="field"><label>Tempo</label><input data-ex="${i}" data-prop="tempo" value="${esc(ex.tempo||"")}" placeholder="Ej. 3-1-1"></div>
-
-    <div class="field"><label>Técnica</label>
-
-     <select data-ex="${i}" data-prop="technique">
-
-      ${["Normal","Serie descendente","Descanso-pausa","Superserie","Triserie","Circuito","Pirámide ascendente","Pirámide descendente","Pirámide doble","Repeticiones con pausa","Serie con ayuda"].map(t=>`<option ${ex.technique===t?"selected":""}>${t}</option>`).join("")}
-
-     </select>
-
-    </div>
-
-   </div>
-
-   <div class="table-wrap">
-
-    <table>
-
-     <thead><tr><th>Serie</th><th>Carga</th><th>Reps.</th><th>RIR</th><th>Tipo</th><th></th></tr></thead>
-
-     <tbody>
-
-      ${ex.series.map((set,j)=>`
-
-       <tr>
-
-        <td>${j+1}</td>
-
-        <td><input style="min-width:65px" type="number" min="0" step="0.5" data-ex="${i}" data-set="${j}" data-prop="weight" value="${number(set.weight)}"></td>
-
-        <td><input style="min-width:55px" type="number" min="0" data-ex="${i}" data-set="${j}" data-prop="reps" value="${number(set.reps)}"></td>
-
-        <td><input style="min-width:48px" type="number" min="0" max="10" data-ex="${i}" data-set="${j}" data-prop="rir" value="${number(set.rir)}"></td>
-
-        <td><select data-ex="${i}" data-set="${j}" data-prop="type">
-
-         ${["Efectiva","Aproximación","Descarga"].map(t=>`<option ${set.type===t?"selected":""}>${t}</option>`).join("")}
-
-        </select></td>
-
-        <td><button class="btn danger smallbtn" data-action="remove-set" data-ex="${i}" data-set="${j}">×</button></td>
-
-       </tr>
-
-      `).join("")}
-
-     </tbody>
-
-    </table>
-
-   </div>
-
-   <button class="btn secondary smallbtn" data-action="add-set" data-ex="${i}">+ Agregar serie</button>
-
-  </div>
-
- `).join("")}
-
- <div class="card">
-
-  <div class="row">
-
-   <button class="btn" data-action="save-session">Guardar entrenamiento</button>
-
-   <button class="btn secondary" data-action="cancel-session">Cancelar</button>
-
-  </div>
-
- </div>
-
- `;
+ <div class="notice">Los datos se guardan en este navegador. Exportá copias de seguridad periódicamente para evitar perder información.</div>`;
 
 }
 
-function saveSession(){
+function recentSessions(){
 
- if(!editingSession)return;
+ let all=[];
 
- const c=getClient(editingSession.clientId);
+ clients.forEach(c=>c.sessions.forEach(s=>all.push({...s,clientName:c.name})));
 
- if(!c)return;
+ all.sort((a,b)=>(b.date||"").localeCompare(a.date||""));
 
- editingSession.date=document.getElementById("session-date").value||today();
+ if(!all.length)return `<div class="empty">Todavía no hay entrenamientos registrados.</div>`;
 
- editingSession.dayName=document.getElementById("session-day").value.trim();
-
- editingSession.notes=document.getElementById("session-notes").value.trim();
-
- c.sessions=c.sessions||[];
-
- c.sessions.push(JSON.parse(JSON.stringify(editingSession)));
-
- selectedClient=c.id;
-
- editingSession=null;
-
- persistAll();
-
- page="clientes";
-
- render();
+ return all.slice(0,5).map(s=>`<div class="between"><div><b>${esc(s.clientName)}</b><div class="muted">${esc(s.dayName||"Entrenamiento")} · ${esc(s.date||"")}</div></div><span class="tag">${s.exercises?.length||0} ejercicios</span></div><hr>`).join("");
 
 }
 
-function viewSession(clientId,sessionId){
+/* PLANIFICACIONES GENERALES */
 
- const c=getClient(clientId);
+function pagePlans(){
 
- const s=c?.sessions?.find(x=>x.id===sessionId);
+ if(selectedPlan){
 
- if(!c||!s)return;
+  const p=getPlan(selectedPlan);
 
- root.innerHTML=`
+  if(!p){selectedPlan=null;return pagePlans()}
 
- ${pageTitle("Detalle del entrenamiento",formatDate(s.date))}
-
- <div class="row">
-
-  <button class="btn secondary" data-action="open-client" data-id="${esc(c.id)}">← Volver al cliente</button>
-
- </div>
-
- <div class="card">
-
-  <h2>${esc(s.dayName||"Entrenamiento")}</h2>
-
-  <p class="muted">${esc(s.notes||"Sin observaciones")}</p>
-
-  <div class="grid">
-
-   <div><span class="muted small">Ejercicios</span><div class="stat">${s.exercises?.length||0}</div></div>
-
-   <div><span class="muted small">Series efectivas</span><div class="stat">${totalEffectiveSets(s)}</div></div>
-
-  </div>
-
- </div>
-
- ${(s.exercises||[]).map(ex=>`
-
-  <div class="card">
-
-   <h2>${esc(ex.name)}</h2>
-
-   <div class="small muted">${esc(ex.muscle||"Otros")} · ${esc(ex.technique||"Normal")}</div>
-
-   <div class="table-wrap">
-
-    <table>
-
-     <thead><tr><th>Serie</th><th>Carga</th><th>Reps.</th><th>RIR</th><th>Tipo</th></tr></thead>
-
-     <tbody>${(ex.series||[]).map((set,i)=>`
-
-      <tr><td>${i+1}</td><td>${number(set.weight)} kg</td><td>${number(set.reps)}</td><td>${number(set.rir)}</td><td>${esc(set.type||"Efectiva")}</td></tr>
-
-     `).join("")}</tbody>
-
-    </table>
-
-   </div>
-
-  </div>
-
- `).join("")}
-
- `;
-
-}
-
-/* ==========================================
-
-   13. EVALUACIONES Y FILTROS
-
-========================================== */
-
-function saveEvaluation(clientId){
-
- const c=getClient(clientId);
-
- if(!c)return;
-
- const weight=document.getElementById("evaluation-weight").value;
-
- const date=document.getElementById("evaluation-date").value||today();
-
- const note=document.getElementById("evaluation-note").value.trim();
-
- if(weight===""&&!note)return alert("Ingresá un peso o una observación.");
-
- c.evaluations=c.evaluations||[];
-
- c.evaluations.push({
-
-  id:uid(),date,weight:weight===""?"":number(weight),note
-
- });
-
- persistAll();
-
- selectedClient=clientId;
-
- render();
-
-}
-
-function filterExercises(){
-
- const search=normalizeName(document.getElementById("exercise-search")?.value);
-
- const muscle=document.getElementById("exercise-filter")?.value||"Todos";
-
- const filtered=allExercises().filter(ex=>{
-
-  const matchesName=normalizeName(ex.name).includes(search);
-
-  const matchesMuscle=muscle==="Todos"||ex.muscle===muscle;
-
-  return matchesName&&matchesMuscle;
-
- });
-
- const container=document.getElementById("exercise-results");
-
- if(container)container.innerHTML=exerciseListHTML(filtered);
-
-}
-
-function showClientStats(clientId){
-
- const c=getClient(clientId);
-
- const container=document.getElementById("client-stats-results");
-
- if(!container)return;
-
- if(!c){container.textContent="Seleccioná un cliente.";return;}
-
- const sessions=c.sessions||[];
-
- const sets=sessions.reduce((n,s)=>n+totalEffectiveSets(s),0);
-
- const weightEntries=(c.evaluations||[]).filter(e=>e.weight!==""&&e.weight!==undefined);
-
- container.innerHTML=`
-
-  <div class="grid">
-
-   <div class="item"><div class="muted">Entrenamientos</div><strong>${sessions.length}</strong></div>
-
-   <div class="item"><div class="muted">Series efectivas</div><strong>${sets}</strong></div>
-
-   <div class="item"><div class="muted">Evaluaciones con peso</div><strong>${weightEntries.length}</strong></div>
-
-  </div>
-
- `;
-
-}
-
-/* ==========================================
-
-   14. EVENTOS Y ACCIONES
-
-========================================== */
-
-document.addEventListener("click",event=>{
-
- const btn=event.target.closest("[data-action]");
-
- if(!btn)return;
-
- const action=btn.dataset.action;
-
- const id=btn.dataset.id;
-
- const index=Number(btn.dataset.index);
-
- const clientId=btn.dataset.client;
-
- const exIndex=Number(btn.dataset.ex);
-
- const setIndex=Number(btn.dataset.set);
-
- switch(action){
-
-  case "go-clients":navigate("clientes");break;
-
-  case "go-plans":navigate("planes");break;
-
-  case "go-exercises":navigate("ejercicios");break;
-
-  case "go-stats":navigate("estadisticas");break;
-
-  case "new-plan":
-
-   selectedPlan=uid();
-
-   plans.push({id:selectedPlan,name:"Nueva planificación",description:"",days:[]});
-
-   render();
-
-   break;
-
-  case "edit-plan":
-
-   selectedPlan=id;render();break;
-
-  case "cancel-plan":
-
-   if(selectedPlan&&!getPlan(selectedPlan)){
-
-    plans=plans.filter(p=>p.id!==selectedPlan);
-
-   }
-
-   selectedPlan=null;render();break;
-
-  case "save-plan":savePlan(id);break;
-
-  case "add-day":addDay(id);break;
-
-  case "delete-day":{
-
-   const p=getPlan(btn.dataset.plan)||clients.find(c=>c.trainingPlan?.id===btn.dataset.plan)?.trainingPlan;
-
-   if(p&&confirmDelete("¿Eliminar este día?")){
-
-    p.days.splice(index,1);persistAll();render();
-
-   }
-
-   break;
-
-  }
-
-  case "add-plan-exercise":addPlanExercise(btn.dataset.plan,index);break;
-
-  case "remove-plan-exercise":{
-
-   const pid=btn.dataset.plan;
-
-   const p=getPlan(pid)||clients.find(c=>c.trainingPlan?.id===pid)?.trainingPlan;
-
-   if(p&&confirmDelete("¿Quitar este ejercicio?")){
-
-    p.days[Number(btn.dataset.day)].exercises.splice(index,1);
-
-    persistAll();render();
-
-   }
-
-   break;
-
-  }
-
-  case "delete-plan":
-
-   if(confirmDelete("¿Eliminar esta planificación?")){
-
-    plans=plans.filter(p=>p.id!==id);
-
-    persistAll();render();
-
-   }
-
-   break;
-
-  case "new-client":newClientForm();break;
-
-  case "edit-client":newClientForm(getClient(id));break;
-
-  case "save-client":saveClient(id);break;
-
-  case "cancel-client":navigate("clientes");break;
-
-  case "open-client":selectedClient=id;page="clientes";render();break;
-
-  case "back-clients":selectedClient=null;page="clientes";render();break;
-
-  case "delete-client":
-
-   if(confirmDelete("¿Eliminar este cliente y sus registros?")){
-
-    clients=clients.filter(c=>c.id!==id);
-
-    persistAll();render();
-
-   }
-
-   break;
-
-  case "assign-plan":assignPlan(id);break;
-
-  case "edit-client-plan":editClientPlan(id);break;
-
-  case "new-session":startNewSession(id);break;
-
-  case "save-session":saveSession();break;
-
-  case "cancel-session":
-
-   editingSession=null;selectedClient=null;page="clientes";render();break;
-
-  case "add-set":
-
-   if(editingSession){
-
-    editingSession.exercises[exIndex].series.push({weight:0,reps:0,rir:2,type:"Efectiva"});
-
-    sessionEditorPage();
-
-   }
-
-   break;
-
-  case "remove-set":
-
-   if(editingSession){
-
-    editingSession.exercises[exIndex].series.splice(setIndex,1);
-
-    sessionEditorPage();
-
-   }
-
-   break;
-
-  case "open-session":viewSession(clientId,id);break;
-
-  case "delete-session":{
-
-   const c=getClient(clientId);
-
-   if(c&&confirmDelete("¿Eliminar este entrenamiento?")){
-
-    c.sessions=c.sessions.filter(s=>s.id!==id);
-
-    persistAll();selectedClient=clientId;page="clientes";render();
-
-   }
-
-   break;
-
-  }
-
-  case "save-evaluation":saveEvaluation(id);break;
-
-  case "delete-evaluation":{
-
-   const c=getClient(clientId);
-
-   if(c&&confirmDelete("¿Eliminar esta evaluación?")){
-
-    c.evaluations=c.evaluations.filter(e=>e.id!==id);
-
-    persistAll();selectedClient=clientId;render();
-
-   }
-
-   break;
-
-  }
-
-  case "new-exercise":exerciseForm();break;
-
-  case "edit-exercise":exerciseForm(customExercises.find(x=>x.id===id));break;
-
-  case "save-exercise":saveExercise(id);break;
-
-  case "cancel-exercise":navigate("ejercicios");break;
-
-  case "delete-exercise":
-
-   if(confirmDelete("¿Eliminar este ejercicio personalizado?")){
-
-    customExercises=customExercises.filter(x=>x.id!==id);
-
-    persistAll();render();
-
-   }
-
-   break;
+  return planEditor(p);
 
  }
 
-});
+ return `${pageTitle("Planificaciones","Creá y organizá programas de entrenamiento.")}
 
-document.addEventListener("input",event=>{
+ <div class="card"><h2>Nueva planificación</h2>
 
- if(event.target.id==="exercise-search")filterExercises();
+  <form id="planForm">
 
- if(event.target.matches("[data-ex][data-prop]")&&editingSession){
+   <div class="row">${field("Nombre","name","","text","required")}
 
-  const ex=editingSession.exercises[Number(event.target.dataset.ex)];
+   <div class="field"><label>Objetivo</label><select name="goal">${options(["Hipertrofia","Fuerza","Resistencia","Salud general","Recomposición corporal","Rendimiento deportivo","Readaptación","Otro"])}</select></div>
 
-  if(!ex)return;
+   <div class="field"><label>Días por semana</label><select name="frequency">${[2,3,4,5,6].map(n=>`<option>${n}</option>`).join("")}</select></div></div>
 
-  const prop=event.target.dataset.prop;
+   <button class="btn">Crear planificación</button>
 
-  const set=event.target.dataset.set;
+  </form>
 
-  if(set!==undefined){
+ </div>
 
-   const series=ex.series[Number(set)];
+ ${plans.length?plans.map(p=>`<div class="card"><div class="between"><div><h3>${esc(p.name)}</h3><span class="tag">${esc(p.goal||"Sin objetivo")}</span> <span class="pill">${p.frequency||p.days.length} días</span><p>${p.days.length} días · ${p.days.reduce((n,d)=>n+d.exercises.length,0)} ejercicios</p></div><button class="btn" data-action="open-plan" data-id="${p.id}">Abrir</button></div></div>`).join(""):`<div class="empty">Todavía no creaste planificaciones.</div>`}`;
 
-   if(series)series[prop]=prop==="type"?event.target.value:number(event.target.value);
+}
 
-  }else{
+function planEditor(p){
 
-   ex[prop]=event.target.type==="number"?number(event.target.value):event.target.value;
+ return `${pageTitle(p.name,"Editor de planificación general")}
 
-  }
+ <div class="card"><div class="row"><button class="btn secondary" data-action="back-plans">← Volver</button><button class="btn secondary" data-action="rename-plan" data-id="${p.id}">Editar datos</button><button class="btn danger" data-action="delete-plan" data-id="${p.id}">Eliminar</button></div>
 
- }
+ <p>Objetivo: ${esc(p.goal)} · Frecuencia: ${p.frequency} días</p>
 
-});
+ <button class="btn" data-action="add-day" data-id="${p.id}">+ Agregar día</button></div>
 
-document.addEventListener("change",event=>{
+ ${p.days.map((d,i)=>`<div class="card">
 
- if(event.target.id==="exercise-filter")filterExercises();
+ <div class="between"><div><h2>${esc(d.name||"Día "+(i+1))}</h2><span class="pill">${d.exercises.length} ejercicios</span></div><div class="row"><button class="btn small secondary" data-action="edit-day" data-id="${d.id}">Editar día</button><button class="btn small danger" data-action="delete-day" data-id="${d.id}">×</button></div></div>
 
- if(event.target.id==="stats-client")showClientStats(event.target.value);
+ ${d.notes?`<p>${esc(d.notes)}</p>`:""}
 
- if(event.target.matches("[data-ex][data-prop]")&&editingSession){
+ ${d.exercises.map((e,j)=>planExerciseCard(e,j)).join("")}
 
-  const ex=editingSession.exercises[Number(event.target.dataset.ex)];
+ <button class="btn secondary" data-action="add-exercise" data-id="${d.id}">+ Agregar ejercicio</button>
 
-  if(!ex)return;
+ </div>`).join("")}
 
-  const prop=event.target.dataset.prop;
+ <div class="card"><h3>Resumen del plan</h3><p>Series efectivas programadas: <b>${p.days.reduce((n,d)=>n+d.exercises.reduce((a,e)=>a+e.series.filter(s=>s.type==="Efectiva").length,0),0)}</b></p></div>`;
 
-  const set=event.target.dataset.set;
+}
 
-  if(set!==undefined){
+function planExerciseCard(e,j){
 
-   const series=ex.series[Number(set)];
+ return `<div class="exercise">
 
-   if(series)series[prop]=prop==="type"?event.target.value:number(event.target.value);
+ <div class="between"><div><b>${j+1}. ${esc(e.name)}</b><div class="muted">${esc(e.muscle||"Sin grupo muscular")} · ${esc(e.technique||"Normal")}</div></div>
 
-  }else{
+ <div class="row"><button class="btn small secondary" data-action="edit-exercise" data-id="${e.id}">Editar</button><button class="btn small danger" data-action="delete-exercise" data-id="${e.id}">×</button></div></div>
 
-   ex[prop]=event.target.type==="number"?number(event.target.value):event.target.value;
+ <div class="muted">Descanso: ${esc(e.rest||"—")} · Tempo: ${esc(e.tempo||"—")} · Bloque: ${esc(e.block||"—")}</div>
 
-  }
+ ${e.series.map((s,k)=>`<div class="muted">Serie ${k+1}: ${esc(s.weight||0)} kg × ${esc(s.reps||0)} rep · RIR ${esc(s.rir??"—")} · ${esc(s.type||"Efectiva")}</div>`).join("")}
 
- }
-
-});
-
-/* ==========================================
-
-   15. FIN DE LA PARTE 3
-
-   La parte 4 agrega gráficos, herramientas,
-
-   progreso, filtros y exportación.
-
-========================================== *//* ==========================================
-
-   16. GRÁFICOS Y SEGUIMIENTO DEL PROGRESO
-
-========================================== */
-
-function svgLineChart(points,title,unit="kg"){
-
- if(!points.length)return emptyState("Todavía no hay datos suficientes para mostrar el gráfico.");
-
- const width=650,height=250,pad=45;
-
- const values=points.map(p=>number(p.value));
-
- let min=Math.min(...values),max=Math.max(...values);
-
- if(min===max){min=Math.max(0,min-1);max=max+1;}
-
- const x=i=>pad+(points.length===1?(width-pad*2)/2:i*(width-pad*2)/(points.length-1));
-
- const y=v=>height-pad-((v-min)/(max-min))*(height-pad*2);
-
- const coords=points.map((p,i)=>`${x(i)},${y(number(p.value))}`).join(" ");
-
- const circles=points.map((p,i)=>`
-
-  <circle cx="${x(i)}" cy="${y(number(p.value))}" r="5" fill="#b5f36b">
-
-   <title>${esc(p.label)}: ${number(p.value)} ${esc(unit)}</title>
-
-  </circle>
-
- `).join("");
-
- return `
-
- <div class="chart-box">
-
-  <div class="small muted">${esc(title)}</div>
-
-  <svg viewBox="0 0 ${width} ${height}" role="img" aria-label="${esc(title)}">
-
-   ${[0,1,2,3].map(i=>{
-
-    const yy=pad+i*(height-pad*2)/3;
-
-    const val=max-i*(max-min)/3;
-
-    return `<line x1="${pad}" y1="${yy}" x2="${width-pad}" y2="${yy}" stroke="#303b33" stroke-width="1"/>
-
-    <text x="5" y="${yy+4}" fill="#9ba79d" font-size="11">${val.toFixed(1)}</text>`;
-
-   }).join("")}
-
-   <polyline points="${coords}" fill="none" stroke="#b5f36b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-
-   ${circles}
-
-   <text x="${pad}" y="${height-8}" fill="#9ba79d" font-size="10">${esc(points[0].label)}</text>
-
-   <text x="${width-pad}" y="${height-8}" fill="#9ba79d" font-size="10" text-anchor="end">${esc(points[points.length-1].label)}</text>
-
-  </svg>
+ ${e.notes?`<p>${esc(e.notes)}</p>`:""}
 
  </div>`;
 
 }
 
-function clientExerciseNames(c){
+/* CLIENTES */
 
- const names=new Map();
+function pageClients(){
 
- (c.sessions||[]).forEach(s=>{
+ if(selectedClient){
 
-  (s.exercises||[]).forEach(ex=>{
+  const c=getClient(selectedClient);
 
-   const key=normalizeName(ex.name);
+  if(!c){selectedClient=null;return pageClients()}
 
-   if(key&&!names.has(key))names.set(key,ex.name);
-
-  });
-
- });
-
- return [...names.entries()].sort((a,b)=>a[1].localeCompare(b[1],"es"));
-
-}
-
-function getExerciseHistory(c,name){
-
- const key=normalizeName(name);
-
- return (c.sessions||[])
-
-  .map(session=>{
-
-   const exercise=(session.exercises||[]).find(ex=>normalizeName(ex.name)===key);
-
-   if(!exercise)return null;
-
-   const effective=effectiveSets(exercise);
-
-   const sets=effective.length?effective:(exercise.series||[]);
-
-   const best=sets.reduce((best,set)=>{
-
-    if(!best||number(set.weight)>number(best.weight))return set;
-
-    return best;
-
-   },null);
-
-   return {
-
-    date:session.date,
-
-    dayName:session.dayName,
-
-    sessionId:session.id,
-
-    exercise,
-
-    bestWeight:number(best?.weight),
-
-    bestReps:number(best?.reps),
-
-    bestRir:number(best?.rir),
-
-    effectiveSets:effective.length,
-
-    series:exercise.series||[]
-
-   };
-
-  })
-
-  .filter(Boolean)
-
-  .sort((a,b)=>String(a.date||"").localeCompare(String(b.date||"")));
-
-}
-
-function compareExerciseSessions(c,name){
-
- const history=getExerciseHistory(c,name);
-
- const last=history.slice(-2);
-
- if(last.length<2){
-
-  return `<div class="notice">Necesitás al menos dos entrenamientos con este ejercicio para compararlos.</div>`;
+  return clientProfile(c);
 
  }
 
- const a=last[0],b=last[1];
+ return `${pageTitle("Clientes","Perfiles, planificaciones y seguimiento.")}
 
- const difference=b.bestWeight-a.bestWeight;
+ <div class="card"><h2>Agregar cliente</h2>
 
- const differenceText=difference>0?`+${difference}`:String(difference);
+ <form id="clientForm"><div class="row">
 
- return `
+ ${field("Nombre","name","","text","required")}
 
- <div class="grid">
+ ${field("Fecha de inicio","start",dateNow(),"date")}
 
-  <div class="item">
+ <div class="field"><label>Objetivo</label><select name="goal">${options(["Hipertrofia","Fuerza","Salud general","Resistencia","Rendimiento deportivo","Recomposición corporal","Otro"])}</select></div></div>
 
-   <div class="muted small">Entrenamiento anterior · ${formatDate(a.date)}</div>
+ <div class="field"><label>Observaciones iniciales</label><textarea name="notes"></textarea></div>
 
-   <h2>${a.bestWeight} kg</h2>
+ <button class="btn">Guardar cliente</button></form></div>
 
-   <div class="small">${a.bestReps} repeticiones · RIR ${a.bestRir}</div>
-
-   <div class="small muted">${a.effectiveSets} series efectivas</div>
-
-  </div>
-
-  <div class="item">
-
-   <div class="muted small">Último entrenamiento · ${formatDate(b.date)}</div>
-
-   <h2>${b.bestWeight} kg</h2>
-
-   <div class="small">${b.bestReps} repeticiones · RIR ${b.bestRir}</div>
-
-   <div class="small muted">${b.effectiveSets} series efectivas</div>
-
-  </div>
-
- </div>
-
- <div class="notice">
-
-  Diferencia de carga: <strong>${differenceText} kg</strong>
-
- </div>
-
- `;
+ ${clients.length?clients.map(c=>`<div class="card"><div class="between"><div><h3>${esc(c.name)}</h3><p>${esc(c.goal||"Sin objetivo")} · Desde ${esc(c.start||"—")}</p></div><button class="btn" data-action="open-client" data-id="${c.id}">Ver ficha</button></div></div>`).join(""):`<div class="empty">Todavía no agregaste clientes.</div>`}`;
 
 }
 
-function progressHTML(c){
+function clientProfile(c){
 
- const names=clientExerciseNames(c);
+ const p=ensureClientPlan(c);
 
- const latestName=names[0]?.[0]||"";
+ return `${pageTitle(c.name,"Ficha individual del cliente")}
 
- const evaluations=(c.evaluations||[])
+ <div class="card"><div class="row"><button class="btn secondary" data-action="back-clients">← Volver</button><button class="btn secondary" data-action="edit-client" data-id="${c.id}">Editar ficha</button><button class="btn danger" data-action="delete-client" data-id="${c.id}">Eliminar</button></div>
 
-  .filter(e=>e.weight!==""&&e.weight!==undefined)
+ <p>Objetivo: <b>${esc(c.goal||"—")}</b> · Inicio: ${esc(c.start||"—")}</p><p>${esc(c.notes||"Sin observaciones")}</p>
 
-  .slice()
+ <div class="field"><label>Asignar una planificación como punto de partida</label><select id="assignPlan"><option value="">Sin planificación</option>${plans.map(x=>`<option value="${x.id}" ${c.planId===x.id?"selected":""}>${esc(x.name)}</option>`).join("")}</select></div>
 
-  .sort((a,b)=>String(a.date||"").localeCompare(String(b.date||"")));
+ <button class="btn secondary" data-action="assign-plan" data-id="${c.id}">Asignar / reemplazar planificación</button>
 
- return `
+ <div class="notice">Al asignar una planificación se crea una copia exclusiva para este cliente. Los cambios que hagas en su rutina no modifican el plan general ni a otros clientes.</div>
 
- <section class="card">
+ </div>
 
-  <h2>Progreso del cliente</h2>
+ <div class="card"><div class="between"><h2>Entrenamiento personal</h2><button class="btn" data-action="edit-client-plan" data-id="${c.id}">Editar entrenamiento</button></div>
 
-  <p class="small muted">Seguimiento de cargas, repeticiones, RIR y evaluaciones.</p>
+ ${p?`<p><b>${esc(p.name||"Plan personalizado")}</b> · ${p.days.length} días · ${p.days.reduce((n,d)=>n+d.exercises.length,0)} ejercicios</p>
 
-  <div class="field">
+ ${p.days.map(d=>`<div class="exercise"><b>${esc(d.name)}</b><p>${d.exercises.length} ejercicios</p></div>`).join("")||`<div class="empty">Todavía no agregaste días.</div>`}`:`<p>Este cliente todavía no tiene una rutina. Podés asignarle una planificación o crear una desde cero.</p>`}
 
-   <label>Ejercicio para analizar</label>
+ <button class="btn secondary" data-action="create-client-plan" data-id="${c.id}">Crear rutina desde cero</button>
 
-   <select id="progress-exercise">
+ </div>
 
-    <option value="">Seleccioná un ejercicio</option>
+ <div class="card"><h2>Registrar entrenamiento</h2>
 
-    ${names.map(([key,name])=>`
+ ${p&&p.days.length?`<div class="field"><label>Día de la planificación personal</label><select id="sessionDay">${p.days.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")}</select></div><button class="btn" data-action="start-session" data-id="${c.id}">Iniciar entrenamiento</button>`:`<p>Agregá días a la rutina personal para poder registrar sesiones.</p>`}
 
-     <option value="${esc(key)}">${esc(name)}</option>
+ </div>
 
-    `).join("")}
+ <div class="card"><h2>Evaluaciones</h2>
 
-   </select>
+ <form id="evaluationForm" data-client="${c.id}">
 
-  </div>
+ <div class="row">${field("Fecha","date",dateNow(),"date")}${field("Peso (kg)","weight","","number",'step="0.1"')}${field("Observación","note")}</div>
 
-  <div id="exercise-progress-results" style="margin-top:14px">
+ <div class="row">${field("Indicador adicional","metric")}${field("Valor","value")}</div>
 
-   ${emptyState("Seleccioná un ejercicio para ver su evolución.")}
+ <button class="btn secondary">Guardar evaluación</button></form>
 
-  </div>
+ ${c.evaluations.length?c.evaluations.slice().reverse().map(e=>`<div class="exercise"><b>${esc(e.date)}</b><p>Peso: ${esc(e.weight||"—")} kg · ${esc(e.metric||"")}: ${esc(e.value||"—")}</p><p>${esc(e.note||"")}</p></div>`).join(""):`<div class="empty">Sin evaluaciones registradas.</div>`}
 
-  <hr>
+ </div>
 
-  <h3>Evolución del peso corporal</h3>
-
-  ${evaluations.length?svgLineChart(
-
-   evaluations.map(e=>({label:formatDate(e.date),value:e.weight})),
-
-   "Peso corporal registrado","kg"
-
-  ):emptyState("Todavía no hay evaluaciones con peso corporal.")}
-
- </section>
-
- <section class="card">
-
-  <h2>Historial con filtros</h2>
-
-  <div class="grid">
-
-   <div class="field">
-
-    <label>Desde</label>
-
-    <input type="date" id="history-from">
-
-   </div>
-
-   <div class="field">
-
-    <label>Hasta</label>
-
-    <input type="date" id="history-to">
-
-   </div>
-
-  </div>
-
-  <div class="field" style="margin-top:10px">
-
-   <label>Ejercicio</label>
-
-   <select id="history-exercise">
-
-    <option value="">Todos los ejercicios</option>
-
-    ${names.map(([key,name])=>`<option value="${esc(key)}">${esc(name)}</option>`).join("")}
-
-   </select>
-
-  </div>
-
-  <div id="filtered-history" style="margin-top:12px">
-
-   ${historyHTML(c)}
-
-  </div>
-
- </section>
-
- `;
+ <div class="card"><h2>Historial de entrenamientos</h2>${c.sessions.length?c.sessions.slice().reverse().map(s=>`<div class="exercise"><div class="between"><div><b>${esc(s.dayName)}</b><p>${esc(s.date)}</p></div><div class="row"><button class="btn small secondary" data-action="view-session" data-client="${c.id}" data-id="${s.id}">Ver</button><button class="btn small danger" data-action="delete-session" data-client="${c.id}" data-id="${s.id}">×</button></div></div></div>`).join(""):`<div class="empty">Todavía no hay sesiones registradas.</div>`}</div>`;
 
 }
 
-/* Se amplía el perfil original sin eliminar sus funciones. */
+/* EDITOR DE RUTINA PERSONAL DEL CLIENTE */
 
-const originalClientProfilePage=clientProfilePage;
+function clientPlanEditor(c){
 
-clientProfilePage=function(c){
+ const p=ensureClientPlan(c);
 
- return originalClientProfilePage(c)+progressHTML(c);
+ if(!p)return `<div class="card"><button class="btn secondary" data-action="back-client-plan">← Volver</button><p>No hay una rutina cargada.</p></div>`;
 
-};
+ return `${pageTitle("Rutina de "+c.name,"Esta planificación pertenece únicamente a este cliente.")}
 
-function renderExerciseProgress(c,key){
+ <div class="card"><div class="row">
 
- const container=document.getElementById("exercise-progress-results");
+ <button class="btn secondary" data-action="back-client-plan">← Volver a la ficha</button>
 
- if(!container)return;
+ <button class="btn secondary" data-action="rename-client-plan" data-id="${c.id}">Editar datos</button>
 
- const name=clientExerciseNames(c).find(item=>item[0]===key)?.[1];
+ <button class="btn" data-action="cp-add-day" data-id="${c.id}">+ Agregar día</button>
 
- if(!name){
+ </div>
 
-  container.innerHTML=emptyState("Seleccioná un ejercicio.");
+ <div class="notice">Podés cambiar ejercicios, series, pesos, repeticiones, RIR, métodos y descansos. Los cambios se guardan en la ficha de este cliente.</div>
+
+ <div class="field"><label>Nombre de la rutina</label><input id="clientPlanName" value="${esc(p.name||"Plan personalizado")}"></div>
+
+ <button class="btn secondary" data-action="save-client-plan-name" data-id="${c.id}">Guardar nombre</button>
+
+ </div>
+
+ ${p.days.map((d,i)=>`<div class="card">
+
+ <div class="between"><div><h2>${esc(d.name||"Día "+(i+1))}</h2><span class="pill">${d.exercises.length} ejercicios</span></div>
+
+ <div class="row"><button class="btn small secondary" data-action="cp-edit-day" data-id="${d.id}">Editar día</button><button class="btn small danger" data-action="cp-delete-day" data-id="${d.id}">×</button></div></div>
+
+ ${d.notes?`<p>${esc(d.notes)}</p>`:""}
+
+ ${d.exercises.map((e,j)=>`<div class="exercise">
+
+ <div class="between"><div><b>${j+1}. ${esc(e.name)}</b><p>${esc(e.muscle||"Sin grupo")} · ${esc(e.technique||"Normal")}</p></div>
+
+ <div class="row"><button class="btn small secondary" data-action="cp-edit-exercise" data-day="${d.id}" data-id="${e.id}">Editar</button><button class="btn small danger" data-action="cp-delete-exercise" data-day="${d.id}" data-id="${e.id}">×</button></div></div>
+
+ <p>Descanso: ${esc(e.rest||"—")} · Tempo: ${esc(e.tempo||"—")} · Bloque: ${esc(e.block||"—")}</p>
+
+ ${e.series.map((s,k)=>`<div class="muted">Serie ${k+1}: ${esc(s.weight??0)} kg × ${esc(s.reps??0)} rep · RIR ${esc(s.rir??"—")} · ${esc(s.type||"Efectiva")}</div>`).join("")}
+
+ ${e.notes?`<p>${esc(e.notes)}</p>`:""}
+
+ </div>`).join("")}
+
+ <button class="btn secondary" data-action="cp-add-exercise" data-id="${d.id}">+ Agregar ejercicio</button>
+
+ </div>`).join("")}
+
+ ${!p.days.length?`<div class="empty">Todavía no hay días. Tocá “Agregar día” para empezar.</div>`:""}`;
+
+}
+
+function openClientExerciseEditor(clientId,dayId,exerciseId){
+
+ const c=getClient(clientId),p=ensureClientPlan(c);
+
+ const day=p?.days.find(d=>d.id===dayId);
+
+ if(!c||!day)return;
+
+ const existing=exerciseId?day.exercises.find(e=>e.id===exerciseId):null;
+
+ const ex=existing||{id:uid(),name:"",muscle:"Pectorales",series:[{weight:0,reps:10,rir:2,type:"Efectiva"}],rest:"90 s",tempo:"2-0-2",technique:"Normal",notes:"",block:"A1"};
+
+ const content=`<div class="card" id="clientExerciseEditor"><div class="between"><h2>${existing?"Editar ejercicio del cliente":"Agregar ejercicio al cliente"}</h2><button class="btn secondary" data-action="close-editor">Cerrar</button></div>
+
+ <form id="clientExerciseForm" data-client="${c.id}" data-day="${day.id}" data-exercise="${existing?.id||""}">
+
+ <div class="row"><div class="field"><label>Ejercicio</label><input name="name" list="clientExerciseOptions" value="${esc(ex.name)}" required><datalist id="clientExerciseOptions">${allExercises().map(x=>`<option value="${esc(x.name)}">`).join("")}</datalist></div>
+
+ <div class="field"><label>Grupo muscular</label><select name="muscle">${muscles.map(x=>`<option ${x===ex.muscle?"selected":""}>${x}</option>`).join("")}</select></div></div>
+
+ <div class="row">${field("Bloque","block",ex.block||"A1")}${field("Descanso","rest",ex.rest||"90 s")}${field("Tempo","tempo",ex.tempo||"2-0-2")}</div>
+
+ <div class="field"><label>Método de entrenamiento</label><select name="technique">${methods.map(x=>`<option ${x===ex.technique?"selected":""}>${x}</option>`).join("")}</select></div>
+
+ <div class="field"><label>Observaciones</label><textarea name="notes">${esc(ex.notes||"")}</textarea></div>
+
+ <h3>Series individuales</h3><div id="seriesEditor">${ex.series.map((s,i)=>seriesEditorRow(s,i)).join("")}</div>
+
+ <button type="button" class="btn secondary" data-action="add-series">+ Agregar serie</button>
+
+ <hr><button class="btn">Guardar ejercicio</button></form></div>`;
+
+ document.getElementById("app").insertAdjacentHTML("beforeend",content);
+
+ document.getElementById("clientExerciseEditor").scrollIntoView({behavior:"smooth"});
+
+}
+
+/* EJERCICIOS */
+
+const defaultExercises=[
+
+ ["Press de banca","Pectorales","Barra"],["Press inclinado con mancuernas","Pectorales","Mancuernas"],["Flexiones de brazos","Pectorales","Peso corporal"],
+
+ ["Remo con barra","Espalda","Barra"],["Jalón al pecho","Espalda","Poleas"],["Dominadas","Espalda","Peso corporal"],
+
+ ["Press militar","Hombros","Barra"],["Elevaciones laterales","Hombros","Mancuernas"],
+
+ ["Curl de bíceps","Bíceps","Mancuernas"],["Extensión de tríceps","Tríceps","Poleas"],
+
+ ["Sentadilla","Cuádriceps","Barra"],["Prensa","Cuádriceps","Máquinas"],["Peso muerto rumano","Isquiotibiales","Barra"],
+
+ ["Curl femoral","Isquiotibiales","Máquinas"],["Hip thrust","Glúteos","Barra"],["Abducción de cadera","Glúteos","Máquinas"],
+
+ ["Elevación de gemelos","Gemelos","Máquinas"],["Plancha","Abdominales","Peso corporal"],["Pallof press","Abdominales","Poleas"]
+
+];
+
+function allExercises(){
+
+ return [...defaultExercises.map(x=>({name:x[0],muscle:x[1],equipment:x[2],custom:false})),...customExercises];
+
+}
+
+function pageExercises(){
+
+ return `${pageTitle("Biblioteca de ejercicios","Buscá, organizá y agregá tus propios ejercicios.")}
+
+ <div class="card"><h2>Crear ejercicio</h2><form id="exerciseForm">
+
+ <div class="row">${field("Nombre","name","","text","required")}
+
+ <div class="field"><label>Grupo muscular</label><select name="muscle">${options(muscles)}</select></div>
+
+ <div class="field"><label>Equipamiento</label><select name="equipment">${options(equipment)}</select></div></div>
+
+ <div class="row">${field("Dificultad","difficulty","Intermedio")} ${field("Variante","variant")}</div>
+
+ <div class="field"><label>Explicación técnica</label><textarea name="description"></textarea></div>
+
+ <div class="field"><label>Errores frecuentes</label><textarea name="errors"></textarea></div>
+
+ <button class="btn">Agregar ejercicio</button></form></div>
+
+ <div class="card"><div class="row"><div class="field"><label>Buscar</label><input id="exerciseSearch" placeholder="Nombre del ejercicio..."></div><div class="field"><label>Grupo muscular</label><select id="muscleFilter"><option value="">Todos</option>${options(muscles)}</select></div></div><div id="exerciseResults"></div></div>`;
+
+}
+
+function updateExerciseResults(){
+
+ const box=document.getElementById("exerciseResults");if(!box)return;
+
+ const q=(document.getElementById("exerciseSearch")?.value||"").toLowerCase();
+
+ const m=document.getElementById("muscleFilter")?.value||"";
+
+ const arr=allExercises().filter(e=>e.name.toLowerCase().includes(q)&&(!m||e.muscle===m));
+
+ box.innerHTML=arr.map(e=>`<div class="exercise"><div class="between"><div><b>${esc(e.name)}</b><p>${esc(e.muscle)} · ${esc(e.equipment||"—")} ${e.custom?'<span class="tag">Personalizado</span>':""}</p></div>${e.custom?`<button class="btn small danger" data-action="delete-custom-exercise" data-id="${e.id}">Eliminar</button>`:""}</div>${e.description?`<p>${esc(e.description)}</p>`:""}${e.errors?`<p>Errores: ${esc(e.errors)}</p>`:""}${e.variant?`<p>Variante: ${esc(e.variant)}</p>`:""}</div>`).join("")||`<div class="empty">No se encontraron ejercicios.</div>`;
+
+}
+
+/* ESTADÍSTICAS */
+
+function estadisticas(){
+
+ const total=clients.reduce((n,c)=>n+c.sessions.length,0);
+
+ const effective=clients.reduce((n,c)=>n+c.sessions.reduce((a,s)=>a+s.exercises.reduce((b,e)=>b+e.series.filter(x=>x.type==="Efectiva").length,0),0),0);
+
+ let groups={};
+
+ clients.forEach(c=>c.sessions.forEach(s=>s.exercises.forEach(e=>{
+
+  const count=e.series.filter(x=>x.type==="Efectiva").length;
+
+  groups[e.muscle||"Sin grupo"]=(groups[e.muscle||"Sin grupo"]||0)+count;
+
+ })));
+
+ const rows=Object.entries(groups).sort((a,b)=>b[1]-a[1]);
+
+ return `${pageTitle("Estadísticas","Seguimiento general de tu trabajo.")}
+
+ <div class="grid"><div class="card"><div class="statlabel">Clientes</div><div class="stat">${clients.length}</div></div><div class="card"><div class="statlabel">Sesiones</div><div class="stat">${total}</div></div><div class="card"><div class="statlabel">Series efectivas</div><div class="stat">${effective}</div></div></div>
+
+ <div class="card"><h2>Series efectivas por grupo muscular</h2>${rows.length?rows.map(([name,n])=>`<div class="between"><span>${esc(name)}</span><b>${n}</b></div><div style="height:7px;background:#303b33;border-radius:8px;margin:6px 0 13px"><div style="height:7px;width:${Math.min(100,n/Math.max(...rows.map(x=>x[1]))*100)}%;background:var(--green);border-radius:8px"></div></div>`).join(""):`<div class="empty">Registrá entrenamientos para generar estadísticas.</div>`}</div>
+
+ <div class="card"><h2>Actividad por cliente</h2>${clients.map(c=>`<div class="between"><span>${esc(c.name)}</span><b>${c.sessions.length} sesiones</b></div><hr>`).join("")||`<div class="empty">Sin clientes.</div>`}</div>
+
+ <div class="notice">Las series de aproximación y descarga se muestran en el historial, pero no se suman al total de series efectivas.</div>`;
+
+}
+
+/* HERRAMIENTAS */
+
+function herramientas(){
+
+ return `${pageTitle("Herramientas","Calculadoras y temporizadores para tus sesiones.")}
+
+ <div class="card"><h2>Calculadora de volumen</h2><p>Calcula el tonelaje de una serie: peso × repeticiones.</p><div class="row">${field("Peso (kg)","volWeight","0","number",'id="volWeight"')}${field("Repeticiones","volReps","0","number",'id="volReps"')}</div><div class="stat" id="volumeResult">0 kg</div></div>
+
+ <div class="card"><h2>Calculadora de porcentajes de fuerza</h2><p>Estimación orientativa. No necesitás probar tu máximo real para usarla.</p>${field("1RM estimado (kg)","oneRm","0","number",'id="oneRm"')}
+
+ <div id="percentResults"></div><div class="notice">La estimación no reemplaza la técnica, la supervisión ni una selección de cargas adecuada a tu nivel.</div></div>
+
+ <div class="card"><h2>Temporizador de descanso</h2><div class="row">${field("Minutos","timerMin","1","number",'id="timerMin"')}${field("Segundos","timerSec","30","number",'id="timerSec"')}</div><div class="stat" id="timerDisplay">01:30</div><div class="row"><button class="btn" data-action="timer-start">Iniciar</button><button class="btn secondary" data-action="timer-pause">Pausar</button><button class="btn secondary" data-action="timer-reset">Reiniciar</button></div></div>
+
+ <div class="card"><h2>Temporizador de circuito</h2><div class="row">${field("Trabajo (segundos)","work","40","number",'id="work"')}${field("Pausa (segundos)","pause","20","number",'id="pause"')}${field("Vueltas","rounds","4","number",'id="rounds"')}</div><button class="btn secondary" data-action="circuit-start">Iniciar circuito</button><p id="circuitStatus" class="muted">Preparado.</p></div>`;
+
+}
+
+function updateCalculators(){
+
+ const w=Number(document.getElementById("volWeight")?.value||0),r=Number(document.getElementById("volReps")?.value||0);
+
+ const out=document.getElementById("volumeResult");if(out)out.textContent=fmt(w*r)+" kg";
+
+ const rm=Number(document.getElementById("oneRm")?.value||0),pr=document.getElementById("percentResults");
+
+ if(pr)pr.innerHTML=rm>0?[50,60,65,70,75,80,85,90].map(p=>`<div class="between"><span>${p}%</span><b>${fmt(rm*p/100)} kg</b></div>`).join(""):"<p>Ingresá un valor para ver los porcentajes.</p>";
+
+}
+
+function formatTime(s){return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")}
+
+function updateTimer(){const el=document.getElementById("timerDisplay");if(el)el.textContent=formatTime(timerSeconds)}
+
+/* DATOS */
+
+function datos(){
+
+ return `${pageTitle("Datos y configuración","Administrá tus copias de seguridad.")}
+
+ <div class="card"><h2>Exportar copia de seguridad</h2><p>Descarga clientes, rutinas personales, planificaciones generales, ejercicios personalizados e historiales en un archivo JSON.</p><button class="btn" data-action="export">Exportar datos</button></div>
+
+ <div class="card"><h2>Importar copia de seguridad</h2><p>La importación reemplaza los datos actuales. Exportá primero una copia de seguridad.</p><input type="file" id="importFile" accept=".json,application/json"><button class="btn secondary" data-action="import">Importar archivo</button></div>
+
+ <div class="card"><h2>Almacenamiento</h2><p>Los datos se guardan en el almacenamiento local de este navegador. No se sincronizan automáticamente con GitHub ni con otros dispositivos.</p><p>Si borrás los datos del navegador o cambiás de dispositivo, podés perder la información que no hayas exportado.</p></div>
+
+ <div class="card"><h2>Imprimir informe</h2><p>Podés imprimir o guardar como PDF un resumen de tus clientes y planificaciones.</p><button class="btn secondary" data-action="print">Generar informe</button></div>`;
+
+}
+
+/* ACCIONES GENERALES */
+
+document.addEventListener("click",e=>{
+
+ const navBtn=e.target.closest("[data-page]");
+
+ if(navBtn){page=navBtn.dataset.page;selectedPlan=null;selectedClient=null;render();return}
+
+ const b=e.target.closest("[data-action]");if(!b)return;
+
+ const a=b.dataset.action,id=b.dataset.id;
+
+ if(a==="new-plan"){page="planes";selectedPlan=null;render();document.getElementById("planForm")?.scrollIntoView();return}
+
+ if(a==="new-client"){page="clientes";render();document.getElementById("clientForm")?.scrollIntoView();return}
+
+ if(a==="open-plan"){selectedPlan=id;page="planes";render();return}
+
+ if(a==="back-plans"){selectedPlan=null;render();return}
+
+ if(a==="back-clients"){selectedClient=null;render();return}
+
+ if(a==="delete-plan"){if(confirm("¿Eliminar esta planificación general? Las copias personales de los clientes no se modifican.")){plans=plans.filter(p=>p.id!==id);selectedPlan=null;save();render()}return}
+
+ if(a==="rename-plan"){
+
+  const p=getPlan(id);if(!p)return;
+
+  const name=prompt("Nombre de la planificación",p.name);if(name===null)return;
+
+  p.name=name.trim()||p.name;
+
+  const goal=prompt("Objetivo",p.goal||"");if(goal!==null)p.goal=goal;
+
+  const freq=prompt("Días por semana (2 a 6)",p.frequency||3);if(freq!==null)p.frequency=Math.min(6,Math.max(2,Number(freq)||3));
+
+  save();render();return;
+
+ }
+
+ if(a==="add-day"){
+
+  const p=getPlan(id);if(!p)return;
+
+  p.days.push({id:uid(),name:"Día "+(p.days.length+1),notes:"",exercises:[]});save();render();return;
+
+ }
+
+ if(a==="edit-day"){
+
+  const d=plans.flatMap(p=>p.days).find(x=>x.id===id);if(!d)return;
+
+  const name=prompt("Nombre del día",d.name);if(name!==null)d.name=name;
+
+  const notes=prompt("Notas del día",d.notes||"");if(notes!==null)d.notes=notes;
+
+  save();render();return;
+
+ }
+
+ if(a==="delete-day"){
+
+  if(!confirm("¿Eliminar este día?"))return;
+
+  plans.forEach(p=>p.days=p.days.filter(d=>d.id!==id));save();render();return;
+
+ }
+
+ if(a==="add-exercise"){const d=plans.flatMap(p=>p.days).find(x=>x.id===id);if(d)openExerciseEditor(null,d.id);return}
+
+ if(a==="edit-exercise"){
+
+  const ex=plans.flatMap(p=>p.days).flatMap(d=>d.exercises).find(x=>x.id===id);
+
+  if(ex)openExerciseEditor(ex.id);return;
+
+ }
+
+ if(a==="delete-exercise"){
+
+  if(!confirm("¿Eliminar este ejercicio?"))return;
+
+  plans.forEach(p=>p.days.forEach(d=>d.exercises=d.exercises.filter(x=>x.id!==id)));save();render();return;
+
+ }
+
+ /* CLIENTES */
+
+ if(a==="open-client"){selectedClient=id;page="clientes";render();return}
+
+ if(a==="edit-client"){
+
+  const c=getClient(id);if(!c)return;
+
+  const name=prompt("Nombre",c.name);if(name!==null)c.name=name;
+
+  const goal=prompt("Objetivo",c.goal||"");if(goal!==null)c.goal=goal;
+
+  const notes=prompt("Observaciones",c.notes||"");if(notes!==null)c.notes=notes;
+
+  save();render();return;
+
+ }
+
+ if(a==="delete-client"){
+
+  if(!confirm("¿Eliminar el cliente y su historial?"))return;
+
+  clients=clients.filter(c=>c.id!==id);selectedClient=null;save();render();return;
+
+ }
+
+ if(a==="assign-plan"){
+
+  const c=getClient(id),chosen=document.getElementById("assignPlan")?.value||"";
+
+  if(!c)return;
+
+  if(chosen&&c.planId===chosen&&c.trainingPlan){
+
+   if(!confirm("Este cliente ya tiene una copia de esa planificación. ¿Querés reemplazar su rutina personal por una copia nueva?"))return;
+
+  }
+
+  assignPlanToClient(c,chosen);render();return;
+
+ }
+
+ if(a==="edit-client-plan"){
+
+  const c=getClient(id);if(!c)return;
+
+  ensureClientPlan(c);
+
+  if(!c.trainingPlan)c.trainingPlan={id:uid(),name:"Plan personalizado",goal:c.goal||"Otro",frequency:3,days:[]};
+
+  save();clientPlanEditing=true;renderClientPlan();return;
+
+ }
+
+ if(a==="create-client-plan"){
+
+  const c=getClient(id);if(!c)return;
+
+  if(c.trainingPlan&&!confirm("Esto reemplazará la rutina personal actual de este cliente. ¿Continuar?"))return;
+
+  c.planId=null;c.trainingPlan={id:uid(),name:"Plan personalizado",goal:c.goal||"Otro",frequency:3,days:[]};
+
+  save();clientPlanEditing=true;renderClientPlan();return;
+
+ }
+
+ if(a==="back-client-plan"){clientPlanEditing=false;render();return}
+
+ if(a==="save-client-plan-name"){
+
+  const c=getClient(id),p=ensureClientPlan(c);if(p){p.name=document.getElementById("clientPlanName")?.value.trim()||"Plan personalizado";save();renderClientPlan()}return;
+
+ }
+
+ if(a==="rename-client-plan"){
+
+  const c=getClient(id),p=ensureClientPlan(c);if(!p)return;
+
+  const name=prompt("Nombre de la rutina",p.name||"Plan personalizado");
+
+  if(name!==null){p.name=name.trim()||p.name;save();renderClientPlan()}return;
+
+ }
+
+ if(a==="cp-add-day"){
+
+  const c=getClient(id),p=ensureClientPlan(c);if(!p)return;
+
+  const name=prompt("Nombre del nuevo día","Día "+(p.days.length+1));if(name===null)return;
+
+  p.days.push({id:uid(),name:name||"Día "+(p.days.length+1),notes:"",exercises:[]});
+
+  save();renderClientPlan();return;
+
+ }
+
+ if(a==="cp-edit-day"){
+
+  const c=getClient(selectedClient),p=ensureClientPlan(c),d=p?.days.find(x=>x.id===id);if(!d)return;
+
+  const name=prompt("Nombre del día",d.name);if(name!==null)d.name=name;
+
+  const notes=prompt("Notas del día",d.notes||"");if(notes!==null)d.notes=notes;
+
+  save();renderClientPlan();return;
+
+ }
+
+ if(a==="cp-delete-day"){
+
+  const c=getClient(selectedClient),p=ensureClientPlan(c);if(!p||!confirm("¿Eliminar este día y sus ejercicios?"))return;
+
+  p.days=p.days.filter(d=>d.id!==id);save();renderClientPlan();return;
+
+ }
+
+ if(a==="cp-add-exercise"){
+
+  const c=getClient(selectedClient);openClientExerciseEditor(c.id,id,null);return;
+
+ }
+
+ if(a==="cp-edit-exercise"){
+
+  const c=getClient(selectedClient);openClientExerciseEditor(c.id,b.dataset.day,id);return;
+
+ }
+
+ if(a==="cp-delete-exercise"){
+
+  const c=getClient(selectedClient),p=ensureClientPlan(c),d=p?.days.find(x=>x.id===b.dataset.day);
+
+  if(!d||!confirm("¿Eliminar este ejercicio de la rutina personal?"))return;
+
+  d.exercises=d.exercises.filter(x=>x.id!==id);save();renderClientPlan();return;
+
+ }
+
+ if(a==="start-session"){startSession(id);return}
+
+ if(a==="view-session"){viewSession(b.dataset.client,id);return}
+
+ if(a==="delete-session"){
+
+  const c=getClient(b.dataset.client);if(c&&confirm("¿Eliminar esta sesión?")){c.sessions=c.sessions.filter(s=>s.id!==id);save();render()}return;
+
+ }
+
+ if(a==="delete-custom-exercise"){
+
+  if(confirm("¿Eliminar este ejercicio personalizado?")){customExercises=customExercises.filter(x=>x.id!==id);save();render()}return;
+
+ }
+
+ if(a==="export"){exportData();return}
+
+ if(a==="import"){importData();return}
+
+ if(a==="print"){window.print();return}
+
+ if(a==="timer-start"){startTimer();return}
+
+ if(a==="timer-pause"){clearInterval(timerInterval);timerInterval=null;return}
+
+ if(a==="timer-reset"){clearInterval(timerInterval);timerInterval=null;timerSeconds=0;updateTimer();return}
+
+ if(a==="circuit-start"){startCircuit();return}
+
+});
+
+/* ESTADO DEL EDITOR PERSONAL */
+
+let clientPlanEditing=false;
+
+function renderClientPlan(){
+
+ const c=getClient(selectedClient);if(!c)return;
+
+ page="clientes";
+
+ document.querySelectorAll("nav button").forEach(b=>b.classList.toggle("active",b.dataset.page==="clientes"));
+
+ document.getElementById("app").innerHTML=clientPlanEditor(c);
+
+}
+
+/* FORMULARIOS PRINCIPALES */
+
+document.addEventListener("submit",e=>{
+
+ e.preventDefault();
+
+ const f=e.target,d=Object.fromEntries(new FormData(f).entries());
+
+ if(f.id==="planForm"){
+
+  const p={id:uid(),name:d.name,goal:d.goal,frequency:Number(d.frequency),days:[]};
+
+  for(let i=1;i<=p.frequency;i++)p.days.push({id:uid(),name:"Día "+i,notes:"",exercises:[]});
+
+  plans.push(p);selectedPlan=p.id;save();render();
+
+ }
+
+ if(f.id==="clientForm"){
+
+  clients.push({id:uid(),name:d.name,start:d.start,goal:d.goal,notes:d.notes,planId:null,trainingPlan:null,sessions:[],evaluations:[]});
+
+  save();render();
+
+ }
+
+ if(f.id==="exerciseForm"){
+
+  customExercises.push({id:uid(),name:d.name,muscle:d.muscle,equipment:d.equipment,difficulty:d.difficulty,variant:d.variant,description:d.description,errors:d.errors,custom:true});
+
+  save();render();
+
+ }
+
+ if(f.id==="evaluationForm"){
+
+  const c=getClient(f.dataset.client);if(!c)return;
+
+  c.evaluations.push({id:uid(),...d});save();render();
+
+ }
+
+});
+
+/* EDITOR DE EJERCICIOS DE PLAN GENERAL */
+
+function openExerciseEditor(exerciseId,dayId){
+
+ const existing=exerciseId?plans.flatMap(p=>p.days).flatMap(d=>d.exercises).find(x=>x.id===exerciseId):null;
+
+ const targetDay=dayId||plans.find(p=>p.id===selectedPlan)?.days.find(d=>d.exercises.some(e=>e.id===exerciseId))?.id;
+
+ const d=plans.flatMap(p=>p.days).find(x=>x.id===targetDay);
+
+ if(!existing&&!d)return;
+
+ const ex=existing||{id:uid(),name:"",muscle:"Pectorales",series:[{weight:0,reps:10,rir:2,type:"Efectiva"}],rest:"90 s",tempo:"2-0-2",technique:"Normal",notes:"",block:"A1"};
+
+ const content=`<div class="card" id="exerciseEditor"><div class="between"><h2>${existing?"Editar ejercicio":"Agregar ejercicio"}</h2><button class="btn secondary" data-action="close-editor">Cerrar</button></div>
+
+ <form id="planExerciseForm" data-exercise="${existing?.id||""}" data-day="${d?.id||targetDay||""}">
+
+ <div class="row"><div class="field"><label>Ejercicio</label><input name="name" list="exerciseOptions" value="${esc(ex.name)}" required><datalist id="exerciseOptions">${allExercises().map(x=>`<option value="${esc(x.name)}">`).join("")}</datalist></div>
+
+ <div class="field"><label>Grupo muscular</label><select name="muscle">${muscles.map(x=>`<option ${x===ex.muscle?"selected":""}>${x}</option>`).join("")}</select></div></div>
+
+ <div class="row">${field("Bloque","block",ex.block||"A1")}${field("Descanso","rest",ex.rest||"90 s")}${field("Tempo","tempo",ex.tempo||"2-0-2")}</div>
+
+ <div class="field"><label>Método de entrenamiento</label><select name="technique">${methods.map(x=>`<option ${x===ex.technique?"selected":""}>${x}</option>`).join("")}</select></div>
+
+ <div class="field"><label>Observaciones</label><textarea name="notes">${esc(ex.notes||"")}</textarea></div>
+
+ <h3>Series individuales</h3><div id="seriesEditor">${ex.series.map((s,i)=>seriesEditorRow(s,i)).join("")}</div>
+
+ <button type="button" class="btn secondary" data-action="add-series">+ Agregar serie</button>
+
+ <hr><button class="btn">Guardar ejercicio</button></form></div>`;
+
+ document.getElementById("app").insertAdjacentHTML("beforeend",content);
+
+ document.getElementById("exerciseEditor").scrollIntoView({behavior:"smooth"});
+
+}
+
+function seriesEditorRow(s,i){
+
+ return `<div class="exercise series-row">
+
+ <div class="between"><b>Serie ${i+1}</b><button type="button" class="btn small danger" data-action="remove-series">Eliminar</button></div>
+
+ <div class="series">
+
+ <div><label>Peso kg</label><input type="number" step="0.5" name="weight" value="${esc(s.weight??0)}"></div>
+
+ <div><label>Repeticiones</label><input type="number" name="reps" value="${esc(s.reps??10)}"></div>
+
+ <div><label>RIR</label><input type="number" min="0" max="10" name="rir" value="${esc(s.rir??2)}"></div>
+
+ <div><label>Tipo</label><select name="type">${seriesTypes.map(x=>`<option ${x===(s.type||"Efectiva")?"selected":""}>${x}</option>`).join("")}</select></div>
+
+ </div></div>`;
+
+}
+
+document.addEventListener("click",e=>{
+
+ const b=e.target.closest("[data-action]");if(!b)return;
+
+ if(b.dataset.action==="close-editor"){
+
+  document.getElementById("exerciseEditor")?.remove();
+
+  document.getElementById("clientExerciseEditor")?.remove();
 
   return;
 
  }
 
- const history=getExerciseHistory(c,name);
+ if(b.dataset.action==="add-series"){
 
- const points=history.map(h=>({
+  const box=document.getElementById("seriesEditor");
 
-  label:formatDate(h.date),
+  if(box)box.insertAdjacentHTML("beforeend",seriesEditorRow({weight:0,reps:10,rir:2,type:"Efectiva"},box.children.length));
 
-  value:h.bestWeight
+  return;
+
+ }
+
+ if(b.dataset.action==="remove-series"){b.closest(".series-row")?.remove();return}
+
+});
+
+/* GUARDADO DE EJERCICIOS: GENERAL Y PERSONAL */
+
+document.addEventListener("submit",e=>{
+
+ const f=e.target;
+
+ if(f.id!=="planExerciseForm"&&f.id!=="clientExerciseForm")return;
+
+ e.preventDefault();
+
+ const d=Object.fromEntries(new FormData(f).entries());
+
+ const series=[...f.querySelectorAll(".series-row")].map(row=>({
+
+  weight:Number(row.querySelector('[name="weight"]').value||0),
+
+  reps:Number(row.querySelector('[name="reps"]').value||0),
+
+  rir:Number(row.querySelector('[name="rir"]').value||0),
+
+  type:row.querySelector('[name="type"]').value
 
  }));
 
- container.innerHTML=`
+ if(!series.length){alert("Agregá al menos una serie.");return}
 
-  <h3>${esc(name)}</h3>
+ const ex={id:f.dataset.exercise||uid(),name:d.name,muscle:d.muscle,block:d.block,rest:d.rest,tempo:d.tempo,technique:d.technique,notes:d.notes,series};
 
-  ${svgLineChart(points,"Evolución de la carga","kg")}
+ if(f.id==="planExerciseForm"){
 
-  <hr>
+  let found=false;
 
-  <h3>Comparación de los dos últimos entrenamientos</h3>
+  plans.forEach(p=>p.days.forEach(day=>{
 
-  ${compareExerciseSessions(c,name)}
+   const i=day.exercises.findIndex(x=>x.id===ex.id);
 
-  <hr>
+   if(i>=0){day.exercises[i]=ex;found=true}
 
-  <h3>Detalle de las sesiones</h3>
+  }));
 
-  ${history.length?history.slice().reverse().map(h=>`
+  if(!found){
 
-   <div class="item">
+   const day=plans.flatMap(p=>p.days).find(x=>x.id===f.dataset.day);
 
-    <div class="between">
-
-     <strong>${formatDate(h.date)}</strong>
-
-     <span class="tag green">${h.effectiveSets} efectivas</span>
-
-    </div>
-
-    <div class="small muted">${esc(h.dayName||"Entrenamiento")}</div>
-
-    <div class="small">Mejor serie: ${h.bestWeight} kg × ${h.bestReps} reps · RIR ${h.bestRir}</div>
-
-   </div>
-
-  `).join(""):emptyState("No hay registros para este ejercicio.")}
-
- `;
-
-}
-
-function historyHTML(c){
-
- const sessions=(c.sessions||[]).slice()
-
-  .sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
-
- if(!sessions.length)return emptyState("Todavía no hay entrenamientos.");
-
- return sessions.map(s=>`
-
-  <div class="item">
-
-   <div class="between">
-
-    <strong>${formatDate(s.date)} · ${esc(s.dayName||"Entrenamiento")}</strong>
-
-    <button class="btn secondary smallbtn" data-action="open-session" data-client="${esc(c.id)}" data-id="${esc(s.id)}">Ver</button>
-
-   </div>
-
-   <div class="small muted">${(s.exercises||[]).length} ejercicios · ${totalEffectiveSets(s)} series efectivas</div>
-
-   ${(s.exercises||[]).map(ex=>`
-
-    <div class="small" style="margin-top:5px">
-
-     <strong>${esc(ex.name)}</strong>:
-
-     ${(ex.series||[]).map(set=>`${number(set.weight)} kg × ${number(set.reps)} (${esc(set.type||"Efectiva")})`).join(" · ")}
-
-    </div>
-
-   `).join("")}
-
-  </div>
-
- `).join("");
-
-}
-
-function filterClientHistory(){
-
- const c=getClient(selectedClient);
-
- const container=document.getElementById("filtered-history");
-
- if(!c||!container)return;
-
- const from=document.getElementById("history-from")?.value||"";
-
- const to=document.getElementById("history-to")?.value||"";
-
- const exercise=document.getElementById("history-exercise")?.value||"";
-
- let sessions=(c.sessions||[]).slice().sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
-
- sessions=sessions.filter(s=>{
-
-  if(from&&String(s.date||"")<from)return false;
-
-  if(to&&String(s.date||"")>to)return false;
-
-  if(exercise&&!s.exercises?.some(ex=>normalizeName(ex.name)===exercise))return false;
-
-  return true;
-
- });
-
- container.innerHTML=sessions.length?sessions.map(s=>`
-
-  <div class="item">
-
-   <div class="between">
-
-    <strong>${formatDate(s.date)} · ${esc(s.dayName||"Entrenamiento")}</strong>
-
-    <button class="btn secondary smallbtn" data-action="open-session" data-client="${esc(c.id)}" data-id="${esc(s.id)}">Ver</button>
-
-   </div>
-
-   ${(s.exercises||[])
-
-    .filter(ex=>!exercise||normalizeName(ex.name)===exercise)
-
-    .map(ex=>`
-
-     <div class="small" style="margin-top:6px">
-
-      <strong>${esc(ex.name)}</strong> · ${(ex.series||[]).length} series
-
-     </div>
-
-    `).join("")}
-
-  </div>
-
- `).join(""):emptyState("No hay entrenamientos que coincidan con esos filtros.");
-
-}
-
-/* ==========================================
-
-   17. HERRAMIENTAS
-
-========================================== */
-
-function toolsPage(){
-
- return `
-
- ${pageTitle("Herramientas","Calculadoras y utilidades de entrenamiento.")}
-
- <div class="card">
-
-  <h2>Calculadora de volumen</h2>
-
-  <p class="small muted">Calculá las series efectivas de una sesión.</p>
-
-  <div class="grid">
-
-   <div class="field"><label>Ejercicios</label><input id="volume-exercises" type="number" min="0" value="5"></div>
-
-   <div class="field"><label>Series efectivas por ejercicio</label><input id="volume-sets" type="number" min="0" value="3"></div>
-
-   <div class="field"><label>Frecuencia semanal</label><input id="volume-frequency" type="number" min="0" value="2"></div>
-
-  </div>
-
-  <button class="btn" style="margin-top:12px" data-action="calculate-volume">Calcular volumen</button>
-
-  <div id="volume-result" class="notice hidden"></div>
-
- </div>
-
- <div class="card">
-
-  <h2>Calculadora de 1RM estimado</h2>
-
-  <p class="small muted">Estimación orientativa a partir de una serie submáxima.</p>
-
-  <div class="grid">
-
-   <div class="field"><label>Carga utilizada (kg)</label><input id="orm-weight" type="number" min="0" step="0.5" value="50"></div>
-
-   <div class="field"><label>Repeticiones</label><input id="orm-reps" type="number" min="1" max="15" value="8"></div>
-
-  </div>
-
-  <button class="btn" style="margin-top:12px" data-action="calculate-orm">Calcular</button>
-
-  <div id="orm-result" class="notice hidden"></div>
-
- </div>
-
- <div class="card">
-
-  <h2>Temporizador de descanso</h2>
-
-  <div class="grid">
-
-   <div class="field"><label>Tiempo en segundos</label><input id="rest-duration" type="number" min="1" value="90"></div>
-
-  </div>
-
-  <div class="stat" id="rest-display">01:30</div>
-
-  <div class="row" style="margin-top:12px">
-
-   <button class="btn" data-action="start-rest">Iniciar</button>
-
-   <button class="btn secondary" data-action="pause-timer">Pausar</button>
-
-   <button class="btn secondary" data-action="reset-timer">Reiniciar</button>
-
-  </div>
-
- </div>
-
- ` + `
-
- <div class="card">
-
-  <h2>Temporizador de circuito</h2>
-
-  <div class="grid">
-
-   <div class="field"><label>Trabajo (segundos)</label><input id="circuit-work" type="number" min="1" value="30"></div>
-
-   <div class="field"><label>Descanso (segundos)</label><input id="circuit-rest" type="number" min="0" value="15"></div>
-
-   <div class="field"><label>Vueltas</label><input id="circuit-rounds" type="number" min="1" value="4"></div>
-
-  </div>
-
-  <div class="stat" id="circuit-display">Listo</div>
-
-  <div class="small muted" id="circuit-status">Preparado para comenzar.</div>
-
-  <div class="row" style="margin-top:12px">
-
-   <button class="btn" data-action="start-circuit">Iniciar circuito</button>
-
-   <button class="btn secondary" data-action="pause-timer">Pausar</button>
-
-   <button class="btn secondary" data-action="reset-timer">Reiniciar</button>
-
-  </div>
-
- </div>
-
- `;
-
-}
-
-function formatSeconds(seconds){
-
- const safe=Math.max(0,Math.floor(seconds));
-
- return String(Math.floor(safe/60)).padStart(2,"0")+":"+String(safe%60).padStart(2,"0");
-
-}
-
-let timerMode="rest";
-
-let circuitState={round:1,phase:"Trabajo",work:30,rest:15,rounds:4};
-
-function stopTimer(){
-
- if(timerInterval){
-
-  clearInterval(timerInterval);
-
-  timerInterval=null;
-
- }
-
-}
-
-function startRestTimer(){
-
- stopTimer();
-
- timerMode="rest";
-
- timerSeconds=Math.max(1,number(document.getElementById("rest-duration")?.value)||90);
-
- updateTimerDisplay();
-
- timerInterval=setInterval(()=>{
-
-  timerSeconds--;
-
-  updateTimerDisplay();
-
-  if(timerSeconds<=0){
-
-   stopTimer();
-
-   alert("¡Terminó el descanso!");
+   if(day)day.exercises.push(ex);
 
   }
 
- },1000);
-
-}
-
-function startCircuitTimer(){
-
- stopTimer();
-
- timerMode="circuit";
-
- circuitState={
-
-  round:1,
-
-  phase:"Trabajo",
-
-  work:Math.max(1,number(document.getElementById("circuit-work")?.value)||30),
-
-  rest:Math.max(0,number(document.getElementById("circuit-rest")?.value)||15),
-
-  rounds:Math.max(1,number(document.getElementById("circuit-rounds")?.value)||4)
-
- };
-
- timerSeconds=circuitState.work;
-
- updateTimerDisplay();
-
- timerInterval=setInterval(()=>{
-
-  timerSeconds--;
-
-  if(timerSeconds<=0){
-
-   if(circuitState.phase==="Trabajo"){
-
-    if(circuitState.rest>0){
-
-     circuitState.phase="Descanso";
-
-     timerSeconds=circuitState.rest;
-
-    }else{
-
-     nextCircuitRound();
-
-    }
-
-   }else{
-
-    nextCircuitRound();
-
-   }
-
-  }
-
-  updateTimerDisplay();
-
- },1000);
-
-}
-
-function nextCircuitRound(){
-
- if(circuitState.round>=circuitState.rounds){
-
-  stopTimer();
-
-  timerSeconds=0;
-
-  alert("¡Circuito terminado!");
-
-  return;
+  save();document.getElementById("exerciseEditor")?.remove();render();
 
  }
 
- circuitState.round++;
+ if(f.id==="clientExerciseForm"){
 
- circuitState.phase="Trabajo";
+  const c=getClient(f.dataset.client),p=ensureClientPlan(c),day=p?.days.find(x=>x.id===f.dataset.day);
 
- timerSeconds=circuitState.work;
+  if(!day)return;
 
-}
+  const index=day.exercises.findIndex(x=>x.id===ex.id);
 
-function updateTimerDisplay(){
+  if(index>=0)day.exercises[index]=ex;else day.exercises.push(ex);
 
- const rest=document.getElementById("rest-display");
-
- const circuit=document.getElementById("circuit-display");
-
- const status=document.getElementById("circuit-status");
-
- if(rest&&timerMode==="rest")rest.textContent=formatSeconds(timerSeconds);
-
- if(circuit&&timerMode==="circuit"){
-
-  circuit.textContent=formatSeconds(timerSeconds);
-
-  if(status)status.textContent=`Vuelta ${circuitState.round} de ${circuitState.rounds} · ${circuitState.phase}`;
+  save();document.getElementById("clientExerciseEditor")?.remove();renderClientPlan();
 
  }
 
-}
+});
 
-/* ==========================================
+/* SESIONES: SE USA LA RUTINA PERSONAL DEL CLIENTE */
 
-   18. EXPORTACIÓN E IMPORTACIÓN DE DATOS
+function startSession(clientId){
 
-========================================== */
+ const c=getClient(clientId),p=ensureClientPlan(c);if(!c||!p)return;
 
-function dataPage(){
+ const day=p.days.find(d=>d.id===document.getElementById("sessionDay")?.value)||p.days[0];
 
- return `
+ if(!day){alert("La rutina personal no tiene días.");return}
 
- ${pageTitle("Datos y copias de seguridad","Protegé tus registros y transferí tus datos.")}
+ editingSession={id:uid(),date:dateNow(),planId:p.id,dayName:day.name,notes:"",exercises:clone(day.exercises)};
 
- <div class="card">
-
-  <h2>Exportar datos</h2>
-
-  <p class="muted small">Descargá una copia de tus planificaciones, ejercicios personalizados, clientes, entrenamientos y evaluaciones.</p>
-
-  <button class="btn" data-action="export-data">Exportar copia de seguridad</button>
-
- </div>
-
- <div class="card">
-
-  <h2>Importar datos</h2>
-
-  <p class="muted small">Seleccioná un archivo JSON exportado desde TP Training Planner.</p>
-
-  <input type="file" id="import-file" accept=".json,application/json">
-
-  <button class="btn" style="margin-top:12px" data-action="import-data">Importar archivo</button>
-
-  <div class="warning">La importación reemplaza los datos actuales. Exportá una copia antes de continuar.</div>
-
- </div>
-
- <div class="card">
-
-  <h2>Almacenamiento</h2>
-
-  <p class="small muted">Los datos se guardan en el almacenamiento local del navegador de este dispositivo. No se sincronizan automáticamente con otros dispositivos.</p>
-
-  <p class="small muted">Si borrás los datos del navegador, cambiás de dispositivo o usás otro navegador, podés perder el acceso a los registros. Conservá copias de seguridad periódicas.</p>
-
- </div>
-
- `;
+ showSessionEditor(c);
 
 }
+
+function showSessionEditor(c){
+
+ const s=editingSession;
+
+ const html=`<div class="card" id="sessionEditor"><div class="between"><h2>Registrar entrenamiento</h2><button class="btn secondary" data-action="close-session">Cerrar</button></div>
+
+ <p>${esc(c.name)} · ${esc(s.dayName)} · ${esc(s.date)}</p>
+
+ ${s.exercises.map((e,i)=>`<div class="exercise"><b>${esc(e.name)}</b><p>${esc(e.muscle||"")}</p>${e.series.map((x,j)=>`<div class="series"><div><label>Serie ${j+1} · Peso</label><input type="number" step="0.5" data-ex="${i}" data-set="${j}" data-key="weight" value="${esc(x.weight||0)}"></div><div><label>Repeticiones</label><input type="number" data-ex="${i}" data-set="${j}" data-key="reps" value="${esc(x.reps||0)}"></div><div><label>RIR</label><input type="number" data-ex="${i}" data-set="${j}" data-key="rir" value="${esc(x.rir??2)}"></div><div><label>Tipo</label><select data-ex="${i}" data-set="${j}" data-key="type">${seriesTypes.map(t=>`<option ${t===(x.type||"Efectiva")?"selected":""}>${t}</option>`).join("")}</select></div></div>`).join("")}</div>`).join("")||`<div class="empty">Este día no tiene ejercicios cargados.</div>`}
+
+ <div class="field"><label>Observaciones de la sesión</label><textarea id="sessionNotes">${esc(s.notes)}</textarea></div>
+
+ <button class="btn" data-action="save-session" data-client="${c.id}">Guardar entrenamiento</button></div>`;
+
+ document.getElementById("app").insertAdjacentHTML("beforeend",html);
+
+ document.getElementById("sessionEditor").scrollIntoView({behavior:"smooth"});
+
+}
+
+document.addEventListener("change",e=>{
+
+ const el=e.target;if(!el.dataset.ex)return;
+
+ const x=editingSession?.exercises?.[Number(el.dataset.ex)]?.series?.[Number(el.dataset.set)];
+
+ if(x){const key=el.dataset.key;x[key]=key==="type"?el.value:Number(el.value)}
+
+});
+
+document.addEventListener("click",e=>{
+
+ const b=e.target.closest("[data-action]");if(!b)return;
+
+ if(b.dataset.action==="close-session"){editingSession=null;document.getElementById("sessionEditor")?.remove();return}
+
+ if(b.dataset.action==="save-session"){
+
+  const c=getClient(b.dataset.client);if(!c||!editingSession)return;
+
+  editingSession.notes=document.getElementById("sessionNotes").value;
+
+  c.sessions.push(editingSession);editingSession=null;save();render();return;
+
+ }
+
+});
+
+function viewSession(clientId,sessionId){
+
+ const c=getClient(clientId),s=c?.sessions.find(x=>x.id===sessionId);if(!s)return;
+
+ const detail=s.exercises.map(e=>`<div class="exercise"><b>${esc(e.name)}</b>${e.series.map((x,i)=>`<p>Serie ${i+1}: ${esc(x.weight)} kg × ${esc(x.reps)} rep · RIR ${esc(x.rir)} · ${esc(x.type||"Efectiva")}</p>`).join("")}</div>`).join("");
+
+ const box=document.createElement("div");box.className="card";
+
+ box.innerHTML=`<h2>${esc(s.dayName)} · ${esc(s.date)}</h2>${detail}<p>${esc(s.notes||"Sin observaciones")}</p><button class="btn secondary">Cerrar</button>`;
+
+ box.querySelector("button").onclick=()=>box.remove();
+
+ document.getElementById("app").appendChild(box);box.scrollIntoView({behavior:"smooth"});
+
+}
+
+/* IMPORTACIÓN Y EXPORTACIÓN */
 
 function exportData(){
 
- const data={
+ const data={version:4,exportedAt:new Date().toISOString(),plans,customExercises,clients};
 
-  version:5,
+ const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
 
-  exportedAt:new Date().toISOString(),
+ const url=URL.createObjectURL(blob),a=document.createElement("a");
 
-  plans,
+ a.href=url;a.download="TP-Training-Planner-respaldo-"+dateNow()+".json";a.click();
 
-  customExercises,
-
-  clients
-
- };
-
- downloadFile(
-
-  "TP-Training-Planner-backup-"+today()+".json",
-
-  JSON.stringify(data,null,2)
-
- );
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
 
 }
 
 function importData(){
 
- const input=document.getElementById("import-file");
+ const input=document.getElementById("importFile"),file=input?.files?.[0];
 
- const file=input?.files?.[0];
-
- if(!file)return alert("Primero seleccioná un archivo.");
+ if(!file){alert("Primero seleccioná un archivo JSON.");return}
 
  const reader=new FileReader();
 
@@ -3122,53 +1406,27 @@ function importData(){
 
   try{
 
-   const data=JSON.parse(reader.result);
+   const d=JSON.parse(reader.result);
 
-   if(Array.isArray(data)){
+   if(!confirm("La importación reemplazará los datos actuales. ¿Continuar?"))return;
 
-    if(!confirmDelete("El archivo contiene planificaciones. ¿Reemplazar las actuales?"))return;
+   if(Array.isArray(d)){plans=d;customExercises=[];clients=[]}
 
-    plans=data;
+   else{
 
-   }else{
+    plans=Array.isArray(d.plans)?d.plans:[];
 
-    if(!data||typeof data!=="object")throw new Error("Formato incorrecto.");
+    customExercises=Array.isArray(d.customExercises)?d.customExercises:[];
 
-    if(!Array.isArray(data.plans)||!Array.isArray(data.customExercises||[])||!Array.isArray(data.clients||[])){
-
-     throw new Error("El archivo no tiene el formato esperado.");
-
-    }
-
-    if(!confirmDelete("Se reemplazarán tus planificaciones, ejercicios y clientes actuales. ¿Continuar?"))return;
-
-    plans=data.plans;
-
-    customExercises=data.customExercises||[];
-
-    clients=data.clients||[];
+    clients=Array.isArray(d.clients)?d.clients:[];
 
    }
 
-   persistAll();
+   normalize();selectedPlan=null;selectedClient=null;clientPlanEditing=false;
 
-   selectedPlan=null;
+   alert("Copia de seguridad importada.");render();
 
-   selectedClient=null;
-
-   editingSession=null;
-
-   page="inicio";
-
-   render();
-
-   alert("Importación realizada correctamente.");
-
-  }catch(error){
-
-   alert("No se pudo importar el archivo: "+error.message);
-
-  }
+  }catch(err){alert("El archivo no es válido o está dañado.")}
 
  };
 
@@ -3176,141 +1434,75 @@ function importData(){
 
 }
 
-/* ==========================================
+/* TEMPORIZADORES */
 
-   19. ACCIONES FINALES
+function startTimer(){
 
-========================================== */
+ if(timerInterval)return;
 
-document.addEventListener("click",event=>{
+ const m=Number(document.getElementById("timerMin")?.value||0),s=Number(document.getElementById("timerSec")?.value||0);
 
- const btn=event.target.closest("[data-action]");
+ if(timerSeconds<=0)timerSeconds=Math.max(0,m*60+s);
 
- if(!btn)return;
+ updateTimer();
 
- switch(btn.dataset.action){
+ timerInterval=setInterval(()=>{
 
-  case "calculate-volume":{
+  timerSeconds=Math.max(0,timerSeconds-1);updateTimer();
 
-   const exercises=Math.max(0,number(document.getElementById("volume-exercises")?.value));
+  if(timerSeconds===0){clearInterval(timerInterval);timerInterval=null;alert("¡Descanso terminado!")}
 
-   const sets=Math.max(0,number(document.getElementById("volume-sets")?.value));
+ },1000);
 
-   const frequency=Math.max(0,number(document.getElementById("volume-frequency")?.value));
+}
 
-   const result=document.getElementById("volume-result");
+function startCircuit(){
 
-   if(result){
+ const work=Math.max(1,Number(document.getElementById("work")?.value||40));
 
-    result.classList.remove("hidden");
+ const pause=Math.max(0,Number(document.getElementById("pause")?.value||20));
 
-    result.textContent=`${exercises*sets} series efectivas por sesión · ${exercises*sets*frequency} series semanales estimadas.`;
+ const rounds=Math.max(1,Number(document.getElementById("rounds")?.value||4));
 
-   }
+ const out=document.getElementById("circuitStatus");let round=1,remaining=work,working=true;
 
-   break;
+ if(timerInterval)clearInterval(timerInterval);
 
-  }
+ out.textContent=`Vuelta ${round}/${rounds} · Trabajo · ${remaining} s`;
 
-  case "calculate-orm":{
+ timerInterval=setInterval(()=>{
 
-   const weight=number(document.getElementById("orm-weight")?.value);
+  remaining--;
 
-   const reps=Math.max(1,number(document.getElementById("orm-reps")?.value));
+  if(remaining<=0){
 
-   const result=document.getElementById("orm-result");
+   if(working){working=false;remaining=pause}
 
-   if(weight<=0||reps>15){
-
-    alert("Ingresá una carga válida y entre 1 y 15 repeticiones.");
-
-    break;
-
-   }
-
-   const estimated=weight*(1+reps/30);
-
-   if(result){
-
-    result.classList.remove("hidden");
-
-    result.textContent=`1RM estimado: ${estimated.toFixed(1)} kg. Es una estimación, no una medición real.`;
-
-   }
-
-   break;
+   else{round++;if(round>rounds){clearInterval(timerInterval);timerInterval=null;out.textContent="Circuito terminado.";return}working=true;remaining=work}
 
   }
 
-  case "start-rest":startRestTimer();break;
+  out.textContent=`Vuelta ${round}/${rounds} · ${working?"Trabajo":"Pausa"} · ${remaining} s`;
 
-  case "start-circuit":startCircuitTimer();break;
+ },1000);
 
-  case "pause-timer":stopTimer();break;
+}
 
-  case "reset-timer":
+/* ACTUALIZACIONES */
 
-   stopTimer();
+document.addEventListener("input",e=>{
 
-   timerMode="rest";
+ if(["exerciseSearch","muscleFilter"].includes(e.target.id))updateExerciseResults();
 
-   timerSeconds=0;
-
-   updateTimerDisplay();
-
-   if(document.getElementById("rest-display")){
-
-    document.getElementById("rest-display").textContent="00:00";
-
-   }
-
-   if(document.getElementById("circuit-display")){
-
-    document.getElementById("circuit-display").textContent="Listo";
-
-    document.getElementById("circuit-status").textContent="Preparado para comenzar.";
-
-   }
-
-   break;
-
-  case "export-data":exportData();break;
-
-  case "import-data":importData();break;
-
- }
+ if(["volWeight","volReps","oneRm"].includes(e.target.id))updateCalculators();
 
 });
 
-document.addEventListener("change",event=>{
+document.addEventListener("change",e=>{
 
- if(event.target.id==="progress-exercise"&&selectedClient){
-
-  renderExerciseProgress(getClient(selectedClient),event.target.value);
-
- }
-
- if(
-
-  event.target.id==="history-from"||
-
-  event.target.id==="history-to"||
-
-  event.target.id==="history-exercise"
-
- ){
-
-  filterClientHistory();
-
- }
+ if(["exerciseSearch","muscleFilter"].includes(e.target.id))updateExerciseResults();
 
 });
-
-/* ==========================================
-
-   20. INICIO FINAL
-
-========================================== */
 
 render();
 
