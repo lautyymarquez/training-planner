@@ -233,12 +233,13 @@ function normalize(){
  });
 
  clients.forEach(c=>{
-
   c.id=c.id||uid();
 
   c.sessions=Array.isArray(c.sessions)?c.sessions:[];
 
   c.evaluations=Array.isArray(c.evaluations)?c.evaluations:[];
+
+  c.objectives=Array.isArray(c.objectives)?c.objectives:[];
 
   /* Compatibilidad con clientes de versiones anteriores */
 
@@ -558,7 +559,136 @@ function pageClients(){
  </div>`).join(""):`<div class="empty">Todavía no agregaste clientes.</div>`}`;
 
 }
+/* SEGUIMIENTO DE OBJETIVOS */
 
+function objectiveProgress(o){
+
+ const start=Number(o.startValue);
+ const target=Number(o.targetValue);
+ const current=Number(o.currentValue);
+
+ if(o.metric&&o.startValue!==""&&o.targetValue!==""&&o.currentValue!==""&&Number.isFinite(start)&&Number.isFinite(target)&&Number.isFinite(current)&&target!==start){
+
+  return Math.max(0,Math.min(100,((current-start)/(target-start))*100));
+
+ }
+
+ return null;
+
+}
+
+function objectivesCard(c){
+
+ const objectives=Array.isArray(c.objectives)?c.objectives:[];
+
+ return `
+ <div class="card">
+
+ <div class="between">
+  <div>
+   <h2>Seguimiento de objetivos</h2>
+   <p>Establecé metas y registrá el progreso de cada cliente.</p>
+  </div>
+  <span class="tag">${objectives.length} objetivos</span>
+ </div>
+
+ <form id="goalForm" data-client="${c.id}">
+
+  <h3>Agregar nuevo objetivo</h3>
+
+  <div class="row">
+   ${field("Nombre del objetivo","name","","text","required")}
+
+   <div class="field">
+    <label>Categoría</label>
+    <select name="category">
+     ${options(["Fuerza","Hipertrofia","Resistencia","Rendimiento deportivo","Salud general","Movilidad","Otro"])}
+    </select>
+   </div>
+  </div>
+
+  <div class="row">
+   ${field("Indicador (opcional)","metric","","text")}
+   ${field("Valor inicial","startValue","","number",'step="any"')}
+  </div>
+
+  <div class="row">
+   ${field("Meta a alcanzar","targetValue","","number",'step="any"')}
+   ${field("Valor actual","currentValue","","number",'step="any"')}
+  </div>
+
+  <div class="row">
+   ${field("Fecha objetivo","dueDate","","date")}
+  </div>
+
+  <div class="field">
+   <label>Descripción u observaciones</label>
+   <textarea name="notes"></textarea>
+  </div>
+
+  <div class="notice">
+   Si completás el indicador y los valores numéricos, la aplicación calculará el progreso automáticamente. También podés crear objetivos generales sin valores numéricos.
+  </div>
+
+  <button class="btn">+ Guardar objetivo</button>
+
+ </form>
+
+ <hr>
+
+ <h3>Objetivos del cliente</h3>
+
+ ${objectives.length?objectives.map(o=>{
+
+  const progress=objectiveProgress(o);
+
+  return `
+   <div class="exercise">
+
+    <div class="between">
+     <div>
+      <b>${esc(o.name)}</b>
+      <p>${esc(o.category||"Otro")} · ${esc(o.dueDate||"Sin fecha objetivo")}</p>
+     </div>
+
+     <span class="tag">${esc(o.status||"En proceso")}</span>
+    </div>
+
+    ${progress!==null?`
+     <div class="between">
+      <span class="muted">${esc(o.metric)}</span>
+      <b>${fmt(progress)}%</b>
+     </div>
+
+     <div style="height:9px;background:#303b33;border-radius:8px;margin:8px 0 12px;overflow:hidden">
+      <div style="height:9px;width:${progress}%;background:var(--green);border-radius:8px"></div>
+     </div>
+
+     <p>Inicial: ${esc(o.startValue)} · Actual: ${esc(o.currentValue)} · Meta: ${esc(o.targetValue)}</p>
+    `:`
+     <p>${esc(o.notes||"Objetivo general sin progreso numérico.")}</p>
+    `}
+
+    ${o.notes&&progress!==null?`<p>${esc(o.notes)}</p>`:""}
+
+    <div class="row">
+     ${o.metric?`<button class="btn small secondary" data-action="update-objective" data-id="${o.id}" data-client="${c.id}">Actualizar progreso</button>`:""}
+
+     <button class="btn small secondary" data-action="toggle-objective" data-id="${o.id}" data-client="${c.id}">
+      ${o.status==="Cumplido"?"Reabrir objetivo":"Marcar cumplido"}
+     </button>
+
+     <button class="btn small danger" data-action="delete-objective" data-id="${o.id}" data-client="${c.id}">Eliminar</button>
+    </div>
+
+   </div>
+  `;
+
+ }).join(""):`<div class="empty">Todavía no hay objetivos registrados para este cliente.</div>`}
+
+ </div>
+ `;
+}
 function clientProfile(c){
 
  const p=ensureClientPlan(c);
@@ -591,6 +721,8 @@ function clientProfile(c){
 
  <div class="notice">Al asignar una planificación se crea una copia exclusiva para este cliente. Los cambios que hagas en su rutina no modifican el plan general ni a otros clientes.</div>
  </div>
+
+ ${objectivesCard(c)}
 
  <div class="card">
  <div class="between">
@@ -1000,7 +1132,72 @@ document.addEventListener("click",e=>{
  /* CLIENTES */
 
  if(a==="open-client"){selectedClient=id;page="clientes";render();return}
+ /* OBJETIVOS DEL CLIENTE */
 
+ if(a==="update-objective"){
+
+  const c=getClient(b.dataset.client);
+  const o=c?.objectives?.find(x=>x.id===id);
+
+  if(!o)return;
+
+  const value=prompt(
+   "Ingresá el nuevo valor actual de "+o.metric,
+   o.currentValue
+  );
+
+  if(value===null)return;
+
+  if(value.trim()===""||!Number.isFinite(Number(value))){
+   alert("Ingresá un valor numérico válido.");
+   return;
+  }
+
+  o.currentValue=value;
+
+  const progress=objectiveProgress(o);
+
+  if(progress!==null&&progress>=100){
+   o.status="Cumplido";
+  }else{
+   o.status="En proceso";
+  }
+
+  save();
+  render();
+  return;
+
+ }
+
+ if(a==="toggle-objective"){
+
+  const c=getClient(b.dataset.client);
+  const o=c?.objectives?.find(x=>x.id===id);
+
+  if(!o)return;
+
+  o.status=o.status==="Cumplido"?"En proceso":"Cumplido";
+
+  save();
+  render();
+  return;
+
+ }
+
+ if(a==="delete-objective"){
+
+  const c=getClient(b.dataset.client);
+  if(!c)return;
+
+  if(!confirm("¿Eliminar este objetivo?"))return;
+
+  c.objectives=c.objectives.filter(o=>o.id!==id);
+
+  save();
+  render();
+  return;
+
+ }
 if(a==="edit-client"){
 
  const c=getClient(id);
@@ -1262,7 +1459,32 @@ if(f.id==="clientForm"){
   save();render();
 
  }
+ if(f.id==="goalForm"){
 
+  const c=getClient(f.dataset.client);
+  if(!c)return;
+
+  if(!Array.isArray(c.objectives))c.objectives=[];
+
+  c.objectives.push({
+   id:uid(),
+   name:d.name.trim(),
+   category:d.category,
+   metric:d.metric.trim(),
+   startValue:d.startValue,
+   targetValue:d.targetValue,
+   currentValue:d.currentValue,
+   dueDate:d.dueDate,
+   notes:d.notes,
+   status:"En proceso",
+   createdAt:dateNow()
+  });
+
+  save();
+  render();
+  return;
+
+ }
  if(f.id==="evaluationForm"){
 
   const c=getClient(f.dataset.client);if(!c)return;
