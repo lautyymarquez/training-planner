@@ -771,6 +771,219 @@ function personalRecordsCard(c){
  </div>
  `;
 }
+/* COMPARACIÓN DE SESIONES */
+
+function sessionMetrics(session){
+
+ const exercises={};
+
+ let totalVolume=0;
+ let totalSets=0;
+ let totalReps=0;
+
+ (session.exercises||[]).forEach(ex=>{
+
+  const name=String(ex.name||"").trim();
+  if(!name)return;
+
+  const key=name.toLowerCase();
+
+  if(!exercises[key]){
+   exercises[key]={
+    name,
+    sets:0,
+    reps:0,
+    volume:0
+   };
+  }
+
+  (ex.series||[]).forEach(s=>{
+
+   const weight=Number(s.weight);
+   const reps=Number(s.reps);
+
+   if(!Number.isFinite(reps)||reps<=0)return;
+
+   const safeWeight=Number.isFinite(weight)&&weight>0?weight:0;
+
+   const volume=safeWeight*reps;
+
+   exercises[key].sets++;
+   exercises[key].reps+=reps;
+   exercises[key].volume+=volume;
+
+   totalSets++;
+   totalReps+=reps;
+   totalVolume+=volume;
+
+  });
+
+ });
+
+ return {
+  exercises,
+  totalSets,
+  totalReps,
+  totalVolume
+ };
+
+}
+
+function sessionComparisonCard(c){
+
+ const ordered=c.sessions.slice().sort(
+  (a,b)=>(b.date||"").localeCompare(a.date||"")
+ );
+
+ const first=ordered.length>=2?ordered[1]:ordered[0];
+ const second=ordered[0];
+
+ return `
+ <div class="card">
+
+  <h2>Comparación de sesiones</h2>
+
+  <p>Elegí dos entrenamientos para analizar los cambios en el rendimiento del cliente.</p>
+
+  ${ordered.length>=2?`
+
+   <div class="field">
+    <label>Sesión A</label>
+    <select id="compareSessionA">
+     ${ordered.map(s=>`
+      <option value="${esc(s.id)}" ${s.id===first.id?"selected":""}>
+       ${esc(s.dayName||"Entrenamiento")} · ${esc(s.date||"Sin fecha")}
+      </option>
+     `).join("")}
+    </select>
+   </div>
+
+   <div class="field">
+    <label>Sesión B</label>
+    <select id="compareSessionB">
+     ${ordered.map(s=>`
+      <option value="${esc(s.id)}" ${s.id===second.id?"selected":""}>
+       ${esc(s.dayName||"Entrenamiento")} · ${esc(s.date||"Sin fecha")}
+      </option>
+     `).join("")}
+    </select>
+   </div>
+
+   <button class="btn" data-action="compare-sessions" data-client="${c.id}">
+    Comparar entrenamientos
+   </button>
+
+   <div id="sessionComparisonResult"></div>
+
+  `:`
+   <div class="empty">
+    Necesitás registrar al menos dos entrenamientos para poder compararlos.
+   </div>
+  `}
+
+ </div>
+ `;
+
+}
+
+function buildSessionComparison(a,b){
+
+ const statsA=sessionMetrics(a);
+ const statsB=sessionMetrics(b);
+
+ const difference=statsB.totalVolume-statsA.totalVolume;
+
+ const names=[...new Set([
+  ...Object.keys(statsA.exercises),
+  ...Object.keys(statsB.exercises)
+ ])].sort();
+
+ return `
+
+ <hr>
+
+ <h3>Resultado de la comparación</h3>
+
+ <div class="grid">
+
+  <div class="exercise">
+   <div class="statlabel">Volumen sesión A</div>
+   <div class="stat">${fmt(statsA.totalVolume)} kg</div>
+  </div>
+
+  <div class="exercise">
+   <div class="statlabel">Volumen sesión B</div>
+   <div class="stat">${fmt(statsB.totalVolume)} kg</div>
+  </div>
+
+  <div class="exercise">
+   <div class="statlabel">Diferencia de volumen</div>
+   <div class="stat">${difference>0?"+":""}${fmt(difference)} kg</div>
+  </div>
+
+ </div>
+
+ <div class="exercise">
+  <b>Sesión A</b>
+  <p>${esc(a.dayName)} · ${esc(a.date)}</p>
+  <p>${statsA.totalSets} series · ${statsA.totalReps} repeticiones</p>
+
+  <hr>
+
+  <b>Sesión B</b>
+  <p>${esc(b.dayName)} · ${esc(b.date)}</p>
+  <p>${statsB.totalSets} series · ${statsB.totalReps} repeticiones</p>
+ </div>
+
+ <h3>Comparación por ejercicio</h3>
+
+ ${names.map(key=>{
+
+  const x=statsA.exercises[key]||{
+   name:statsB.exercises[key].name,
+   sets:0,
+   reps:0,
+   volume:0
+  };
+
+  const y=statsB.exercises[key]||{
+   name:statsA.exercises[key].name,
+   sets:0,
+   reps:0,
+   volume:0
+  };
+
+  const diff=y.volume-x.volume;
+
+  return `
+   <div class="exercise">
+
+    <b>${esc(x.name)}</b>
+
+    <p>Sesión A: ${x.sets} series · ${x.reps} rep · ${fmt(x.volume)} kg</p>
+
+    <p>Sesión B: ${y.sets} series · ${y.reps} rep · ${fmt(y.volume)} kg</p>
+
+    <div class="between">
+     <span class="muted">Diferencia de volumen</span>
+     <b>${diff>0?"+":""}${fmt(diff)} kg</b>
+    </div>
+
+   </div>
+  `;
+
+ }).join("")||`<div class="empty">No hay ejercicios para comparar.</div>`}
+
+ <div class="notice">
+  El volumen se calcula multiplicando peso por repeticiones. En ejercicios de peso corporal sin carga externa registrada, el volumen aparecerá como 0 
+ </div>
+
+ ${sessionComparisonCard(c)}
+
+ `;
+ `;
+
+}
 function clientProfile(c){
 
  const p=ensureClientPlan(c);
@@ -1456,7 +1669,39 @@ if(a==="edit-client"){
   const c=getClient(b.dataset.client);if(c&&confirm("¿Eliminar esta sesión?")){c.sessions=c.sessions.filter(s=>s.id!==id);save();render()}return;
 
  }
+if(a==="compare-sessions"){
 
+ const c=getClient(b.dataset.client);
+
+ if(!c)return;
+
+ const firstId=document.getElementById("compareSessionA")?.value;
+ const secondId=document.getElementById("compareSessionB")?.value;
+
+ if(!firstId||!secondId){
+  alert("Seleccioná dos entrenamientos.");
+  return;
+ }
+
+ if(firstId===secondId){
+  alert("Seleccioná dos sesiones diferentes.");
+  return;
+ }
+
+ const first=c.sessions.find(s=>s.id===firstId);
+ const second=c.sessions.find(s=>s.id===secondId);
+
+ if(!first||!second)return;
+
+ const result=document.getElementById("sessionComparisonResult");
+
+ if(result){
+  result.innerHTML=buildSessionComparison(first,second);
+ }
+
+ return;
+
+}
  if(a==="delete-custom-exercise"){
 
   if(confirm("¿Eliminar este ejercicio personalizado?")){customExercises=customExercises.filter(x=>x.id!==id);save();render()}return;
