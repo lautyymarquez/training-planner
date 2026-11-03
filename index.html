@@ -886,7 +886,92 @@ function sessionComparisonCard(c){
 
 }
 
+
 function buildSessionComparison(a,b){
+
+ const statsA=sessionMetrics(a);
+ const statsB=sessionMetrics(b);
+
+ const difference=statsB.totalVolume-statsA.totalVolume;
+
+ const names=[...new Set([
+  ...Object.keys(statsA.exercises),
+  ...Object.keys(statsB.exercises)
+ ])].sort();
+
+ return `
+
+ <hr>
+
+ <h3>Resultado de la comparación</h3>
+
+ <div class="grid">
+
+  <div class="exercise">
+   <div class="statlabel">Volumen sesión A</div>
+   <div class="stat">${fmt(statsA.totalVolume)} kg</div>
+  </div>
+
+  <div class="exercise">
+   <div class="statlabel">Volumen sesión B</div>
+   <div class="stat">${fmt(statsB.totalVolume)} kg</div>
+  </div>
+
+  <div class="exercise">
+   <div class="statlabel">Diferencia de volumen</div>
+   <div class="stat">${difference>0?"+":""}${fmt(difference)} kg</div>
+  </div>
+
+ </div>
+
+ <div class="exercise">
+  <b>Sesión A</b>
+  <p>${esc(a.dayName||"Entrenamiento")} · ${esc(a.date||"")}</p>
+  <p>${statsA.totalSets} series · ${statsA.totalReps} repeticiones</p>
+
+  <hr>
+
+  <b>Sesión B</b>
+  <p>${esc(b.dayName||"Entrenamiento")} · ${esc(b.date||"")}</p>
+  <p>${statsB.totalSets} series · ${statsB.totalReps} repeticiones</p>
+ </div>
+
+ <h3>Comparación por ejercicio</h3>
+
+ ${names.map(key=>{
+
+  const x=statsA.exercises[key]||{
+   name:statsB.exercises[key].name,
+   sets:0,reps:0,volume:0
+  };
+
+  const y=statsB.exercises[key]||{
+   name:statsA.exercises[key].name,
+   sets:0,reps:0,volume:0
+  };
+
+  const diff=y.volume-x.volume;
+
+  return `
+   <div class="exercise">
+    <b>${esc(x.name)}</b>
+    <p>Sesión A: ${x.sets} series · ${x.reps} rep · ${fmt(x.volume)} kg</p>
+    <p>Sesión B: ${y.sets} series · ${y.reps} rep · ${fmt(y.volume)} kg</p>
+    <div class="between">
+     <span class="muted">Diferencia de volumen</span>
+     <b>${diff>0?"+":""}${fmt(diff)} kg</b>
+    </div>
+   </div>
+  `;
+
+ }).join("")||`<div class="empty">No hay ejercicios para comparar.</div>`}
+
+ <div class="notice">
+  El volumen se calcula multiplicando peso por repeticiones. En ejercicios de peso corporal sin carga externa registrada, el volumen aparecerá como 0 kg.
+ </div>
+
+ `;
+}
 
  const statsA=sessionMetrics(a);
  const statsB=sessionMetrics(b);
@@ -1097,7 +1182,13 @@ ${personalRecordsCard(c)}
  </div>
  </div>`).join(""):`<div class="empty">Todavía no hay sesiones registradas.</div>`}
 
- </div>`;
+ </div>
+
+ ${sessionComparisonCard(c)}
+
+ `;
+
+}
 
 }
 
