@@ -559,63 +559,118 @@ function pageClients(){
 
 }
 
+function clientProfile(c){
+
  const p=ensureClientPlan(c);
 
  return `${pageTitle(c.name,"Ficha individual del cliente")}
 
- <div class="card"><div class="row"><button class="btn secondary" data-action="back-clients">← Volver</button><button class="btn secondary" data-action="edit-client" data-id="${c.id}">Editar ficha</button><button class="btn danger" data-action="delete-client" data-id="${c.id}">Eliminar</button></div>
+ <div class="card"><div class="row">
+ <button class="btn secondary" data-action="back-clients">← Volver</button>
+ <button class="btn secondary" data-action="edit-client" data-id="${c.id}">Editar ficha</button>
+ <button class="btn danger" data-action="delete-client" data-id="${c.id}">Eliminar</button>
+ </div>
 
-<p><b>Edad:</b> ${esc(c.age||"No registrada")} años</p>
-<p><b>Teléfono / WhatsApp:</b> ${esc(c.phone||"No registrado")}</p>
-<p><b>Objetivo:</b> ${esc(c.goal||"—")}</p>
-<p><b>Experiencia:</b> ${esc(c.experience||"No registrada")}</p>
-<p><b>Disponibilidad:</b> ${esc(c.availability||"No registrada")}</p>
-<p><b>Fecha de inicio:</b> ${esc(c.start||"—")}</p>
-<p><b>Observaciones:</b> ${esc(c.notes||"Sin observaciones")}</p>
+ <p><b>Edad:</b> ${esc(c.age||"No registrada")} años</p>
+ <p><b>Teléfono / WhatsApp:</b> ${esc(c.phone||"No registrado")}</p>
+ <p><b>Objetivo:</b> ${esc(c.goal||"—")}</p>
+ <p><b>Experiencia:</b> ${esc(c.experience||"No registrada")}</p>
+ <p><b>Disponibilidad:</b> ${esc(c.availability||"No registrada")}</p>
+ <p><b>Fecha de inicio:</b> ${esc(c.start||"—")}</p>
+ <p><b>Observaciones:</b> ${esc(c.notes||"Sin observaciones")}</p>
 
- <div class="field"><label>Asignar una planificación como punto de partida</label><select id="assignPlan"><option value="">Sin planificación</option>${plans.map(x=>`<option value="${x.id}" ${c.planId===x.id?"selected":""}>${esc(x.name)}</option>`).join("")}</select></div>
+ <div class="field">
+ <label>Asignar una planificación como punto de partida</label>
+ <select id="assignPlan">
+ <option value="">Sin planificación</option>
+ ${plans.map(x=>`<option value="${x.id}" ${c.planId===x.id?"selected":""}>${esc(x.name)}</option>`).join("")}
+ </select>
+ </div>
 
  <button class="btn secondary" data-action="assign-plan" data-id="${c.id}">Asignar / reemplazar planificación</button>
 
  <div class="notice">Al asignar una planificación se crea una copia exclusiva para este cliente. Los cambios que hagas en su rutina no modifican el plan general ni a otros clientes.</div>
-
  </div>
 
- <div class="card"><div class="between"><h2>Entrenamiento personal</h2><button class="btn" data-action="edit-client-plan" data-id="${c.id}">Editar entrenamiento</button></div>
+ <div class="card">
+ <div class="between">
+ <h2>Entrenamiento personal</h2>
+ <button class="btn" data-action="edit-client-plan" data-id="${c.id}">Editar entrenamiento</button>
+ </div>
 
  ${p?`<p><b>${esc(p.name||"Plan personalizado")}</b> · ${p.days.length} días · ${p.days.reduce((n,d)=>n+d.exercises.length,0)} ejercicios</p>
 
- ${p.days.map(d=>`<div class="exercise"><b>${esc(d.name)}</b><p>${d.exercises.length} ejercicios</p></div>`).join("")||`<div class="empty">Todavía no agregaste días.</div>`}`:`<p>Este cliente todavía no tiene una rutina. Podés asignarle una planificación o crear una desde cero.</p>`}
+ ${p.days.map(d=>`<div class="exercise">
+ <b>${esc(d.name)}</b>
+ <p>${d.exercises.length} ejercicios</p>
+ </div>`).join("")||`<div class="empty">Todavía no agregaste días.</div>`}`:`<p>Este cliente todavía no tiene una rutina. Podés asignarle una planificación o crear una desde cero.</p>`}
 
  <button class="btn secondary" data-action="create-client-plan" data-id="${c.id}">Crear rutina desde cero</button>
+ </div>
+
+ <div class="card">
+ <h2>Registrar entrenamiento</h2>
+
+ ${p&&p.days.length?`
+ <div class="field">
+ <label>Día de la planificación personal</label>
+ <select id="sessionDay">
+ ${p.days.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")}
+ </select>
+ </div>
+ <button class="btn" data-action="start-session" data-id="${c.id}">Iniciar entrenamiento</button>
+ `:`<p>Agregá días a la rutina personal para poder registrar sesiones.</p>`}
 
  </div>
 
- <div class="card"><h2>Registrar entrenamiento</h2>
-
- ${p&&p.days.length?`<div class="field"><label>Día de la planificación personal</label><select id="sessionDay">${p.days.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join("")}</select></div><button class="btn" data-action="start-session" data-id="${c.id}">Iniciar entrenamiento</button>`:`<p>Agregá días a la rutina personal para poder registrar sesiones.</p>`}
-
- </div>
-
- <div class="card"><h2>Evaluaciones</h2>
+ <div class="card">
+ <h2>Evaluaciones</h2>
 
  <form id="evaluationForm" data-client="${c.id}">
 
- <div class="row">${field("Fecha","date",dateNow(),"date")}${field("Peso (kg)","weight","","number",'step="0.1"')}${field("Observación","note")}</div>
+ <div class="row">
+ ${field("Fecha","date",dateNow(),"date")}
+ ${field("Peso (kg)","weight","","number",'step="0.1"')}
+ ${field("Observación","note")}
+ </div>
 
- <div class="row">${field("Indicador adicional","metric")}${field("Valor","value")}</div>
+ <div class="row">
+ ${field("Indicador adicional","metric")}
+ ${field("Valor","value")}
+ </div>
 
- <button class="btn secondary">Guardar evaluación</button></form>
+ <button class="btn secondary">Guardar evaluación</button>
+ </form>
 
- ${c.evaluations.length?c.evaluations.slice().reverse().map(e=>`<div class="exercise"><b>${esc(e.date)}</b><p>Peso: ${esc(e.weight||"—")} kg · ${esc(e.metric||"")}: ${esc(e.value||"—")}</p><p>${esc(e.note||"")}</p></div>`).join(""):`<div class="empty">Sin evaluaciones registradas.</div>`}
+ ${c.evaluations.length?c.evaluations.slice().reverse().map(e=>`
+ <div class="exercise">
+ <b>${esc(e.date)}</b>
+ <p>Peso: ${esc(e.weight||"—")} kg · ${esc(e.metric||"")}: ${esc(e.value||"—")}</p>
+ <p>${esc(e.note||"")}</p>
+ </div>`).join(""):`<div class="empty">Sin evaluaciones registradas.</div>`}
 
  </div>
 
- <div class="card"><h2>Historial de entrenamientos</h2>${c.sessions.length?c.sessions.slice().reverse().map(s=>`<div class="exercise"><div class="between"><div><b>${esc(s.dayName)}</b><p>${esc(s.date)}</p></div><div class="row"><button class="btn small secondary" data-action="view-session" data-client="${c.id}" data-id="${s.id}">Ver</button><button class="btn small danger" data-action="delete-session" data-client="${c.id}" data-id="${s.id}">×</button></div></div></div>`).join(""):`<div class="empty">Todavía no hay sesiones registradas.</div>`}</div>`;
+ <div class="card">
+ <h2>Historial de entrenamientos</h2>
+
+ ${c.sessions.length?c.sessions.slice().reverse().map(s=>`
+ <div class="exercise">
+ <div class="between">
+ <div>
+ <b>${esc(s.dayName)}</b>
+ <p>${esc(s.date)}</p>
+ </div>
+ <div class="row">
+ <button class="btn small secondary" data-action="view-session" data-client="${c.id}" data-id="${s.id}">Ver</button>
+ <button class="btn small danger" data-action="delete-session" data-client="${c.id}" data-id="${s.id}">×</button>
+ </div>
+ </div>
+ </div>`).join(""):`<div class="empty">Todavía no hay sesiones registradas.</div>`}
+
+ </div>`;
 
 }
-
-/* EDITOR DE RUTINA PERSONAL DEL CLIENTE */
 
 function clientPlanEditor(c){
 
