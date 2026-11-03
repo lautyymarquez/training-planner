@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 
 <html lang="es">
@@ -8,7 +6,7 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <meta name="theme-color" content="#10110f">
 
@@ -16,81 +14,111 @@
 
 <style>
 
-:root{--bg:#10110f;--panel:#1a1c19;--panel2:#22251f;--green:#baff39;--text:#f3f5ef;--muted:#92988c;--border:#30342d;--red:#ff6868}
+:root{
+
+ --bg:#10110f;--panel:#191c19;--panel2:#222620;--green:#baff39;
+
+ --text:#f4f6f0;--muted:#92998e;--border:#30362e;
+
+ --red:#ff6868;--blue:#76baff;--radius:16px
+
+}
 
 *{box-sizing:border-box}
 
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;padding-bottom:85px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;padding-bottom:95px}
 
-header{padding:23px 18px 15px;border-bottom:1px solid var(--border);position:sticky;top:0;background:#10110f;z-index:5}
+header{position:sticky;top:0;z-index:10;background:#10110f;border-bottom:1px solid var(--border);padding:17px 18px}
 
-.logo{font-size:23px;font-weight:900;letter-spacing:1px}.logo span{color:var(--green)}
+.logo{font-weight:900;font-size:22px;letter-spacing:1px}
 
-.sub{font-size:11px;color:var(--muted);letter-spacing:2px;margin-top:5px}
+.logo span{color:var(--green)}
 
-main{padding:18px;max-width:750px;margin:auto}
+.sub{font-size:10px;letter-spacing:2px;color:var(--muted);margin-top:5px}
 
-h2{font-size:21px;margin:8px 0 16px}h3{font-size:16px;margin:0 0 12px}
+main{max-width:850px;margin:auto;padding:18px}
 
-p{color:var(--muted);font-size:13px;line-height:1.5}
+h2{font-size:22px;margin:8px 0 17px}
 
-.card{background:var(--panel);border:1px solid var(--border);border-radius:15px;padding:16px;margin-bottom:13px}
+h3{font-size:16px;margin:0 0 12px}
 
-button{border:0;border-radius:10px;padding:12px 15px;font-weight:700;cursor:pointer}
+p{font-size:13px;color:var(--muted);line-height:1.5}
+
+small,.small{font-size:11px;color:var(--muted)}
+
+.card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:15px;margin-bottom:13px}
+
+.card-title{display:flex;align-items:center;justify-content:space-between;gap:10px}
+
+.stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+
+.stat{background:var(--panel2);border:1px solid var(--border);padding:14px;border-radius:13px}
+
+.stat strong{font-size:25px;color:var(--green);display:block;margin-bottom:5px}
+
+button{border:0;border-radius:10px;padding:11px 14px;font-weight:750;cursor:pointer;font-size:13px}
 
 .primary{background:var(--green);color:#10110f}
 
-.secondary{background:var(--panel2);color:var(--text);border:1px solid var(--border)}
+.secondary{background:var(--panel2);border:1px solid var(--border);color:var(--text)}
 
-.danger{background:#382020;color:#ff8b8b}
+.danger{background:#3a2020;color:#ff9999}
 
-input,select,textarea{width:100%;background:#11130f;color:var(--text);border:1px solid var(--border);border-radius:9px;padding:11px;margin-top:6px;font-size:14px}
+button:active{opacity:.75}
 
-label{font-size:12px;color:var(--muted);display:block;margin-top:12px}
+input,select,textarea{width:100%;background:#111410;color:var(--text);border:1px solid var(--border);border-radius:9px;padding:11px;margin-top:6px;font-size:14px}
 
-.row{display:flex;gap:8px;align-items:center}.row>*{flex:1;min-width:0}
+textarea{resize:vertical;min-height:65px}
 
-.nav{position:fixed;bottom:0;left:0;right:0;background:#171915;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 2px calc(8px + env(safe-area-inset-bottom));z-index:10}
+label{display:block;color:var(--muted);font-size:11px;margin-top:11px}
 
-.nav button{background:none;color:var(--muted);font-size:10px;padding:8px 3px}
+.row{display:flex;gap:8px;align-items:center}
+
+.row>*{flex:1;min-width:0}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:#171a16;border-top:1px solid var(--border);display:flex;justify-content:space-around;padding:8px 2px calc(8px + env(safe-area-inset-bottom))}
+
+.nav button{background:none;color:var(--muted);font-size:10px;padding:7px 3px;flex:1}
 
 .nav button.active{color:var(--green)}
 
-.stat{font-size:27px;font-weight:900;color:var(--green)}
+.nav span{display:block;font-size:18px;margin-bottom:3px}
 
-.exercise{border:1px solid var(--border);border-radius:12px;padding:13px;margin-top:10px;background:#171915}
+.tag{display:inline-block;background:#2b3321;color:var(--green);padding:5px 9px;border-radius:30px;font-size:10px;margin:4px 3px 0 0}
 
-.exercise-head{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.item{background:#171a16;border:1px solid var(--border);border-radius:12px;padding:13px;margin-top:10px}
 
-.exercise-name{font-weight:800}.small{font-size:11px;color:var(--muted)}
+.item-head{display:flex;justify-content:space-between;align-items:center;gap:8px}
 
-.series{background:#22251f;border-radius:10px;padding:10px;margin-top:9px}
+.series{background:var(--panel2);padding:10px;border-radius:10px;margin-top:9px}
 
-.series-title{font-size:12px;font-weight:800;color:var(--green);margin-bottom:6px}
+.series-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
 
-.series-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.series-grid label{margin:0;font-size:10px}
 
-.series-grid label{margin:0;font-size:10px}.series-grid input{padding:9px 5px;text-align:center}
+.series-grid input{padding:9px 4px;text-align:center}
 
 .actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
 
-.actions button{font-size:12px;padding:9px 11px}
+.actions button{font-size:11px;padding:9px 10px}
 
-.tag{display:inline-block;background:#2a3021;color:var(--green);font-size:11px;padding:5px 8px;border-radius:20px;margin-top:6px}
+.hidden{display:none!important}
 
-.hidden{display:none!important}.empty{text-align:center;padding:30px 10px;color:var(--muted)}
+.empty{text-align:center;padding:25px;color:var(--muted);font-size:13px}
 
-.day-title{font-weight:800;font-size:17px;margin-bottom:10px}
+.bar{height:9px;background:#30362e;border-radius:10px;overflow:hidden;margin-top:7px}
+
+.bar div{height:100%;background:var(--green);border-radius:10px}
+
+.section-label{font-size:10px;letter-spacing:1.5px;color:var(--muted);margin:20px 0 9px}
 
 hr{border:0;border-top:1px solid var(--border);margin:15px 0}
 
-.back{margin-bottom:12px}
+.day-heading{font-size:16px;font-weight:800;margin:5px 0 10px}
 
-.item-line{padding:11px 0;border-bottom:1px solid var(--border)}
-
-.item-line:last-child{border:0}
-
-@media(min-width:600px){main{padding:25px}}
+@media(min-width:600px){main{padding:25px}.stat-grid{grid-template-columns:repeat(4,1fr)}}
 
 </style>
 
@@ -102,7 +130,7 @@ hr{border:0;border-top:1px solid var(--border);margin:15px 0}
 
  <div class="logo">TP<span>.</span> TRAINING PLANNER</div>
 
- <div class="sub">YOUR PERSONAL TRAINING SYSTEM</div>
+ <div class="sub">PROFESSIONAL TRAINING SYSTEM</div>
 
 </header>
 
@@ -110,19 +138,21 @@ hr{border:0;border-top:1px solid var(--border);margin:15px 0}
 
 <section id="home">
 
- <h2>Inicio</h2>
+ <h2>Panel principal</h2>
 
  <div class="card">
 
-  <p>Tu espacio personal de planificación y seguimiento.</p>
+  <div class="section-label">RESUMEN GENERAL</div>
 
-  <div class="row">
+  <div class="stat-grid">
 
-   <div><div class="stat" id="planCount">0</div><div class="small">PLANES</div></div>
+   <div class="stat"><strong id="homePlans">0</strong><small>PLANIFICACIONES</small></div>
 
-   <div><div class="stat" id="clientCount">0</div><div class="small">CLIENTES</div></div>
+   <div class="stat"><strong id="homeClients">0</strong><small>CLIENTES</small></div>
 
-   <div><div class="stat" id="exerciseCount">0</div><div class="small">EJERCICIOS</div></div>
+   <div class="stat"><strong id="homeExercises">0</strong><small>EJERCICIOS</small></div>
+
+   <div class="stat"><strong id="homeSessions">0</strong><small>SESIONES</small></div>
 
   </div>
 
@@ -130,51 +160,29 @@ hr{border:0;border-top:1px solid var(--border);margin:15px 0}
 
  <button class="primary" onclick="newPlan()">+ Nueva planificación</button>
 
- <button class="secondary" onclick="newClient()">+ Nuevo cliente</button>
+ <div class="section-label">MIS PLANIFICACIONES</div>
 
- <h3 style="margin-top:25px">Mis planificaciones</h3><div id="homePlans"></div>
+ <div id="homePlanList"></div>
 
- <h3 style="margin-top:22px">Mis clientes</h3><div id="homeClients"></div>
+ <div class="section-label">CLIENTES</div>
+
+ <div id="homeClientList"></div>
 
 </section>
 
 <section id="plans" class="hidden">
 
- <h2>Planificaciones</h2>
+ <div class="card-title"><h2>Planificaciones</h2><button class="primary" onclick="newPlan()">+ Crear</button></div>
 
- <button class="primary" onclick="newPlan()">+ Crear planificación</button>
-
- <div id="plansList" style="margin-top:15px"></div>
+ <div id="plansList"></div>
 
 </section>
 
 <section id="editor" class="hidden">
 
- <button class="secondary back" onclick="showPage('plans')">← Volver</button>
+ <button class="secondary" onclick="showPage('plans')">← Volver</button>
 
- <div id="editorContent"></div>
-
-</section>
-
-<section id="clients" class="hidden">
-
- <h2>Mis clientes</h2>
-
- <p>Fichas individuales y seguimiento.</p>
-
- <button class="primary" onclick="newClient()">+ Agregar cliente</button>
-
- <input id="searchClient" placeholder="Buscar cliente..." oninput="renderClients()">
-
- <div id="clientsList" style="margin-top:14px"></div>
-
-</section>
-
-<section id="clientDetail" class="hidden">
-
- <button class="secondary back" onclick="showPage('clients')">← Volver a clientes</button>
-
- <div id="clientContent"></div>
+ <div id="editorContent" style="margin-top:15px"></div>
 
 </section>
 
@@ -182,29 +190,123 @@ hr{border:0;border-top:1px solid var(--border);margin:15px 0}
 
  <h2>Biblioteca de ejercicios</h2>
 
- <p>Ejercicios disponibles para tus planificaciones.</p>
+ <input id="exerciseSearch" placeholder="Buscar ejercicio..." oninput="renderLibrary()">
 
- <button class="primary" onclick="newCustomExercise()">+ Crear ejercicio</button>
+ <div class="row">
 
- <input id="searchExercise" placeholder="Buscar ejercicio..." oninput="renderLibrary()">
+  <select id="muscleFilter" onchange="renderLibrary()">
+
+   <option value="">Todos los grupos</option>
+
+  </select>
+
+  <button class="primary" onclick="addCustomExercise()">+ Agregar</button>
+
+ </div>
 
  <div id="libraryList"></div>
 
 </section>
 
+<section id="clients" class="hidden">
+
+ <div class="card-title"><h2>Clientes</h2><button class="primary" onclick="newClient()">+ Agregar</button></div>
+
+ <div id="clientsList"></div>
+
+</section>
+
+<section id="clientDetail" class="hidden">
+
+ <button class="secondary" onclick="showPage('clients')">← Volver a clientes</button>
+
+ <div id="clientContent" style="margin-top:15px"></div>
+
+</section>
+
 <section id="analysis" class="hidden">
 
- <h2>Análisis</h2>
+ <h2>Estadísticas</h2>
+
+ <div class="stat-grid">
+
+  <div class="stat"><strong id="statPlans">0</strong><small>PLANES</small></div>
+
+  <div class="stat"><strong id="statClients">0</strong><small>CLIENTES</small></div>
+
+  <div class="stat"><strong id="statExercises">0</strong><small>EJERCICIOS</small></div>
+
+  <div class="stat"><strong id="statSessions">0</strong><small>SESIONES</small></div>
+
+ </div>
+
+ <div class="card" style="margin-top:13px">
+
+  <h3>Ejercicios más utilizados</h3>
+
+  <div id="exerciseStats"></div>
+
+ </div>
 
  <div class="card">
 
-  <div class="stat" id="totalPlans">0</div><div class="small">PLANIFICACIONES</div><hr>
+  <h3>Actividad de clientes</h3>
 
-  <div class="stat" id="totalClients">0</div><div class="small">CLIENTES</div><hr>
+  <div id="clientStats"></div>
 
-  <div class="stat" id="totalExercises">0</div><div class="small">EJERCICIOS PLANIFICADOS</div><hr>
+ </div>
 
-  <div class="stat" id="totalSessions">0</div><div class="small">ENTRENAMIENTOS REGISTRADOS</div>
+</section>
+
+<section id="tools" class="hidden">
+
+ <h2>Herramientas</h2>
+
+ <div class="card">
+
+  <h3>Calculadora de porcentajes de 1RM</h3>
+
+  <label>1RM estimado (kg)</label><input id="oneRM" type="number" min="0" placeholder="Ej. 100">
+
+  <button class="primary" style="margin-top:10px" onclick="calculateRM()">Calcular</button>
+
+  <div id="rmResult"></div>
+
+ </div>
+
+ <div class="card">
+
+  <h3>Calculadora de volumen</h3>
+
+  <label>Series</label><input id="volSets" type="number" value="3">
+
+  <label>Repeticiones por serie</label><input id="volReps" type="number" value="10">
+
+  <label>Carga (kg)</label><input id="volWeight" type="number" value="20">
+
+  <button class="primary" style="margin-top:10px" onclick="calculateVolume()">Calcular volumen</button>
+
+  <div id="volumeResult"></div>
+
+ </div>
+
+ <div class="card">
+
+  <h3>Cronómetro de descanso</h3>
+
+  <label>Duración (segundos)</label><input id="timerSeconds" type="number" value="90">
+
+  <div class="stat" style="margin-top:12px;text-align:center"><strong id="timerDisplay">01:30</strong><small>TIEMPO RESTANTE</small></div>
+
+  <div class="actions">
+
+   <button class="primary" onclick="startTimer()">Iniciar</button>
+
+   <button class="secondary" onclick="pauseTimer()">Pausar</button>
+
+   <button class="secondary" onclick="resetTimer()">Reiniciar</button>
+
+  </div>
 
  </div>
 
@@ -212,13 +314,13 @@ hr{border:0;border-top:1px solid var(--border);margin:15px 0}
 
 <section id="settings" class="hidden">
 
- <h2>Datos y copias de seguridad</h2>
+ <h2>Configuración y datos</h2>
 
  <div class="card">
 
-  <h3>Guardar una copia</h3>
+  <h3>Copia de seguridad</h3>
 
-  <p>Exportá planes, clientes, ejercicios e historiales.</p>
+  <p>Exportá tus planificaciones, ejercicios, clientes e historial en un archivo JSON.</p>
 
   <button class="primary" onclick="exportBackup()">Exportar copia</button>
 
@@ -226,21 +328,29 @@ hr{border:0;border-top:1px solid var(--border);margin:15px 0}
 
  <div class="card">
 
-  <h3>Recuperar una copia</h3>
+  <h3>Importar copia</h3>
 
-  <input type="file" id="backupFile" accept=".json">
+  <input type="file" id="backupFile" accept=".json,application/json">
 
-  <button class="secondary" style="margin-top:10px" onclick="importBackup()">Importar copia</button>
+  <button class="secondary" style="margin-top:10px" onclick="importBackup()">Importar datos</button>
 
  </div>
 
  <div class="card">
 
-  <h3>Guardado automático</h3>
+  <h3>Almacenamiento</h3>
 
-  <p id="saveStatus">Los datos se guardan en este navegador.</p>
+  <p>Los datos se guardan automáticamente en este navegador y dispositivo. No se sincronizan con GitHub.</p>
 
-  <p>Los datos no se sincronizan con otros dispositivos. Evitá almacenar información médica o datos sensibles de clientes.</p>
+  <p id="saveStatus">Guardado automático activo.</p>
+
+ </div>
+
+ <div class="card">
+
+  <h3>Informes</h3>
+
+  <p>Podés imprimir o guardar como PDF el informe de un cliente desde su perfil.</p>
 
  </div>
 
@@ -250,17 +360,19 @@ hr{border:0;border-top:1px solid var(--border);margin:15px 0}
 
 <nav class="nav">
 
- <button class="active" onclick="showPage('home',this)">⌂<br>Inicio</button>
+ <button class="active" onclick="showPage('home',this)"><span>⌂</span>Inicio</button>
 
- <button onclick="showPage('plans',this)">▤<br>Planes</button>
+ <button onclick="showPage('plans',this)"><span>▤</span>Planes</button>
 
- <button onclick="showPage('clients',this)">♙<br>Clientes</button>
+ <button onclick="showPage('clients',this)"><span>♙</span>Clientes</button>
 
- <button onclick="showPage('library',this)">＋<br>Ejercicios</button>
+ <button onclick="showPage('library',this)"><span>＋</span>Ejercicios</button>
 
- <button onclick="showPage('analysis',this)">◫<br>Análisis</button>
+ <button onclick="showPage('analysis',this)"><span>◫</span>Stats</button>
 
- <button onclick="showPage('settings',this)">⚙<br>Datos</button>
+ <button onclick="showPage('tools',this)"><span>◷</span>Tools</button>
+
+ <button onclick="showPage('settings',this)"><span>⚙</span>Datos</button>
 
 </nav>
 
@@ -268,11 +380,11 @@ hr{border:0;border-top:1px solid var(--border);margin:15px 0}
 
 const KEY='tp_training_planner_v1';
 
-const LIBKEY='tp_custom_exercises_v1';
+const EXKEY='tp_custom_exercises_v1';
 
 const CLIENTKEY='tp_clients_v1';
 
-const defaultLibrary=[
+const defaultExercises=[
 
 ['Press banca','Pecho'],['Press inclinado con mancuernas','Pecho'],['Aperturas','Pecho'],['Flexiones','Pecho'],
 
@@ -286,51 +398,37 @@ const defaultLibrary=[
 
 ['Peso muerto rumano','Isquios'],['Curl femoral','Isquios'],['Hip thrust','Glúteos'],['Patada de glúteo','Glúteos'],['Abducción de cadera','Glúteos'],
 
-['Gemelos de pie','Gemelos'],['Gemelos sentado','Gemelos'],
+['Gemelos de pie','Gemelos'],['Gemelos sentado','Gemelos'],['Plancha','Core'],['Crunch','Core'],
 
-['Plancha','Core'],['Crunch','Core'],['Elevación de piernas','Core'],['Pallof press','Core'],
-
-['Sentadilla búlgara','Piernas'],['Peso muerto','Cuerpo completo'],['Burpees','Cuerpo completo'],['Saltos al cajón','Potencia']
+['Elevación de piernas','Core'],['Pallof press','Core'],['Sentadilla búlgara','Piernas'],['Peso muerto','Cuerpo completo']
 
 ];
 
-let plans=[],customExercises=[],clients=[];
+let plans=[],customExercises=[],clients=[],currentPlan=null,currentClient=null;
 
-let currentPlan=null,currentClientId=null,sessionDraft=null;
+let timerInterval=null,timerLeft=90;
 
-function makeId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
+function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,7)}
 
 function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 
-function allExercises(){return [...defaultLibrary.map(x=>({name:x[0],muscle:x[1],builtin:true})),...customExercises]}
+function allExercises(){return [...defaultExercises.map(x=>({name:x[0],muscle:x[1],custom:false})),...customExercises]}
 
-function saveAll(){
-
- try{
-
-  localStorage.setItem(KEY,JSON.stringify(plans));
-
-  localStorage.setItem(LIBKEY,JSON.stringify(customExercises));
-
-  localStorage.setItem(CLIENTKEY,JSON.stringify(clients));
-
-  const el=document.getElementById('saveStatus');
-
-  if(el)el.textContent='✓ Guardado automáticamente en este dispositivo.';
-
- }catch(e){alert('No se pudieron guardar los datos. Exportá una copia de seguridad.')}
-
- updateStats();
-
-}
+function read(key,fallback){try{let v=JSON.parse(localStorage.getItem(key));return v??fallback}catch(e){return fallback}}
 
 function normalize(){
 
- try{let x=JSON.parse(localStorage.getItem(KEY)||'[]');plans=Array.isArray(x)?x:[]}catch(e){plans=[]}
+ plans=read(KEY,[]);
 
- try{let x=JSON.parse(localStorage.getItem(LIBKEY)||'[]');customExercises=Array.isArray(x)?x.map(v=>Array.isArray(v)?{id:makeId(),name:v[0],muscle:v[1]||'General'}:v):[]}catch(e){customExercises=[]}
+ if(!Array.isArray(plans))plans=[];
 
- try{let x=JSON.parse(localStorage.getItem(CLIENTKEY)||'[]');clients=Array.isArray(x)?x:[]}catch(e){clients=[]}
+ customExercises=read(EXKEY,[]);
+
+ if(!Array.isArray(customExercises))customExercises=[];
+
+ clients=read(CLIENTKEY,[]);
+
+ if(!Array.isArray(clients))clients=[];
 
  plans.forEach(p=>{
 
@@ -344,9 +442,15 @@ function normalize(){
 
     if(!Array.isArray(e.series)){
 
-     e.series=Array.from({length:Math.max(1,Number(e.sets)||3)},()=>({weight:e.weight??0,reps:e.reps??10,rir:e.rir??2}));
+     let n=Math.max(1,Number(e.sets)||3);
+
+     e.series=Array.from({length:n},()=>({weight:e.weight??0,reps:e.reps??10,rir:e.rir??2}));
 
     }
+
+    e.series.forEach(s=>{if(s.weight===undefined)s.weight=0;if(s.reps===undefined)s.reps=10;if(s.rir===undefined)s.rir=2});
+
+    e.rest??=90;e.tempo??='2-0-2';e.technique??='Normal';e.notes??='';
 
    });
 
@@ -354,25 +458,29 @@ function normalize(){
 
  });
 
- clients.forEach(c=>{if(!Array.isArray(c.history))c.history=[]});
+ clients.forEach(c=>{c.sessions??=[];c.notes??='';c.goal??='Salud general';c.startDate??='';});
 
- saveAll();
+ save(false);
 
 }
 
-function updateStats(){
+function save(refresh=true){
 
- const ex=plans.reduce((a,p)=>a+p.days.reduce((b,d)=>b+d.exercises.length,0),0);
+ try{
 
- const sessions=clients.reduce((a,c)=>a+(c.history||[]).length,0);
+  localStorage.setItem(KEY,JSON.stringify(plans));
 
- ['planCount','totalPlans'].forEach(id=>{let e=document.getElementById(id);if(e)e.textContent=plans.length});
+  localStorage.setItem(EXKEY,JSON.stringify(customExercises));
 
- ['clientCount','totalClients'].forEach(id=>{let e=document.getElementById(id);if(e)e.textContent=clients.length});
+  localStorage.setItem(CLIENTKEY,JSON.stringify(clients));
 
- ['exerciseCount','totalExercises'].forEach(id=>{let e=document.getElementById(id);if(e)e.textContent=ex});
+  let s=document.getElementById('saveStatus');
 
- let s=document.getElementById('totalSessions');if(s)s.textContent=sessions;
+  if(s)s.textContent='✓ Guardado automáticamente en este dispositivo.';
+
+ }catch(e){alert('No se pudieron guardar los datos. Exportá una copia y revisá el espacio disponible.')}
+
+ if(refresh)updateStats();
 
 }
 
@@ -390,263 +498,337 @@ function showPage(page,btn){
 
  if(page==='plans')renderPlans();
 
+ if(page==='library')renderLibrary();
+
  if(page==='clients')renderClients();
 
- if(page==='clientDetail')renderClientDetail();
-
- if(page==='library')renderLibrary();
+ if(page==='analysis')renderAnalysis();
 
  updateStats();window.scrollTo(0,0);
 
 }
 
+function updateStats(){
+
+ let ex=plans.reduce((a,p)=>a+p.days.reduce((b,d)=>b+d.exercises.length,0),0);
+
+ let sessions=clients.reduce((a,c)=>a+(c.sessions?.length||0),0);
+
+ let vals={homePlans:plans.length,homeClients:clients.length,homeExercises:ex,homeSessions:sessions,
+
+ statPlans:plans.length,statClients:clients.length,statExercises:ex,statSessions:sessions};
+
+ Object.entries(vals).forEach(([k,v])=>{let el=document.getElementById(k);if(el)el.textContent=v});
+
+}
+
 function newPlan(){
 
- const name=prompt('Nombre de la planificación:');
+ let name=prompt('Nombre de la planificación:');
 
- if(!name||!name.trim())return;
+ if(!name?.trim())return;
 
- const goal=prompt('Objetivo:','Hipertrofia')||'Hipertrofia';
+ let goal=prompt('Objetivo (Hipertrofia, Fuerza, Resistencia, Salud general):','Hipertrofia')||'Hipertrofia';
 
- const freq=Math.min(7,Math.max(1,Number(prompt('¿Cuántos días por semana?','4'))||4));
+ let freq=Math.min(6,Math.max(2,Number(prompt('Días por semana (2 a 6):','4'))||4));
 
- const p={id:makeId(),name:name.trim(),goal,frequency:freq,days:[]};
+ let p={id:id(),name:name.trim(),goal,frequency:freq,days:[]};
 
- for(let i=1;i<=freq;i++)p.days.push({id:makeId(),name:'Día '+i,exercises:[]});
+ for(let i=1;i<=freq;i++)p.days.push({id:id(),name:'Día '+i,exercises:[]});
 
- plans.push(p);saveAll();openPlan(p.id);
+ plans.push(p);save();openPlan(p.id);
 
 }
 
 function planCard(p){
 
- const div=document.createElement('div');div.className='card';
+ let d=document.createElement('div');d.className='card';
 
- div.innerHTML=`<h3>${esc(p.name)}</h3><span class="tag">${esc(p.goal)}</span><p>${p.days.length} días de entrenamiento</p><button class="primary">Abrir planificación</button>`;
+ d.innerHTML=`<div class="card-title"><h3>${esc(p.name)}</h3><span class="tag">${esc(p.goal)}</span></div><p>${p.days.length} días de entrenamiento</p><button class="primary">Abrir planificación</button>`;
 
- div.querySelector('button').onclick=()=>openPlan(p.id);return div;
+ d.querySelector('button').onclick=()=>openPlan(p.id);return d;
 
 }
 
 function renderHome(){
 
- const box=document.getElementById('homePlans');box.innerHTML='';
+ let a=document.getElementById('homePlanList');a.innerHTML='';
 
- if(!plans.length)box.innerHTML='<div class="empty">Todavía no tenés planificaciones.</div>';
+ if(!plans.length)a.innerHTML='<div class="empty">Todavía no hay planificaciones.</div>';
 
- plans.forEach(p=>box.appendChild(planCard(p)));
+ plans.slice(0,3).forEach(p=>a.appendChild(planCard(p)));
 
- const cb=document.getElementById('homeClients');cb.innerHTML='';
+ let b=document.getElementById('homeClientList');b.innerHTML='';
 
- if(!clients.length)cb.innerHTML='<div class="empty">Todavía no agregaste clientes.</div>';
+ if(!clients.length)b.innerHTML='<div class="empty">Todavía no hay clientes.</div>';
 
- clients.slice(0,4).forEach(c=>cb.appendChild(clientCard(c)));
+ clients.slice(0,3).forEach(c=>b.appendChild(clientCard(c)));
+
+ updateStats();
 
 }
 
 function renderPlans(){
 
- const box=document.getElementById('plansList');box.innerHTML='';
+ let b=document.getElementById('plansList');b.innerHTML='';
 
- if(!plans.length)box.innerHTML='<div class="empty">No hay planificaciones.</div>';
+ if(!plans.length)b.innerHTML='<div class="empty">No hay planificaciones creadas.</div>';
 
- plans.forEach(p=>box.appendChild(planCard(p)));
+ plans.forEach(p=>b.appendChild(planCard(p)));
 
 }
 
-function openPlan(id){currentPlan=plans.find(p=>p.id===id);if(!currentPlan)return;showPage('editor');renderEditor()}
+function openPlan(pid){currentPlan=plans.find(p=>p.id===pid);if(!currentPlan)return;showPage('editor');renderEditor()}
 
 function renderEditor(){
 
- const p=currentPlan;if(!p)return;
+ let p=currentPlan;if(!p)return;
 
- const box=document.getElementById('editorContent');
+ let box=document.getElementById('editorContent');
 
  box.innerHTML=`<h2>${esc(p.name)}</h2>
 
  <div class="card">
 
- <label>Nombre</label><input id="planName" value="${esc(p.name)}">
+ <label>Nombre</label><input id="pName" value="${esc(p.name)}">
 
- <label>Objetivo</label><select id="planGoal">${['Hipertrofia','Fuerza','Resistencia','Rendimiento','Salud general'].map(x=>`<option ${p.goal===x?'selected':''}>${x}</option>`).join('')}</select>
+ <label>Objetivo</label><select id="pGoal">${['Hipertrofia','Fuerza','Resistencia','Rendimiento','Salud general'].map(x=>`<option ${p.goal===x?'selected':''}>${x}</option>`).join('')}</select>
 
- <button class="secondary" style="margin-top:12px" onclick="updatePlan()">Guardar cambios</button></div>
+ <label>Descripción</label><textarea id="pNotes">${esc(p.notes||'')}</textarea>
 
- <div class="row" style="margin:20px 0 12px"><h3>Días de entrenamiento</h3><button class="secondary" onclick="addDay()">+ Día</button></div><div id="daysBox"></div>
+ <button class="primary" style="margin-top:12px" onclick="updatePlan()">Guardar cambios</button></div>
 
- <button class="danger" style="margin-top:15px" onclick="deletePlan()">Eliminar planificación</button>`;
+ <div class="card-title"><h3>Días de entrenamiento</h3><button class="secondary" onclick="addDay()">+ Día</button></div>
 
- const days=document.getElementById('daysBox');
+ <div id="daysBox"></div><button class="danger" onclick="deletePlan()">Eliminar planificación</button>`;
+
+ let days=document.getElementById('daysBox');
 
  p.days.forEach((d,di)=>{
 
-  const card=document.createElement('div');card.className='card';
+  let card=document.createElement('div');card.className='card';
 
-  const title=document.createElement('div');title.className='day-title';title.textContent=d.name;card.appendChild(title);
+  card.innerHTML=`<div class="card-title"><div class="day-heading">${esc(d.name)}</div><button class="secondary" onclick="renameDay(${di})">Editar día</button></div>
 
-  const rename=document.createElement('button');rename.className='secondary';rename.textContent='Renombrar día';
+  <label>Notas del día</label><input value="${esc(d.notes||'')}" onchange="currentPlan.days[${di}].notes=this.value;save()">
 
-  rename.onclick=()=>{let n=prompt('Nombre del día:',d.name);if(n&&n.trim()){d.name=n.trim();saveAll();renderEditor()}};
+  <div id="day${di}"></div>
 
-  card.appendChild(rename);
+  <div class="actions"><button class="primary" onclick="addExercise(${di})">+ Ejercicio</button><button class="secondary" onclick="addBlock(${di})">+ Bloque</button><button class="danger" onclick="deleteDay(${di})">Eliminar día</button></div>`;
 
-  d.exercises.forEach((e,ei)=>card.appendChild(exerciseCard(d,e,di,ei)));
+  days.appendChild(card);
 
-  const add=document.createElement('button');add.className='primary';add.style.marginTop='12px';add.textContent='+ Agregar ejercicio';add.onclick=()=>addExercise(di);card.appendChild(add);
+  let target=card.querySelector('#day'+di);
 
-  const del=document.createElement('button');del.className='danger';del.style.marginLeft='7px';del.textContent='Eliminar día';
-
-  del.onclick=()=>{if(confirm('¿Eliminar este día y sus ejercicios?')){p.days.splice(di,1);saveAll();renderEditor()}};
-
-  card.appendChild(del);days.appendChild(card);
+  d.exercises.forEach((e,ei)=>target.appendChild(exerciseCard(d,e,di,ei)));
 
  });
+
+}
+
+function updatePlan(){
+
+ currentPlan.name=document.getElementById('pName').value.trim()||currentPlan.name;
+
+ currentPlan.goal=document.getElementById('pGoal').value;
+
+ currentPlan.notes=document.getElementById('pNotes').value;
+
+ save();renderEditor();
+
+}
+
+function addDay(){
+
+ if(currentPlan.days.length>=6){alert('El máximo es de 6 días.');return}
+
+ let n=prompt('Nombre del día:','Día '+(currentPlan.days.length+1));
+
+ if(!n?.trim())return;
+
+ currentPlan.days.push({id:id(),name:n.trim(),exercises:[]});save();renderEditor();
+
+}
+
+function renameDay(i){
+
+ let n=prompt('Nombre del día:',currentPlan.days[i].name);
+
+ if(n?.trim()){currentPlan.days[i].name=n.trim();save();renderEditor()}
+
+}
+
+function deleteDay(i){
+
+ if(confirm('¿Eliminar este día y sus ejercicios?')){currentPlan.days.splice(i,1);save();renderEditor()}
+
+}
+
+function addBlock(di){
+
+ let name=prompt('Nombre del bloque:','A1 / A2');
+
+ if(!name?.trim())return;
+
+ currentPlan.days[di].exercises.push({id:id(),name:'Bloque '+name,muscle:'Bloque',block:name,series:[],rest:0,tempo:'',technique:'Bloque',notes:'',isBlock:true});
+
+ save();renderEditor();
+
+}
+
+function addExercise(di){
+
+ let list=allExercises();
+
+ let options=list.map((x,i)=>`${i+1}. ${x.name} (${x.muscle})`).join('\n');
+
+ let choice=prompt('Escribí el número del ejercicio o su nombre:\n\n'+options);
+
+ if(!choice?.trim())return;
+
+ let found=list[Number(choice)-1]||list.find(x=>x.name.toLowerCase()===choice.toLowerCase());
+
+ let name=found?found.name:choice.trim();
+
+ let muscle=found?found.muscle:(prompt('Grupo muscular:','General')||'General');
+
+ let count=Math.min(20,Math.max(1,Number(prompt('Cantidad inicial de series:','3'))||3));
+
+ currentPlan.days[di].exercises.push({id:id(),name,muscle,series:Array.from({length:count},()=>({weight:0,reps:10,rir:2})),rest:90,tempo:'2-0-2',technique:'Normal',notes:'',block:''});
+
+ save();renderEditor();
 
 }
 
 function exerciseCard(day,e,di,ei){
 
- const div=document.createElement('div');div.className='exercise';
+ let div=document.createElement('div');div.className='item';
 
- const head=document.createElement('div');head.className='exercise-head';
+ if(e.isBlock){
 
- const name=document.createElement('div');name.className='exercise-name';name.textContent=e.name;
+  div.innerHTML=`<strong>${esc(e.name)}</strong><p>Bloque de trabajo</p><button class="danger" onclick="removeExercise(${di},${ei})">Eliminar bloque</button>`;
 
- const muscle=document.createElement('div');muscle.className='small';muscle.textContent=e.muscle||'Sin grupo';
+  return div;
 
- head.append(name,muscle);div.appendChild(head);
+ }
+
+ let title=document.createElement('div');title.className='item-head';
+
+ title.innerHTML=`<strong>${esc(e.name)}</strong><span class="small">${esc(e.muscle||'General')}</span>`;
+
+ div.appendChild(title);
 
  e.series.forEach((s,si)=>{
 
-  const row=document.createElement('div');row.className='series';
+  let row=document.createElement('div');row.className='series';
 
-  row.innerHTML=`<div class="series-title">SERIE ${si+1}</div><div class="series-grid">
+  row.innerHTML=`<div class="small" style="color:var(--green);margin-bottom:7px">SERIE ${si+1}</div>
 
-  <label>Peso (kg)<input type="number" min="0" step="0.5" value="${esc(s.weight)}" data-field="weight"></label>
+  <div class="series-grid">
 
-  <label>Repeticiones<input type="text" value="${esc(s.reps)}" data-field="reps"></label>
+   <label>Carga kg<input type="number" min="0" step=".5" value="${esc(s.weight)}" data-f="weight"></label>
 
-  <label>RIR<input type="number" min="0" max="10" value="${esc(s.rir)}" data-field="rir"></label></div>`;
+   <label>Reps<input value="${esc(s.reps)}" data-f="reps"></label>
 
-  row.querySelectorAll('input').forEach(input=>input.addEventListener('change',()=>{let f=input.dataset.field;s[f]=f==='weight'||f==='rir'?Number(input.value):input.value;saveAll()}));
+   <label>RIR<input type="number" min="0" max="10" value="${esc(s.rir)}" data-f="rir"></label>
 
-  const remove=document.createElement('button');remove.className='danger';remove.style.marginTop='8px';remove.textContent='Eliminar serie';
+  </div>`;
 
-  remove.onclick=()=>{if(e.series.length<=1){alert('Debe quedar al menos una serie.');return}e.series.splice(si,1);saveAll();renderEditor()};
+  row.querySelectorAll('input').forEach(inp=>inp.addEventListener('change',()=>{
 
-  row.appendChild(remove);div.appendChild(row);
+   let f=inp.dataset.f;s[f]=(f==='weight'||f==='rir')?Number(inp.value):inp.value;save();
+
+  }));
+
+  let del=document.createElement('button');del.className='danger';del.style.marginTop='8px';del.textContent='Quitar serie';
+
+  del.onclick=()=>{if(e.series.length<=1){alert('Debe quedar al menos una serie.');return}e.series.splice(si,1);save();renderEditor()};
+
+  row.appendChild(del);div.appendChild(row);
 
  });
 
- const extra=document.createElement('div');extra.style.marginTop='10px';
+ let meta=document.createElement('div');
 
- extra.innerHTML=`<label>Descanso (segundos)</label><input type="number" min="0" value="${esc(e.rest??90)}" data-meta="rest">
+ meta.innerHTML=`<div class="grid2">
 
- <label>Tempo</label><input value="${esc(e.tempo??'2-0-2')}" data-meta="tempo">
+ <label>Descanso (seg)<input type="number" value="${esc(e.rest??90)}" data-m="rest"></label>
 
- <label>Técnica</label><select data-meta="technique">${['Normal','Superserie','Drop set','Rest-pause','Pausa','Pirámide'].map(x=>`<option ${e.technique===x?'selected':''}>${x}</option>`).join('')}</select>
+ <label>Tempo<input value="${esc(e.tempo??'2-0-2')}" data-m="tempo"></label>
 
- <label>Notas técnicas</label><textarea rows="2" data-meta="notes">${esc(e.notes||'')}</textarea>`;
+ </div>
 
- extra.querySelectorAll('[data-meta]').forEach(input=>input.addEventListener('change',()=>{e[input.dataset.meta]=input.value;saveAll()}));
+ <label>Método</label><select data-m="technique">${['Normal','Superserie','Triserie','Circuito','Drop set','Rest-pause','Pirámide','Pausa','Myo-reps'].map(x=>`<option ${e.technique===x?'selected':''}>${x}</option>`).join('')}</select>
 
- div.appendChild(extra);
+ <label>Bloque (A1, A2, B1...)</label><input value="${esc(e.block||'')}" data-m="block" placeholder="Ej. A1">
 
- const actions=document.createElement('div');actions.className='actions';
+ <label>Indicaciones técnicas</label><textarea data-m="notes">${esc(e.notes||'')}</textarea>`;
 
- const add=document.createElement('button');add.className='primary';add.textContent='+ Agregar serie';
+ meta.querySelectorAll('[data-m]').forEach(inp=>inp.addEventListener('change',()=>{e[inp.dataset.m]=inp.value;save()}));
 
- add.onclick=()=>{let last=e.series[e.series.length-1];e.series.push({...last});saveAll();renderEditor()};
+ div.appendChild(meta);
 
- const edit=document.createElement('button');edit.className='secondary';edit.textContent='Cambiar ejercicio';
+ let actions=document.createElement('div');actions.className='actions';
 
- edit.onclick=()=>{let n=prompt('Nombre del ejercicio:',e.name);if(n&&n.trim()){e.name=n.trim();saveAll();renderEditor()}};
+ let add=document.createElement('button');add.className='primary';add.textContent='+ Serie';
 
- const del=document.createElement('button');del.className='danger';del.textContent='Eliminar ejercicio';
+ add.onclick=()=>{let last=e.series[e.series.length-1]||{weight:0,reps:10,rir:2};e.series.push({...last});save();renderEditor()};
 
- del.onclick=()=>{if(confirm('¿Eliminar este ejercicio?')){day.exercises.splice(ei,1);saveAll();renderEditor()}};
+ let edit=document.createElement('button');edit.className='secondary';edit.textContent='Renombrar';
 
- actions.append(add,edit,del);div.appendChild(actions);return div;
+ edit.onclick=()=>{let n=prompt('Nombre:',e.name);if(n?.trim()){e.name=n.trim();save();renderEditor()}};
 
-}
+ let remove=document.createElement('button');remove.className='danger';remove.textContent='Eliminar';
 
-function updatePlan(){currentPlan.name=document.getElementById('planName').value.trim()||currentPlan.name;currentPlan.goal=document.getElementById('planGoal').value;saveAll();renderEditor()}
+ remove.onclick=()=>removeExercise(di,ei);
 
-function addDay(){let name=prompt('Nombre del nuevo día:','Día '+(currentPlan.days.length+1));if(!name||!name.trim())return;currentPlan.days.push({id:makeId(),name:name.trim(),exercises:[]});saveAll();renderEditor()}
-
-function addExercise(di){
-
- const list=allExercises();
-
- const options=list.map((x,i)=>(i+1)+'. '+x.name+' ('+x.muscle+')').join('\n');
-
- const answer=prompt('Elegí un ejercicio escribiendo su número:\n\n'+options);
-
- if(!answer)return;
-
- const index=Number(answer)-1;
-
- if(!Number.isInteger(index)||index<0||index>=list.length){alert('Número no válido.');return}
-
- const item=list[index],count=Math.max(1,Math.min(20,Number(prompt('Cantidad inicial de series:','3'))||3));
-
- currentPlan.days[di].exercises.push({id:makeId(),name:item.name,muscle:item.muscle,series:Array.from({length:count},()=>({weight:0,reps:10,rir:2})),rest:90,tempo:'2-0-2',technique:'Normal',notes:''});
-
- saveAll();renderEditor();
+ actions.append(add,edit,remove);div.appendChild(actions);return div;
 
 }
 
-function deletePlan(){if(!confirm('¿Eliminar toda esta planificación?'))return;plans=plans.filter(p=>p.id!==currentPlan.id);currentPlan=null;saveAll();showPage('plans')}
+function removeExercise(di,ei){if(confirm('¿Eliminar este ejercicio?')){currentPlan.days[di].exercises.splice(ei,1);save();renderEditor()}}
 
-/* BIBLIOTECA */
-
-function newCustomExercise(existing){
-
- let name=prompt('Nombre del ejercicio:',existing?.name||'');if(!name||!name.trim())return;
-
- let muscle=prompt('Grupo muscular:',existing?.muscle||'General')||'General';
-
- let description=prompt('Descripción:',existing?.description||'')||'';
-
- let technique=prompt('Indicaciones técnicas:',existing?.technique||'')||'';
-
- let errors=prompt('Errores comunes:',existing?.errors||'')||'';
-
- if(existing)Object.assign(existing,{name:name.trim(),muscle,description,technique,errors});
-
- else customExercises.push({id:makeId(),name:name.trim(),muscle,description,technique,errors});
-
- saveAll();renderLibrary();
-
-}
+function deletePlan(){if(confirm('¿Eliminar esta planificación?')){plans=plans.filter(p=>p.id!==currentPlan.id);currentPlan=null;save();showPage('plans')}}
 
 function renderLibrary(){
 
- let q=(document.getElementById('searchExercise')?.value||'').toLowerCase();
+ let q=(document.getElementById('exerciseSearch').value||'').toLowerCase();
 
- const box=document.getElementById('libraryList');box.innerHTML='';
+ let filter=document.getElementById('muscleFilter').value;
 
- const items=allExercises().filter(x=>(x.name+' '+x.muscle+' '+(x.description||'')).toLowerCase().includes(q));
+ let list=allExercises();
 
- if(!items.length){box.innerHTML='<div class="empty">No se encontraron ejercicios.</div>';return}
+ let groups=[...new Set(list.map(x=>x.muscle))].sort();
 
- items.forEach(x=>{
+ let sel=document.getElementById('muscleFilter');
 
-  const d=document.createElement('div');d.className='card';
+ let old=sel.value;
 
-  d.innerHTML=`<strong>${esc(x.name)}</strong><div class="small">${esc(x.muscle)}</div>${x.description?`<p>${esc(x.description)}</p>`:''}${x.technique?`<p><b>Técnica:</b> ${esc(x.technique)}</p>`:''}${x.errors?`<p><b>Errores:</b> ${esc(x.errors)}</p>`:''}`;
+ sel.innerHTML='<option value="">Todos los grupos</option>'+groups.map(g=>`<option>${esc(g)}</option>`).join('');
 
-  if(!x.builtin){
+ sel.value=groups.includes(old)?old:'';
 
-   const actions=document.createElement('div');actions.className='actions';
+ let box=document.getElementById('libraryList');box.innerHTML='';
 
-   const edit=document.createElement('button');edit.className='secondary';edit.textContent='Editar';edit.onclick=()=>newCustomExercise(x);
+ list.filter(x=>(x.name+' '+x.muscle).toLowerCase().includes(q)&&(!sel.value||x.muscle===sel.value)).forEach(x=>{
 
-   const del=document.createElement('button');del.className='danger';del.textContent='Eliminar';del.onclick=()=>{if(confirm('¿Eliminar este ejercicio?')){customExercises=customExercises.filter(v=>v.id!==x.id);saveAll();renderLibrary()}};
+  let d=document.createElement('div');d.className='item';
 
-   actions.append(edit,del);d.appendChild(actions);
+  d.innerHTML=`<strong>${esc(x.name)}</strong><div class="small">${esc(x.muscle)}</div>${x.custom?'<span class="tag">PERSONALIZADO</span>':''}`;
 
-  }else{const tag=document.createElement('span');tag.className='tag';tag.textContent='Ejercicio incluido';d.appendChild(tag)}
+  if(x.custom){
+
+   let b=document.createElement('button');b.className='secondary';b.style.marginTop='9px';b.textContent='Editar';
+
+   b.onclick=()=>editCustomExercise(x.id);d.appendChild(b);
+
+   let del=document.createElement('button');del.className='danger';del.style.margin='9px 0 0 6px';del.textContent='Eliminar';
+
+   del.onclick=()=>{if(confirm('¿Eliminar este ejercicio de tu biblioteca?')){customExercises=customExercises.filter(z=>z.id!==x.id);save();renderLibrary()}};
+
+   d.appendChild(del);
+
+  }
 
   box.appendChild(d);
 
@@ -654,29 +836,51 @@ function renderLibrary(){
 
 }
 
-/* CLIENTES */
+function addCustomExercise(){
+
+ let name=prompt('Nombre del ejercicio:');if(!name?.trim())return;
+
+ let muscle=prompt('Grupo muscular:','General')||'General';
+
+ customExercises.push({id:id(),name:name.trim(),muscle,custom:true,description:'',technique:'',errors:''});
+
+ save();renderLibrary();
+
+}
+
+function editCustomExercise(eid){
+
+ let e=customExercises.find(x=>x.id===eid);if(!e)return;
+
+ let name=prompt('Nombre:',e.name);if(!name?.trim())return;
+
+ e.name=name.trim();e.muscle=prompt('Grupo muscular:',e.muscle)||e.muscle;
+
+ e.description=prompt('Descripción:',e.description||'')||'';
+
+ e.technique=prompt('Técnica:',e.technique||'')||'';
+
+ e.errors=prompt('Errores frecuentes:',e.errors||'')||'';
+
+ save();renderLibrary();
+
+}
 
 function newClient(){
 
- let name=prompt('Nombre del cliente:');if(!name||!name.trim())return;
+ let name=prompt('Nombre del cliente:');if(!name?.trim())return;
 
- let goal=prompt('Objetivo de entrenamiento:','Salud general')||'Salud general';
+ let c={id:id(),name:name.trim(),goal:prompt('Objetivo:','Salud general')||'Salud general',startDate:new Date().toISOString().slice(0,10),notes:'',planId:'',sessions:[]};
 
- let notes=prompt('Notas generales (evitá datos sensibles):','')||'';
-
- let c={id:makeId(),name:name.trim(),goal,startDate:new Date().toISOString().slice(0,10),notes,planId:'',history:[]};
-
- clients.push(c);saveAll();openClient(c.id);
+ clients.push(c);save();openClient(c.id);
 
 }
 
 function clientCard(c){
 
- const d=document.createElement('div');d.className='card';
+ let d=document.createElement('div');d.className='card';
 
- const plan=plans.find(p=>p.id===c.planId);
-
- d.innerHTML=`<h3>${esc(c.name)}</h3><span class="tag">${esc(c.goal||'Sin objetivo')}</span><p>${plan?'Plan asignado: '+esc(plan.name):'Sin planificación asignada'}</p><p>${(c.history||[]).length} entrenamientos registrados</p><button class="primary">Ver ficha</button>`;
+ d.innerHTML=`<div class="card-title"><h3>${esc(c.name)}</h3><span class="tag">${esc(c.goal)}</span></div><p>${c.sessions.length} entrenamientos registrados</p><button class="primary">Ver perfil</button>`;
 
  d.querySelector('button').onclick=()=>openClient(c.id);return d;
 
@@ -684,301 +888,315 @@ function clientCard(c){
 
 function renderClients(){
 
- let q=(document.getElementById('searchClient')?.value||'').toLowerCase();
+ let b=document.getElementById('clientsList');b.innerHTML='';
 
- const box=document.getElementById('clientsList');box.innerHTML='';
+ if(!clients.length)b.innerHTML='<div class="empty">Todavía no agregaste clientes.</div>';
 
- const filtered=clients.filter(c=>c.name.toLowerCase().includes(q));
-
- if(!filtered.length){box.innerHTML='<div class="empty">No hay clientes para mostrar.</div>';return}
-
- filtered.forEach(c=>box.appendChild(clientCard(c)));
+ clients.forEach(c=>b.appendChild(clientCard(c)));
 
 }
 
-function openClient(id){currentClientId=id;showPage('clientDetail');renderClientDetail()}
+function openClient(cid){currentClient=clients.find(c=>c.id===cid);if(!currentClient)return;showPage('clientDetail');renderClientDetail()}
 
 function renderClientDetail(){
 
- const c=clients.find(x=>x.id===currentClientId);if(!c)return;
+ let c=currentClient;if(!c)return;
 
- const box=document.getElementById('clientContent'),plan=plans.find(p=>p.id===c.planId);
+ let box=document.getElementById('clientContent');
 
  box.innerHTML=`<h2>${esc(c.name)}</h2>
 
- <div class="card"><span class="tag">${esc(c.goal||'Sin objetivo')}</span><p>Fecha de inicio: ${esc(c.startDate||'Sin fecha')}</p><p>${esc(c.notes||'Sin notas generales')}</p>
+ <div class="card">
 
- <div class="actions"><button class="secondary" onclick="editClient()">Editar ficha</button><button class="danger" onclick="deleteClient()">Eliminar cliente</button></div></div>
+ <span class="tag">${esc(c.goal)}</span>
 
- <div class="card"><h3>Planificación asignada</h3><label>Elegir planificación</label>
+ <label>Objetivo</label><input id="cGoal" value="${esc(c.goal)}">
 
- <select id="clientPlan"><option value="">Sin planificación</option>${plans.map(p=>`<option value="${esc(p.id)}" ${c.planId===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>
+ <label>Fecha de inicio</label><input id="cStart" type="date" value="${esc(c.startDate||'')}">
 
- <button class="secondary" style="margin-top:10px" onclick="assignPlan()">Guardar asignación</button>
+ <label>Planificación asignada</label><select id="cPlan"><option value="">Sin planificación</option>${plans.map(p=>`<option value="${p.id}" ${c.planId===p.id?'selected':''}>${esc(p.name)}</option>`).join('')}</select>
 
- ${plan?`<p>Plan actual: <b>${esc(plan.name)}</b></p>`:'<p>Sin plan asignado.</p>'}</div>
+ <label>Notas del cliente</label><textarea id="cNotes">${esc(c.notes||'')}</textarea>
 
- <div class="card" id="sessionArea"><h3>Registrar entrenamiento</h3>
+ <button class="primary" style="margin-top:10px" onclick="saveClient()">Guardar perfil</button>
 
- <p>Las series aparecerán en pantalla para que puedas editarlas directamente.</p>
+ </div>
 
- <button class="primary" onclick="addSession()">+ Nuevo entrenamiento</button></div>
+ <button class="primary" onclick="newSession()">+ Registrar entrenamiento</button>
 
- <h3>Historial de entrenamientos</h3><div id="clientHistory"></div>`;
+ <button class="secondary" onclick="printClientReport()">Informe / PDF</button>
 
- const hist=document.getElementById('clientHistory');
+ <div class="section-label">HISTORIAL DE ENTRENAMIENTOS</div><div id="sessionList"></div>
 
- if(!c.history.length)hist.innerHTML='<div class="empty">Todavía no hay entrenamientos registrados.</div>';
+ <button class="danger" onclick="deleteClient()">Eliminar cliente</button>`;
 
- [...c.history].reverse().forEach(h=>{
+ renderSessions();
 
-  const d=document.createElement('div');d.className='card';
+}
 
-  d.innerHTML=`<h3>${esc(h.date)}</h3><p>${esc(h.note||'Sin notas')}</p>`;
+function saveClient(){
 
-  (h.exercises||[]).forEach(e=>{
+ currentClient.goal=document.getElementById('cGoal').value;
 
-   const line=document.createElement('div');line.className='item-line';
+ currentClient.startDate=document.getElementById('cStart').value;
 
-   line.innerHTML=`<b>${esc(e.name)}</b><div class="small">${(e.series||[]).map((s,i)=>`Serie ${i+1}: ${esc(s.weight)} kg × ${esc(s.reps)} reps · RIR ${esc(s.rir)}`).join('<br>')}</div>`;
+ currentClient.planId=document.getElementById('cPlan').value;
 
-   d.appendChild(line);
+ currentClient.notes=document.getElementById('cNotes').value;
+
+ save();renderClientDetail();
+
+}
+
+function newSession(){
+
+ let c=currentClient;
+
+ let date=new Date().toISOString().slice(0,10);
+
+ let plan=plans.find(p=>p.id===c.planId);
+
+ let dayIndex=0;
+
+ if(plan&&plan.days.length){
+
+  let choice=prompt('Día de la planificación:\n'+plan.days.map((d,i)=>(i+1)+'. '+d.name).join('\n'),'1');
+
+  if(choice===null)return;
+
+  dayIndex=Math.max(0,Math.min(plan.days.length-1,(Number(choice)||1)-1));
+
+ }
+
+ let exercises=[];
+
+ if(plan&&plan.days[dayIndex]){
+
+  exercises=plan.days[dayIndex].exercises.filter(e=>!e.isBlock).map(e=>({
+
+   name:e.name,muscle:e.muscle,series:e.series.map(s=>({...s})),notes:e.notes||''
+
+  }));
+
+ }
+
+ c.sessions.unshift({id:id(),date,planId:plan?.id||'',dayName:plan?.days[dayIndex]?.name||'',notes:'',exercises});
+
+ save();renderSessions();
+
+}
+
+function renderSessions(){
+
+ let b=document.getElementById('sessionList');if(!b)return;
+
+ b.innerHTML='';
+
+ if(!currentClient.sessions.length){b.innerHTML='<div class="empty">Todavía no hay entrenamientos registrados.</div>';return}
+
+ currentClient.sessions.forEach((s,i)=>{
+
+  let d=document.createElement('div');d.className='card';
+
+  d.innerHTML=`<div class="card-title"><strong>${esc(s.date)}</strong><span class="tag">${esc(s.dayName||'Entrenamiento')}</span></div>
+
+  <p>${s.exercises.length} ejercicios registrados</p><label>Notas de la sesión</label><textarea data-note="${i}">${esc(s.notes||'')}</textarea>
+
+  <div id="session${i}"></div><div class="actions"><button class="primary" onclick="saveSession(${i})">Guardar cambios</button><button class="secondary" onclick="editSession(${i})">Editar series</button><button class="danger" onclick="deleteSession(${i})">Eliminar</button></div>`;
+
+  b.appendChild(d);
+
+  let list=d.querySelector('#session'+i);
+
+  s.exercises.forEach(e=>{
+
+   let x=document.createElement('div');x.className='item';
+
+   x.innerHTML=`<strong>${esc(e.name)}</strong><div class="small">${e.series.length} series</div>`;
+
+   e.series.forEach((z,j)=>{let t=document.createElement('div');t.className='small';t.textContent=`Serie ${j+1}: ${z.weight} kg × ${z.reps} reps · RIR ${z.rir}`;x.appendChild(t)});
+
+   list.appendChild(x);
 
   });
-
-  const del=document.createElement('button');del.className='danger';del.style.marginTop='10px';del.textContent='Eliminar registro';
-
-  del.onclick=()=>{if(confirm('¿Eliminar este entrenamiento?')){c.history=c.history.filter(x=>x.id!==h.id);saveAll();renderClientDetail()}};
-
-  d.appendChild(del);hist.appendChild(d);
 
  });
 
 }
 
-function editClient(){
+function saveSession(i){
 
- const c=clients.find(x=>x.id===currentClientId);if(!c)return;
+ let s=currentClient.sessions[i];let note=document.querySelector(`[data-note="${i}"]`);
 
- let name=prompt('Nombre:',c.name);if(!name||!name.trim())return;
-
- c.name=name.trim();c.goal=prompt('Objetivo:',c.goal)||c.goal;
-
- c.notes=prompt('Notas generales:',c.notes||'')??c.notes;
-
- saveAll();renderClientDetail();
+ s.notes=note?.value||'';save();alert('Entrenamiento guardado.');
 
 }
 
-function assignPlan(){const c=clients.find(x=>x.id===currentClientId);if(!c)return;c.planId=document.getElementById('clientPlan').value;saveAll();renderClientDetail()}
+function editSession(i){
 
-function deleteClient(){if(!confirm('¿Eliminar esta ficha y su historial?'))return;clients=clients.filter(c=>c.id!==currentClientId);currentClientId=null;saveAll();showPage('clients')}
+ let s=currentClient.sessions[i];
 
-/* REGISTRO VISUAL DE ENTRENAMIENTO */
+ s.exercises.forEach(e=>e.series.forEach((z,j)=>{
 
-function addSession(){
+  let w=prompt(`${e.name} · Serie ${j+1} · Carga (kg):`,z.weight);if(w!==null)z.weight=Number(w)||0;
 
- const c=clients.find(x=>x.id===currentClientId);if(!c)return;
+  let r=prompt(`${e.name} · Serie ${j+1} · Repeticiones:`,z.reps);if(r!==null)z.reps=r;
 
- const plan=plans.find(p=>p.id===c.planId);
+  let rir=prompt(`${e.name} · Serie ${j+1} · RIR:`,z.rir);if(rir!==null)z.rir=Number(rir)||0;
 
- sessionDraft={
+ }));
 
-  date:new Date().toISOString().slice(0,10),
-
-  note:'',
-
-  exercises:plan?plan.days.flatMap(d=>d.exercises.map(e=>({
-
-   id:makeId(),name:e.name,muscle:e.muscle,
-
-   series:e.series.map(s=>({...s}))
-
-  }))):[]
-
- };
-
- renderSessionBuilder();
+ save();renderSessions();
 
 }
 
-function renderSessionBuilder(){
+function deleteSession(i){if(confirm('¿Eliminar este entrenamiento?')){currentClient.sessions.splice(i,1);save();renderSessions()}}
 
- const area=document.getElementById('sessionArea');
+function deleteClient(){if(confirm('¿Eliminar este cliente y todo su historial?')){clients=clients.filter(c=>c.id!==currentClient.id);currentClient=null;save();showPage('clients')}}
 
- if(!area||!sessionDraft)return;
+function printClientReport(){
 
- area.innerHTML=`<h3>Nuevo entrenamiento</h3>
+ let c=currentClient;
 
- <label>Fecha</label><input type="date" id="sessionDate" value="${esc(sessionDraft.date)}">
+ let w=window.open('','_blank');
 
- <label>Observaciones</label><textarea id="sessionNote" rows="2">${esc(sessionDraft.note)}</textarea>
+ if(!w){alert('Permití las ventanas emergentes para generar el informe.');return}
 
- <div class="row" style="margin-top:18px"><h3>Ejercicios</h3><button class="primary" onclick="sessionAddExercise()">+ Ejercicio</button></div>
+ let rows=c.sessions.map(s=>`<h3>${esc(s.date)} – ${esc(s.dayName)}</h3><p>${esc(s.notes||'')}</p>`+
 
- <div id="sessionExercises"></div><hr>
+ s.exercises.map(e=>`<p><b>${esc(e.name)}</b><br>${e.series.map((z,i)=>`Serie ${i+1}: ${esc(z.weight)} kg × ${esc(z.reps)} reps · RIR ${esc(z.rir)}`).join('<br>')}</p>`).join('')).join('');
 
- <button class="primary" style="width:100%" onclick="saveSessionDraft()">GUARDAR ENTRENAMIENTO</button>
+ w.document.write(`<html><head><title>Informe ${esc(c.name)}</title><style>body{font-family:Arial;padding:25px}h1{color:#26351b}hr{margin:20px 0}</style></head><body><h1>TP. TRAINING PLANNER</h1><h2>Informe de ${esc(c.name)}</h2><p>Objetivo: ${esc(c.goal)}</p><p>Inicio: ${esc(c.startDate)}</p><p>${esc(c.notes||'')}</p><hr>${rows}</body></html>`);
 
- <button class="secondary" style="width:100%;margin-top:8px" onclick="cancelSessionDraft()">Cancelar</button>`;
-
- renderSessionExercises();
+ w.document.close();w.print();
 
 }
 
-function renderSessionExercises(){
+function renderAnalysis(){
 
- const box=document.getElementById('sessionExercises');if(!box||!sessionDraft)return;
+ updateStats();
 
- box.innerHTML='';
+ let counts={};
 
- sessionDraft.exercises.forEach((e,ei)=>{
+ plans.forEach(p=>p.days.forEach(d=>d.exercises.forEach(e=>{if(!e.isBlock)counts[e.name]=(counts[e.name]||0)+1})));
 
-  const card=document.createElement('div');card.className='exercise';
+ let box=document.getElementById('exerciseStats');box.innerHTML='';
 
-  const title=document.createElement('h3');title.textContent=e.name;card.appendChild(title);
+ let entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8);
 
-  e.series.forEach((s,si)=>{
+ if(!entries.length)box.innerHTML='<p>No hay ejercicios planificados todavía.</p>';
 
-   const row=document.createElement('div');row.className='series';
+ entries.forEach(([name,n])=>{
 
-   row.innerHTML=`<div class="series-title">SERIE ${si+1}</div>
+  let x=document.createElement('div');x.style.margin='12px 0';
 
-   <div class="series-grid">
+  x.innerHTML=`<div class="card-title"><span>${esc(name)}</span><strong>${n}</strong></div><div class="bar"><div style="width:${Math.min(100,n/Math.max(1,entries[0][1])*100)}%"></div></div>`;
 
-   <label>Peso (kg)<input type="number" min="0" step="0.5" value="${esc(s.weight??0)}" data-field="weight"></label>
+  box.appendChild(x);
 
-   <label>Repeticiones<input type="text" value="${esc(s.reps??10)}" data-field="reps"></label>
+ });
 
-   <label>RIR<input type="number" min="0" max="10" value="${esc(s.rir??2)}" data-field="rir"></label>
+ let cb=document.getElementById('clientStats');cb.innerHTML='';
 
-   </div>`;
+ if(!clients.length)cb.innerHTML='<p>No hay clientes registrados.</p>';
 
-   row.querySelectorAll('input').forEach(input=>{
+ clients.forEach(c=>{
 
-    input.addEventListener('input',()=>{const f=input.dataset.field;s[f]=f==='reps'?input.value:Number(input.value)});
+  let x=document.createElement('div');x.style.margin='12px 0';
 
-   });
+  x.innerHTML=`<div class="card-title"><span>${esc(c.name)}</span><strong>${c.sessions.length}</strong></div><div class="bar"><div style="width:${Math.min(100,c.sessions.length*10)}%"></div></div>`;
 
-   const remove=document.createElement('button');remove.className='danger';remove.style.marginTop='8px';remove.textContent='Eliminar serie';
-
-   remove.onclick=()=>{if(e.series.length<=1){alert('Debe quedar al menos una serie.');return}e.series.splice(si,1);renderSessionExercises()};
-
-   row.appendChild(remove);card.appendChild(row);
-
-  });
-
-  const actions=document.createElement('div');actions.className='actions';
-
-  const add=document.createElement('button');add.className='primary';add.textContent='+ Agregar serie';
-
-  add.onclick=()=>{const last=e.series[e.series.length-1];e.series.push({...last});renderSessionExercises()};
-
-  const remove=document.createElement('button');remove.className='danger';remove.textContent='Eliminar ejercicio';
-
-  remove.onclick=()=>{sessionDraft.exercises.splice(ei,1);renderSessionExercises()};
-
-  actions.append(add,remove);card.appendChild(actions);box.appendChild(card);
+  cb.appendChild(x);
 
  });
 
 }
 
-function sessionAddExercise(){
+function calculateRM(){
 
- const list=allExercises();
+ let n=Number(document.getElementById('oneRM').value);
 
- const options=list.map((x,i)=>(i+1)+'. '+x.name+' ('+x.muscle+')').join('\n');
+ let b=document.getElementById('rmResult');if(!n||n<=0){b.innerHTML='<p>Ingresá un valor válido.</p>';return}
 
- const answer=prompt('Elegí el número del ejercicio:\n\n'+options);
-
- if(!answer)return;
-
- const index=Number(answer)-1;if(!Number.isInteger(index)||index<0||index>=list.length){alert('Número no válido.');return}
-
- const x=list[index];
-
- sessionDraft.exercises.push({id:makeId(),name:x.name,muscle:x.muscle,series:[{weight:0,reps:10,rir:2}]});
-
- renderSessionExercises();
+ b.innerHTML='<hr>'+[100,95,90,85,80,75,70,65,60,55,50].map(p=>`<div class="row"><span>${p}%</span><strong>${(n*p/100).toFixed(1)} kg</strong></div>`).join('');
 
 }
 
-function saveSessionDraft(){
+function calculateVolume(){
 
- const c=clients.find(x=>x.id===currentClientId);if(!c||!sessionDraft)return;
+ let s=Number(document.getElementById('volSets').value),r=Number(document.getElementById('volReps').value),w=Number(document.getElementById('volWeight').value);
 
- const date=document.getElementById('sessionDate').value;
-
- if(!date){alert('Seleccioná una fecha.');return}
-
- sessionDraft.date=date;
-
- sessionDraft.note=document.getElementById('sessionNote').value;
-
- c.history.push({id:makeId(),date:sessionDraft.date,note:sessionDraft.note,exercises:sessionDraft.exercises});
-
- sessionDraft=null;saveAll();renderClientDetail();alert('¡Entrenamiento guardado correctamente!');
+ document.getElementById('volumeResult').innerHTML=`<hr><div class="stat"><strong>${(s*r*w).toLocaleString('es-AR')} kg</strong><small>VOLUMEN TOTAL (SERIES × REPS × CARGA)</small></div>`;
 
 }
 
-function cancelSessionDraft(){
+function displayTimer(){
 
- if(!confirm('¿Cancelar este entrenamiento?'))return;
+ let m=Math.floor(timerLeft/60),s=timerLeft%60;
 
- sessionDraft=null;renderClientDetail();
+ document.getElementById('timerDisplay').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
 
 }
 
-/* COPIAS DE SEGURIDAD */
+function startTimer(){
+
+ if(timerInterval)return;
+
+ if(timerLeft<=0)timerLeft=Math.max(1,Number(document.getElementById('timerSeconds').value)||90);
+
+ timerInterval=setInterval(()=>{timerLeft--;displayTimer();if(timerLeft<=0){pauseTimer();if(navigator.vibrate)navigator.vibrate(300);alert('¡Descanso terminado!')}},1000);
+
+}
+
+function pauseTimer(){clearInterval(timerInterval);timerInterval=null}
+
+function resetTimer(){pauseTimer();timerLeft=Math.max(1,Number(document.getElementById('timerSeconds').value)||90);displayTimer()}
 
 function exportBackup(){
 
- const data={version:3,plans,customExercises,clients};
+ let data={version:2,plans,customExercises,clients};
 
- const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+ let blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
 
- const url=URL.createObjectURL(blob),a=document.createElement('a');
+ let url=URL.createObjectURL(blob),a=document.createElement('a');
 
- a.href=url;a.download='TP-copia-seguridad.json';a.click();URL.revokeObjectURL(url);
+ a.href=url;a.download='TP-Training-Planner-backup.json';a.click();
+
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
 
 }
 
 function importBackup(){
 
- const file=document.getElementById('backupFile').files[0];
+ let f=document.getElementById('backupFile').files[0];if(!f){alert('Seleccioná un archivo.');return}
 
- if(!file){alert('Primero seleccioná un archivo.');return}
-
- const reader=new FileReader();
+ let reader=new FileReader();
 
  reader.onload=()=>{
 
   try{
 
-   const data=JSON.parse(reader.result);
+   let data=JSON.parse(reader.result);
+
+   let newPlans=Array.isArray(data)?data:data.plans;
+
+   if(!Array.isArray(newPlans))throw new Error('Archivo inválido');
 
    if(!confirm('La importación reemplazará los datos actuales. ¿Continuar?'))return;
 
-   if(Array.isArray(data))plans=data;
+   plans=newPlans;
 
-   else if(data&&Array.isArray(data.plans)){
+   customExercises=Array.isArray(data.customExercises)?data.customExercises:[];
 
-    plans=data.plans;
+   clients=Array.isArray(data.clients)?data.clients:[];
 
-    customExercises=Array.isArray(data.customExercises)?data.customExercises:[];
+   save();normalize();alert('Copia importada correctamente.');showPage('home');
 
-    clients=Array.isArray(data.clients)?data.clients:[];
-
-   }else throw new Error('Formato inválido');
-
-   normalize();saveAll();alert('Copia recuperada correctamente.');showPage('home');
-
-  }catch(e){alert('El archivo no es una copia válida de TP.')}
+  }catch(e){alert('No se pudo leer la copia. Revisá que sea un archivo válido de TP.')}
 
  };
 
- reader.readAsText(file);
+ reader.readAsText(f);
 
 }
 
@@ -987,6 +1205,8 @@ normalize();
 renderHome();
 
 updateStats();
+
+displayTimer();
 
 </script>
 
