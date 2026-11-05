@@ -1122,7 +1122,9 @@ function clientPlanEditor(c){
  <div class="field"><label>Nombre de la rutina</label><input id="clientPlanName" value="${esc(p.name||"Plan personalizado")}"></div>
 
  <button class="btn secondary" data-action="save-client-plan-name" data-id="${c.id}">Guardar nombre</button>
-
+<button class="btn" data-action="send-client-whatsapp" data-id="${c.id}">
+ 📲 Enviar rutina por WhatsApp
+</button>
  </div>
 
  ${p.days.map((d,i)=>`<div class="card">
@@ -1749,6 +1751,104 @@ function datos(){
 
 }
 
+/* ENVIAR RUTINA POR WHATSAPP */
+
+function sendClientRoutineWhatsApp(c){
+
+ if(!c)return;
+
+ const p=ensureClientPlan(c);
+
+ if(!p){
+  alert("Este cliente no tiene una rutina cargada.");
+  return;
+ }
+
+ let phone=String(c.phone||"").replace(/\D/g,"");
+
+ if(!phone){
+  alert("Este cliente no tiene un número de WhatsApp. Editá sus datos y agregalo.");
+  return;
+ }
+
+ // Adaptar número al formato internacional argentino
+ if(phone.startsWith("00"))phone=phone.slice(2);
+ if(phone.startsWith("0"))phone=phone.slice(1);
+
+ if(phone.startsWith("54")){
+  if(!phone.startsWith("549"))phone="549"+phone.slice(2);
+ }else{
+  phone="549"+phone;
+ }
+
+ const lines=[];
+
+ lines.push("🏋️ PLANIFICACIÓN DE ENTRENAMIENTO");
+ lines.push("");
+ lines.push("Hola "+c.name+"!");
+ lines.push("Te comparto tu rutina de entrenamiento.");
+ lines.push("");
+ lines.push("📋 RUTINA: "+(p.name||"Plan personalizado"));
+
+ if(p.goal)lines.push("🎯 Objetivo: "+p.goal);
+ if(p.frequency)lines.push("📅 Frecuencia: "+p.frequency+" días semanales");
+
+ lines.push("");
+
+ (p.days||[]).forEach((d,i)=>{
+
+  lines.push("━━━━━━━━━━━━━━");
+  lines.push("📌 "+(d.name||"Día "+(i+1)));
+  lines.push("");
+
+  if(d.notes)lines.push("📝 "+d.notes);
+
+  if(!d.exercises?.length){
+   lines.push("Sin ejercicios cargados.");
+  }
+
+  (d.exercises||[]).forEach((e,j)=>{
+
+   lines.push((j+1)+". "+e.name);
+
+   if(e.muscle)lines.push("Grupo muscular: "+e.muscle);
+   if(e.technique)lines.push("Método: "+e.technique);
+
+   (e.series||[]).forEach((s,k)=>{
+
+    lines.push(
+     "   Serie "+(k+1)+": "+
+     (s.weight??"—")+" kg × "+
+     (s.reps??"—")+" rep | RIR "+
+     (s.rir??"—")+" | "+
+     (s.type||"Efectiva")
+    );
+
+   });
+
+   if(e.rest)lines.push("   Descanso: "+e.rest);
+   if(e.tempo)lines.push("   Tempo: "+e.tempo);
+   if(e.block)lines.push("   Bloque: "+e.block);
+   if(e.notes)lines.push("   Notas: "+e.notes);
+
+   lines.push("");
+
+  });
+
+  if(d.notes)lines.push("");
+
+ });
+
+ lines.push("¡A entrenar! 💪");
+
+ const message=lines.join("\n");
+
+ const url="https://wa.me/"+phone+"?text="+encodeURIComponent(message);
+
+ window.open(url,"_blank");
+
+}
+
 /* ACCIONES GENERALES */
 
 document.addEventListener("click",e=>{
@@ -1997,6 +2097,18 @@ if(a==="edit-client"){
  }
 
  if(a==="back-client-plan"){clientPlanEditing=false;render();return}
+
+if(a==="send-client-whatsapp"){
+
+ const c=getClient(id);
+
+ if(!c)return;
+
+ sendClientRoutineWhatsApp(c);
+
+ return;
+
+}
 
  if(a==="save-client-plan-name"){
 
