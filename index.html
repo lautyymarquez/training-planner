@@ -1213,49 +1213,178 @@ const defaultExercises=[
 
 ];
 
+
 function allExercises(){
 
- return [...defaultExercises.map(x=>({name:x[0],muscle:x[1],equipment:x[2],custom:false})),...customExercises];
+ return [
+  ...defaultExercises.map(x=>({
+   name:x[0],
+   muscle:x[1],
+   equipment:x[2],
+   difficulty:"No especificada",
+   secondaryMuscle:"",
+   custom:false
+  })),
+  ...customExercises.map(x=>({
+   ...x,
+   difficulty:x.difficulty||"No especificada",
+   secondaryMuscle:x.secondaryMuscle||""
+  }))
+ ];
 
 }
 
 function pageExercises(){
 
- return `${pageTitle("Biblioteca de ejercicios","Buscá, organizá y agregá tus propios ejercicios.")}
+ return `${pageTitle("Biblioteca de ejercicios","Buscá, filtrá y organizá tus ejercicios.")}
 
  <div class="card"><h2>Crear ejercicio</h2><form id="exerciseForm">
 
- <div class="row">${field("Nombre","name","","text","required")}
+ <div class="row">
+ ${field("Nombre","name","","text","required")}
 
- <div class="field"><label>Grupo muscular</label><select name="muscle">${options(muscles)}</select></div>
+ <div class="field"><label>Grupo muscular</label>
+ <select name="muscle">${options(muscles)}</select></div>
 
- <div class="field"><label>Equipamiento</label><select name="equipment">${options(equipment)}</select></div></div>
+ <div class="field"><label>Equipamiento</label>
+ <select name="equipment">${options(equipment)}</select></div>
+ </div>
 
- <div class="row">${field("Dificultad","difficulty","Intermedio")} ${field("Variante","variant")}</div>
+ <div class="row">
+ ${field("Dificultad","difficulty","Intermedio")}
+ ${field("Variante","variant")}
+ </div>
 
- <div class="field"><label>Explicación técnica</label><textarea name="description"></textarea></div>
+ <div class="field"><label>Explicación técnica</label>
+ <textarea name="description"></textarea></div>
 
- <div class="field"><label>Errores frecuentes</label><textarea name="errors"></textarea></div>
+ <div class="field"><label>Errores frecuentes</label>
+ <textarea name="errors"></textarea></div>
 
- <button class="btn">Agregar ejercicio</button></form></div>
+ <button class="btn">Agregar ejercicio</button>
+ </form></div>
 
- <div class="card"><div class="row"><div class="field"><label>Buscar</label><input id="exerciseSearch" placeholder="Nombre del ejercicio..."></div><div class="field"><label>Grupo muscular</label><select id="muscleFilter"><option value="">Todos</option>${options(muscles)}</select></div></div><div id="exerciseResults"></div></div>`;
+ <div class="card">
+ <h2>Buscar ejercicios</h2>
+
+ <div class="field">
+ <label>Nombre del ejercicio</label>
+ <input id="exerciseSearch" placeholder="Ej: sentadilla, press, remo...">
+ </div>
+
+ <div class="row">
+
+ <div class="field">
+ <label>Grupo muscular</label>
+ <select id="muscleFilter">
+ <option value="">Todos</option>${options(muscles)}
+ </select>
+ </div>
+
+ <div class="field">
+ <label>Equipamiento</label>
+ <select id="equipmentFilter">
+ <option value="">Todos</option>${options(equipment)}
+ </select>
+ </div>
+
+ </div>
+
+ <div class="row">
+
+ <div class="field">
+ <label>Dificultad</label>
+ <select id="difficultyFilter">
+ <option value="">Todas</option>
+ ${options(["Principiante","Intermedio","Avanzado","No especificada"])}
+ </select>
+ </div>
+
+ <div class="field">
+ <label>Tipo de ejercicio</label>
+ <select id="typeFilter">
+ <option value="">Todos</option>
+ <option value="library">Biblioteca</option>
+ <option value="custom">Personalizados</option>
+ </select>
+ </div>
+
+ </div>
+
+ <div id="exerciseResults"></div>
+ </div>`;
 
 }
 
 function updateExerciseResults(){
 
- const box=document.getElementById("exerciseResults");if(!box)return;
+ const box=document.getElementById("exerciseResults");
+ if(!box)return;
 
- const q=(document.getElementById("exerciseSearch")?.value||"").toLowerCase();
+ const q=(document.getElementById("exerciseSearch")?.value||"").toLowerCase().trim();
 
- const m=document.getElementById("muscleFilter")?.value||"";
+ const muscle=document.getElementById("muscleFilter")?.value||"";
+ const equip=document.getElementById("equipmentFilter")?.value||"";
+ const difficulty=document.getElementById("difficultyFilter")?.value||"";
+ const type=document.getElementById("typeFilter")?.value||"";
 
- const arr=allExercises().filter(e=>e.name.toLowerCase().includes(q)&&(!m||e.muscle===m));
+ const arr=allExercises().filter(e=>{
 
- box.innerHTML=arr.map(e=>`<div class="exercise"><div class="between"><div><b>${esc(e.name)}</b><p>${esc(e.muscle)} · ${esc(e.equipment||"—")} ${e.custom?'<span class="tag">Personalizado</span>':""}</p></div>${e.custom?`<button class="btn small danger" data-action="delete-custom-exercise" data-id="${e.id}">Eliminar</button>`:""}</div>${e.description?`<p>${esc(e.description)}</p>`:""}${e.errors?`<p>Errores: ${esc(e.errors)}</p>`:""}${e.variant?`<p>Variante: ${esc(e.variant)}</p>`:""}</div>`).join("")||`<div class="empty">No se encontraron ejercicios.</div>`;
+  const matchesName=e.name.toLowerCase().includes(q);
+
+  const matchesMuscle=!muscle||e.muscle===muscle;
+
+  const matchesEquipment=!equip||e.equipment===equip;
+
+  const matchesDifficulty=!difficulty||e.difficulty===difficulty;
+
+  const matchesType=!type||(type==="custom"?e.custom:!e.custom);
+
+  return matchesName&&matchesMuscle&&matchesEquipment&&matchesDifficulty&&matchesType;
+
+ });
+
+ box.innerHTML=`
+ <div class="between">
+  <h3>Resultados</h3>
+  <span class="tag">${arr.length} ejercicios</span>
+ </div>
+
+ ${arr.map(e=>`
+ <div class="exercise">
+
+  <div class="between">
+   <div>
+    <b>${esc(e.name)}</b>
+    <p>${esc(e.muscle)} · ${esc(e.equipment||"Sin equipamiento")}</p>
+   </div>
+
+   ${e.custom?`
+    <button class="btn small danger"
+    data-action="delete-custom-exercise"
+    data-id="${e.id}">Eliminar</button>
+   `:`
+    <span class="pill">Biblioteca</span>
+   `}
+  </div>
+
+  <div class="row">
+   <span class="tag">${esc(e.difficulty)}</span>
+   ${e.secondaryMuscle?`<span class="pill">Secundario: ${esc(e.secondaryMuscle)}</span>`:""}
+  </div>
+
+  ${e.description?`<p>${esc(e.description)}</p>`:""}
+  ${e.errors?`<p>Errores: ${esc(e.errors)}</p>`:""}
+  ${e.variant?`<p>Variante: ${esc(e.variant)}</p>`:""}
+
+ </div>
+ `).join("")||`<div class="empty">No se encontraron ejercicios con esos filtros.</div>`}
+ `;
 
 }
+
+
+ 
 
 /* ESTADÍSTICAS */
 
@@ -2170,19 +2299,27 @@ function startCircuit(){
 
 /* ACTUALIZACIONES */
 
+
 document.addEventListener("input",e=>{
 
- if(["exerciseSearch","muscleFilter"].includes(e.target.id))updateExerciseResults();
+ if(["exerciseSearch","muscleFilter","equipmentFilter","difficultyFilter","typeFilter"].includes(e.target.id)){
+  updateExerciseResults();
+ }
 
- if(["volWeight","volReps","oneRm"].includes(e.target.id))updateCalculators();
+ if(["volWeight","volReps","oneRm"].includes(e.target.id)){
+  updateCalculators();
+ }
 
 });
 
 document.addEventListener("change",e=>{
 
- if(["exerciseSearch","muscleFilter"].includes(e.target.id))updateExerciseResults();
+ if(["exerciseSearch","muscleFilter","equipmentFilter","difficultyFilter","typeFilter"].includes(e.target.id)){
+  updateExerciseResults();
+ }
 
 });
+
 
 render();
 
