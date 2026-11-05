@@ -1194,22 +1194,151 @@ function openClientExerciseEditor(clientId,dayId,exerciseId){
 }
 
 /* EJERCICIOS */
-
 const defaultExercises=[
 
- ["Press de banca","Pectorales","Barra"],["Press inclinado con mancuernas","Pectorales","Mancuernas"],["Flexiones de brazos","Pectorales","Peso corporal"],
+/* PECHO */
+["Press de banca","Pectorales","Barra","Intermedio","Tríceps"],
+["Press de banca con mancuernas","Pectorales","Mancuernas","Intermedio","Tríceps"],
+["Press inclinado con barra","Pectorales","Barra","Intermedio","Hombros"],
+["Press inclinado con mancuernas","Pectorales","Mancuernas","Intermedio","Hombros"],
+["Press declinado con barra","Pectorales","Barra","Intermedio","Tríceps"],
+["Aperturas con mancuernas","Pectorales","Mancuernas","Principiante","Hombros"],
+["Cruce de poleas alto a bajo","Pectorales","Poleas","Intermedio","Hombros"],
+["Cruce de poleas bajo a alto","Pectorales","Poleas","Intermedio","Hombros"],
+["Press de pecho en máquina","Pectorales","Máquinas","Principiante","Tríceps"],
+["Flexiones de brazos","Pectorales","Peso corporal","Principiante","Tríceps"],
 
- ["Remo con barra","Espalda","Barra"],["Jalón al pecho","Espalda","Poleas"],["Dominadas","Espalda","Peso corporal"],
+/* ESPALDA */
+["Dominadas pronas","Espalda","Peso corporal","Avanzado","Bíceps"],
+["Dominadas supinas","Espalda","Peso corporal","Intermedio","Bíceps"],
+["Jalón al pecho agarre ancho","Espalda","Poleas","Principiante","Bíceps"],
+["Jalón al pecho agarre estrecho","Espalda","Poleas","Principiante","Bíceps"],
+["Remo con barra","Espalda","Barra","Intermedio","Bíceps"],
+["Remo con mancuerna a una mano","Espalda","Mancuernas","Principiante","Bíceps"],
+["Remo en polea baja","Espalda","Poleas","Principiante","Bíceps"],
+["Remo en máquina","Espalda","Máquinas","Principiante","Bíceps"],
+["Pullover en polea","Espalda","Poleas","Intermedio","Pectorales"],
+["Peso muerto convencional","Espalda","Barra","Avanzado","Isquiotibiales"],
 
- ["Press militar","Hombros","Barra"],["Elevaciones laterales","Hombros","Mancuernas"],
+/* HOMBROS */
+["Press militar con barra","Hombros","Barra","Intermedio","Tríceps"],
+["Press militar con mancuernas","Hombros","Mancuernas","Intermedio","Tríceps"],
+["Press Arnold","Hombros","Mancuernas","Intermedio","Tríceps"],
+["Elevaciones laterales con mancuernas","Hombros","Mancuernas","Principiante",""],
+["Elevaciones laterales en polea","Hombros","Poleas","Intermedio",""],
+["Elevaciones frontales con mancuernas","Hombros","Mancuernas","Principiante","Pectorales"],
+["Elevaciones frontales con disco","Hombros","Otros","Principiante","Pectorales"],
+["Pájaros con mancuernas","Hombros","Mancuernas","Principiante","Espalda"],
+["Face pull","Hombros","Poleas","Principiante","Espalda"],
+["Reverse fly en máquina","Hombros","Máquinas","Principiante","Espalda"],
 
- ["Curl de bíceps","Bíceps","Mancuernas"],["Extensión de tríceps","Tríceps","Poleas"],
+/* BÍCEPS */
+["Curl de bíceps con barra recta","Bíceps","Barra","Principiante","Antebrazos"],
+["Curl con barra EZ","Bíceps","Barra","Principiante","Antebrazos"],
+["Curl alternado con mancuernas","Bíceps","Mancuernas","Principiante","Antebrazos"],
+["Curl martillo","Bíceps","Mancuernas","Principiante","Antebrazos"],
+["Curl concentrado","Bíceps","Mancuernas","Intermedio",""],
+["Curl predicador con barra EZ","Bíceps","Barra","Intermedio","Antebrazos"],
+["Curl predicador en máquina","Bíceps","Máquinas","Principiante",""],
+["Curl en polea baja","Bíceps","Poleas","Principiante",""],
+["Curl Bayesian","Bíceps","Poleas","Intermedio",""],
+["Curl inverso con barra","Bíceps","Barra","Intermedio","Antebrazos"],
 
- ["Sentadilla","Cuádriceps","Barra"],["Prensa","Cuádriceps","Máquinas"],["Peso muerto rumano","Isquiotibiales","Barra"],
+/* TRÍCEPS */
+["Extensión de tríceps en polea","Tríceps","Poleas","Principiante",""],
+["Extensión de tríceps con cuerda","Tríceps","Poleas","Principiante",""],
+["Extensión de tríceps con barra recta","Tríceps","Poleas","Principiante",""],
+["Extensión por encima de la cabeza con cuerda","Tríceps","Poleas","Intermedio",""],
+["Extensión francesa con barra EZ","Tríceps","Barra","Intermedio",""],
+["Extensión francesa con mancuernas","Tríceps","Mancuernas","Intermedio",""],
+["Press cerrado","Tríceps","Barra","Intermedio","Pectorales"],
+["Fondos en paralelas","Tríceps","Peso corporal","Avanzado","Pectorales"],
+["Patada de tríceps","Tríceps","Mancuernas","Principiante",""],
+["Extensión de tríceps en máquina","Tríceps","Máquinas","Principiante",""],
 
- ["Curl femoral","Isquiotibiales","Máquinas"],["Hip thrust","Glúteos","Barra"],["Abducción de cadera","Glúteos","Máquinas"],
+/* CUÁDRICEPS */
+["Sentadilla trasera","Cuádriceps","Barra","Avanzado","Glúteos"],
+["Sentadilla frontal","Cuádriceps","Barra","Avanzado","Glúteos"],
+["Sentadilla goblet","Cuádriceps","Mancuernas","Principiante","Glúteos"],
+["Prensa inclinada","Cuádriceps","Máquinas","Principiante","Glúteos"],
+["Prensa horizontal","Cuádriceps","Máquinas","Principiante","Glúteos"],
+["Extensión de rodilla","Cuádriceps","Máquinas","Principiante",""],
+["Sentadilla búlgara","Cuádriceps","Mancuernas","Avanzado","Glúteos"],
+["Zancadas hacia adelante","Cuádriceps","Mancuernas","Intermedio","Glúteos"],
+["Zancadas hacia atrás","Cuádriceps","Mancuernas","Intermedio","Glúteos"],
+["Step up","Cuádriceps","Mancuernas","Intermedio","Glúteos"],
 
- ["Elevación de gemelos","Gemelos","Máquinas"],["Plancha","Abdominales","Peso corporal"],["Pallof press","Abdominales","Poleas"]
+/* ISQUIOTIBIALES */
+["Peso muerto rumano con barra","Isquiotibiales","Barra","Intermedio","Glúteos"],
+["Peso muerto rumano con mancuernas","Isquiotibiales","Mancuernas","Intermedio","Glúteos"],
+["Curl femoral acostado","Isquiotibiales","Máquinas","Principiante",""],
+["Curl femoral sentado","Isquiotibiales","Máquinas","Principiante",""],
+["Curl femoral unilateral","Isquiotibiales","Máquinas","Intermedio",""],
+["Buenos días con barra","Isquiotibiales","Barra","Avanzado","Glúteos"],
+["Peso muerto a una pierna","Isquiotibiales","Mancuernas","Intermedio","Glúteos"],
+["Pull through","Isquiotibiales","Poleas","Principiante","Glúteos"],
+["Nordic curl asistido","Isquiotibiales","Peso corporal","Avanzado",""],
+["Hiperextensiones a 45 grados","Isquiotibiales","Otros","Intermedio","Glúteos"],
+
+/* GLÚTEOS */
+["Hip thrust con barra","Glúteos","Barra","Intermedio","Isquiotibiales"],
+["Hip thrust con mancuerna","Glúteos","Mancuernas","Principiante","Isquiotibiales"],
+["Puente de glúteos","Glúteos","Peso corporal","Principiante",""],
+["Puente de glúteos unilateral","Glúteos","Peso corporal","Intermedio",""],
+["Abducción de cadera en máquina","Glúteos","Máquinas","Principiante",""],
+["Abducción de cadera con banda","Glúteos","Bandas elásticas","Principiante",""],
+["Patada de glúteo en polea","Glúteos","Poleas","Principiante",""],
+["Patada de glúteo en máquina","Glúteos","Máquinas","Principiante",""],
+["Sentadilla sumo","Glúteos","Mancuernas","Intermedio","Cuádriceps"],
+["Peso muerto sumo","Glúteos","Barra","Intermedio","Isquiotibiales"],
+
+/* GEMELOS */
+["Elevación de gemelos de pie","Gemelos","Máquinas","Principiante",""],
+["Elevación de gemelos sentado","Gemelos","Máquinas","Principiante",""],
+["Elevación de gemelos en prensa","Gemelos","Máquinas","Principiante",""],
+["Elevación de gemelos unilateral","Gemelos","Peso corporal","Intermedio",""],
+["Elevación de gemelos con mancuernas","Gemelos","Mancuernas","Principiante",""],
+["Elevación de gemelos con barra","Gemelos","Barra","Intermedio",""],
+["Caminata en puntas de pie","Gemelos","Peso corporal","Principiante",""],
+["Elevación de gemelos en escalón","Gemelos","Peso corporal","Principiante",""],
+["Saltos de tobillo","Gemelos","Peso corporal","Intermedio",""],
+["Elevación de gemelos en máquina Smith","Gemelos","Máquinas","Intermedio",""],
+
+/* ABDOMINALES */
+["Plancha frontal","Abdominales","Peso corporal","Principiante",""],
+["Plancha lateral","Abdominales","Peso corporal","Principiante",""],
+["Crunch abdominal","Abdominales","Peso corporal","Principiante",""],
+["Crunch en polea","Abdominales","Poleas","Intermedio",""],
+["Elevación de piernas colgado","Abdominales","Peso corporal","Avanzado",""],
+["Elevación de rodillas colgado","Abdominales","Peso corporal","Intermedio",""],
+["Reverse crunch","Abdominales","Peso corporal","Principiante",""],
+["Rueda abdominal","Abdominales","Otros","Avanzado",""],
+["Pallof press","Abdominales","Poleas","Intermedio",""],
+["Dead bug","Abdominales","Peso corporal","Principiante",""],
+
+/* ANTEBRAZOS */
+["Curl de muñeca con barra","Antebrazos","Barra","Principiante",""],
+["Curl de muñeca inverso","Antebrazos","Barra","Intermedio",""],
+["Curl de muñeca con mancuerna","Antebrazos","Mancuernas","Principiante",""],
+["Curl inverso de muñeca con mancuerna","Antebrazos","Mancuernas","Intermedio",""],
+["Farmer walk","Antebrazos","Mancuernas","Intermedio",""],
+["Agarre estático con barra","Antebrazos","Barra","Intermedio",""],
+["Pinza de discos","Antebrazos","Otros","Intermedio",""],
+["Curl martillo cruzado","Antebrazos","Mancuernas","Principiante","Bíceps"],
+["Extensión de dedos con banda","Antebrazos","Bandas elásticas","Principiante",""],
+["Wrist roller","Antebrazos","Otros","Intermedio",""],
+
+/* CUERPO COMPLETO */
+["Burpee","Cuerpo completo","Peso corporal","Avanzado",""],
+["Thruster con mancuernas","Cuerpo completo","Mancuernas","Avanzado",""],
+["Thruster con barra","Cuerpo completo","Barra","Avanzado",""],
+["Kettlebell swing","Cuerpo completo","Kettlebell","Intermedio","Glúteos"],
+["Clean con kettlebell","Cuerpo completo","Kettlebell","Avanzado",""],
+["Turkish get up","Cuerpo completo","Kettlebell","Avanzado",""],
+["Sentadilla con press","Cuerpo completo","Mancuernas","Intermedio",""],
+["Mountain climbers","Cuerpo completo","Peso corporal","Intermedio","Abdominales"],
+["Bear crawl","Cuerpo completo","Peso corporal","Intermedio",""],
+["Caminata del granjero","Cuerpo completo","Mancuernas","Intermedio","Antebrazos"]
 
 ];
 
@@ -1221,8 +1350,8 @@ function allExercises(){
    name:x[0],
    muscle:x[1],
    equipment:x[2],
-   difficulty:"No especificada",
-   secondaryMuscle:"",
+   difficulty:x[3]||"No especificada",
+   secondaryMuscle:x[4]||"",
    custom:false
   })),
   ...customExercises.map(x=>({
@@ -1231,88 +1360,6 @@ function allExercises(){
    secondaryMuscle:x.secondaryMuscle||""
   }))
  ];
-
-}
-
-function pageExercises(){
-
- return `${pageTitle("Biblioteca de ejercicios","Buscá, filtrá y organizá tus ejercicios.")}
-
- <div class="card"><h2>Crear ejercicio</h2><form id="exerciseForm">
-
- <div class="row">
- ${field("Nombre","name","","text","required")}
-
- <div class="field"><label>Grupo muscular</label>
- <select name="muscle">${options(muscles)}</select></div>
-
- <div class="field"><label>Equipamiento</label>
- <select name="equipment">${options(equipment)}</select></div>
- </div>
-
- <div class="row">
- ${field("Dificultad","difficulty","Intermedio")}
- ${field("Variante","variant")}
- </div>
-
- <div class="field"><label>Explicación técnica</label>
- <textarea name="description"></textarea></div>
-
- <div class="field"><label>Errores frecuentes</label>
- <textarea name="errors"></textarea></div>
-
- <button class="btn">Agregar ejercicio</button>
- </form></div>
-
- <div class="card">
- <h2>Buscar ejercicios</h2>
-
- <div class="field">
- <label>Nombre del ejercicio</label>
- <input id="exerciseSearch" placeholder="Ej: sentadilla, press, remo...">
- </div>
-
- <div class="row">
-
- <div class="field">
- <label>Grupo muscular</label>
- <select id="muscleFilter">
- <option value="">Todos</option>${options(muscles)}
- </select>
- </div>
-
- <div class="field">
- <label>Equipamiento</label>
- <select id="equipmentFilter">
- <option value="">Todos</option>${options(equipment)}
- </select>
- </div>
-
- </div>
-
- <div class="row">
-
- <div class="field">
- <label>Dificultad</label>
- <select id="difficultyFilter">
- <option value="">Todas</option>
- ${options(["Principiante","Intermedio","Avanzado","No especificada"])}
- </select>
- </div>
-
- <div class="field">
- <label>Tipo de ejercicio</label>
- <select id="typeFilter">
- <option value="">Todos</option>
- <option value="library">Biblioteca</option>
- <option value="custom">Personalizados</option>
- </select>
- </div>
-
- </div>
-
- <div id="exerciseResults"></div>
- </div>`;
 
 }
 
