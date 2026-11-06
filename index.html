@@ -1558,7 +1558,6 @@ function updateExerciseResults(){
  if(!box)return;
 
  const q=(document.getElementById("exerciseSearch")?.value||"").toLowerCase().trim();
-
  const muscle=document.getElementById("muscleFilter")?.value||"";
  const equip=document.getElementById("equipmentFilter")?.value||"";
  const difficulty=document.getElementById("difficultyFilter")?.value||"";
@@ -1567,13 +1566,9 @@ function updateExerciseResults(){
  const arr=allExercises().filter(e=>{
 
   const matchesName=e.name.toLowerCase().includes(q);
-
   const matchesMuscle=!muscle||e.muscle===muscle;
-
   const matchesEquipment=!equip||e.equipment===equip;
-
   const matchesDifficulty=!difficulty||e.difficulty===difficulty;
-
   const matchesType=!type||(type==="custom"?e.custom:!e.custom);
 
   return matchesName&&matchesMuscle&&matchesEquipment&&matchesDifficulty&&matchesType;
@@ -1587,6 +1582,7 @@ function updateExerciseResults(){
  </div>
 
  ${arr.map(e=>`
+
  <div class="exercise">
 
   <div class="between">
@@ -1606,14 +1602,30 @@ function updateExerciseResults(){
 
   <div class="row">
    <span class="tag">${esc(e.difficulty)}</span>
-   ${e.secondaryMuscle?`<span class="pill">Secundario: ${esc(e.secondaryMuscle)}</span>`:""}
   </div>
 
-  ${e.description?`<p>${esc(e.description)}</p>`:""}
-  ${e.errors?`<p>Errores: ${esc(e.errors)}</p>`:""}
-  ${e.variant?`<p>Variante: ${esc(e.variant)}</p>`:""}
+  ${e.secondaryMuscles?.length?`
+   <p><b>Músculos secundarios:</b> ${e.secondaryMuscles.map(m=>esc(m)).join(", ")}</p>
+  `:""}
+
+  ${e.movementPattern?`
+   <p><b>Patrón:</b> ${esc(e.movementPattern)}</p>
+  `:""}
+
+  ${e.trainingType?`
+   <p><b>Tipo de entrenamiento:</b> ${esc(e.trainingType)}</p>
+  `:""}
+
+  ${e.region?`
+   <p><b>Región corporal:</b> ${esc(e.region)}</p>
+  `:""}
+
+  ${e.description?`<p><b>Descripción:</b> ${esc(e.description)}</p>`:""}
+  ${e.errors?`<p><b>Errores frecuentes:</b> ${esc(e.errors)}</p>`:""}
+  ${e.variant?`<p><b>Variante:</b> ${esc(e.variant)}</p>`:""}
 
  </div>
+
  `).join("")||`<div class="empty">No se encontraron ejercicios con esos filtros.</div>`}
  `;
 
