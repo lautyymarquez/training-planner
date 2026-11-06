@@ -185,7 +185,42 @@ const seriesTypes=["Efectiva","Aproximación","Descarga"];
 const muscles=["Pectorales","Espalda","Hombros","Bíceps","Tríceps","Cuádriceps","Isquiotibiales","Glúteos","Gemelos","Abdominales","Antebrazos","Cuerpo completo"];
 
 const equipment=["Peso corporal","Mancuernas","Barra","Máquinas","Poleas","Bandas elásticas","Kettlebell","Otros"];
+const movementPatterns=[
+ "Empuje horizontal",
+ "Empuje vertical",
+ "Tracción horizontal",
+ "Tracción vertical",
+ "Dominante de rodilla",
+ "Bisagra de cadera",
+ "Dominante de cadera",
+ "Unilateral",
+ "Rotación",
+ "Anti-rotación",
+ "Estabilidad",
+ "Locomoción",
+ "Salto",
+ "Lanzamiento",
+ "Aislamiento"
+];
 
+const trainingTypes=[
+ "Fuerza",
+ "Hipertrofia",
+ "Potencia",
+ "Resistencia muscular",
+ "Acondicionamiento",
+ "Movilidad",
+ "Estabilidad",
+ "Pliometría",
+ "Funcional"
+];
+
+const bodyRegions=[
+ "Tren superior",
+ "Tren inferior",
+ "Zona media",
+ "Cuerpo completo"
+];
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
@@ -1498,12 +1533,20 @@ function allExercises(){
    equipment:x[2],
    difficulty:x[3]||"No especificada",
    secondaryMuscle:x[4]||"",
+   secondaryMuscles:x[4]?[x[4]]:[],
+   movementPattern:x[5]||"",
+   trainingType:x[6]||"",
+   region:x[7]||"",
    custom:false
   })),
+
   ...customExercises.map(x=>({
    ...x,
    difficulty:x.difficulty||"No especificada",
-   secondaryMuscle:x.secondaryMuscle||""
+   secondaryMuscle:x.secondaryMuscle||"",
+   secondaryMuscles:Array.isArray(x.secondaryMuscles)
+    ?x.secondaryMuscles
+    :(x.secondaryMuscle?[x.secondaryMuscle]:[])
   }))
  ];
 
@@ -1595,7 +1638,18 @@ function pageExercises(){
     ${selectField("Equipamiento","equipment",equipment,"Mancuernas")}
     ${selectField("Dificultad","difficulty",["Principiante","Intermedio","Avanzado"],"Principiante")}
    </div>
+<div class="field">
+ <label>Músculos secundarios (separados por coma)</label>
+ <input name="secondaryMuscles"
+ placeholder="Ej: Glúteos, isquiotibiales">
+</div>
 
+<div class="row">
+ ${selectField("Patrón de movimiento","movementPattern",movementPatterns,"Dominante de rodilla")}
+ ${selectField("Tipo de entrenamiento","trainingType",trainingTypes,"Fuerza")}
+</div>
+
+${selectField("Región corporal","region",bodyRegions,"Tren superior")}
    ${field("Variante","variant")}
 
    <div class="field">
@@ -2303,11 +2357,33 @@ if(f.id==="clientForm"){
 
  if(f.id==="exerciseForm"){
 
-  customExercises.push({id:uid(),name:d.name,muscle:d.muscle,equipment:d.equipment,difficulty:d.difficulty,variant:d.variant,description:d.description,errors:d.errors,custom:true});
+  const secondaryMuscles=(d.secondaryMuscles||"")
+   .split(",")
+   .map(x=>x.trim())
+   .filter(Boolean);
 
-  save();render();
+  customExercises.push({
+   id:uid(),
+   name:d.name,
+   muscle:d.muscle,
+   secondaryMuscle:secondaryMuscles[0]||"",
+   secondaryMuscles,
+   equipment:d.equipment,
+   difficulty:d.difficulty,
+   movementPattern:d.movementPattern,
+   trainingType:d.trainingType,
+   region:d.region,
+   variant:d.variant,
+   description:d.description,
+   errors:d.errors,
+   custom:true
+  });
 
- }
+  save();
+  render();
+  return;
+
+}
  if(f.id==="goalForm"){
 
   const c=getClient(f.dataset.client);
