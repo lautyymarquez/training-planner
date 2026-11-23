@@ -1942,6 +1942,127 @@ function sendClientRoutineWhatsApp(c){
 
 }
 
+/* REORDENAR EJERCICIOS */
+
+let draggedExercise = null;
+let dragContainer = null;
+let dragMoved = false;
+let dragStartX = 0;
+let dragStartY = 0;
+
+document.addEventListener("pointerdown", e => {
+ const handle = e.target.closest(".drag-handle");
+ if (!handle) return;
+
+ const card = handle.closest(".exercise[data-exercise-id]");
+ if (!card) return;
+
+ draggedExercise = card;
+ dragContainer = card.parentElement;
+ dragStartX = e.clientX;
+ dragStartY = e.clientY;
+ dragMoved = false;
+
+ e.preventDefault();
+});
+
+document.addEventListener("pointermove", e => {
+ if (!draggedExercise || !dragContainer) return;
+
+ const distance = Math.hypot(
+  e.clientX - dragStartX,
+  e.clientY - dragStartY
+ );
+
+ if (distance < 6) return;
+
+ dragMoved = true;
+ draggedExercise.classList.add("dragging");
+
+ const target = document.elementFromPoint(
+  e.clientX,
+  e.clientY
+ )?.closest(".exercise[data-exercise-id]");
+
+ if (!target || target === draggedExercise) return;
+ if (target.parentElement !== dragContainer) return;
+
+ const rect = target.getBoundingClientRect();
+ const after = e.clientY > rect.top + rect.height / 2;
+
+ dragContainer.insertBefore(
+  draggedExercise,
+  after ? target.nextSibling : target
+ );
+});
+
+function finishExerciseDrag(){
+
+ if (!draggedExercise) return;
+
+ const card = draggedExercise;
+ const container = dragContainer;
+ const moved = dragMoved;
+
+ const owner = card.dataset.owner;
+ const dayId = card.dataset.dayId;
+
+ card.classList.remove("dragging");
+
+ draggedExercise = null;
+ dragContainer = null;
+ dragMoved = false;
+
+ if (!moved) return;
+
+ const ids = Array.from(container.children)
+  .filter(el => el.matches(".exercise[data-exercise-id]"))
+  .map(el => el.dataset.exerciseId);
+
+ if (owner === "plan") {
+
+  const day = plans.flatMap(p => p.days)
+   .find(d => d.id === dayId);
+
+  if (!day) return;
+
+  const exercises = new Map(
+   day.exercises.map(e => [e.id,e])
+  );
+
+  day.exercises = ids
+   .map(id => exercises.get(id))
+   .filter(Boolean);
+
+  save();
+  render();
+  return;
+ }
+
+ if (owner === "client") {
+
+  const client = getClient(selectedClient);
+  const plan = client ? ensureClientPlan(client) : null;
+  const day = plan?.days.find(d => d.id === dayId);
+
+  if (!day) return;
+
+  const exercises = new Map(
+   day.exercises.map(e => [e.id,e])
+  );
+
+  day.exercises = ids
+   .map(id => exercises.get(id))
+   .filter(Boolean);
+
+  save();
+  renderClientPlan();
+ }
+}
+
+document.addEventListener("pointerup", finishExerciseDrag);
+document.addEventListener("pointercancel", finishExerciseDrag);
+
 /* ACCIONES GENERALES */
 
 document.addEventListener("click",e=>{
