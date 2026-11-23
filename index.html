@@ -532,9 +532,10 @@ ${d.exercises.map((e,j)=>planExerciseCard(e,j,d.id)).join("")}
 
 }
 
-function planExerciseCard(e,j){
 
- <div class="exercise" data-exercise-id="${e.id}" data-day-id="${dayId}" data-owner="plan">
+function planExerciseCard(e,j,dayId){
+
+ return `<div class="exercise" data-exercise-id="${e.id}" data-day-id="${dayId}" data-owner="plan">
 
  <div class="between">
  <div><b>${j+1}. ${esc(e.name)}</b>
@@ -556,6 +557,7 @@ function planExerciseCard(e,j){
 
  </div>`;
 }
+
 
 /* CLIENTES */
 
