@@ -1957,7 +1957,166 @@ function updateExerciseResults(){
  renderLibrarySelection();
 }
 
-/* FICHAS TECNICAS DE EJERCICIOS */
+
+/* FICHAS TECNICAS TP - PECHO Y ESPALDA */
+
+function getExerciseFichaData(ex){
+
+ const name=String(ex.name||"").toLowerCase()
+  .normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+
+ const contains=(...words)=>words.some(w=>name.includes(w));
+
+ let data={
+  muscles:ex.muscle||"No especificado",
+  secondary:ex.secondaryMuscles?.length
+   ?ex.secondaryMuscles
+   :(ex.secondaryMuscle?[ex.secondaryMuscle]:[]),
+  movement:ex.movementPattern||"No especificado",
+  execution:ex.description||"Todavía no hay una descripción técnica cargada.",
+  errors:ex.errors||"Todavía no hay errores frecuentes cargados.",
+  variants:ex.variant||"Todavía no hay variantes cargadas."
+ };
+
+ /* PECHO */
+
+ if(contains("press banca","press plano","banca plana","bench press")){
+  data={
+   ...data,
+   muscles:"Pectoral mayor",
+   secondary:["Tríceps","Deltoides anterior"],
+   movement:"Empuje horizontal",
+   execution:"Acostate en el banco con los pies apoyados. Sujetá la barra con un agarre estable. Bajala de forma controlada hacia la zona media del pecho y empujá hasta extender los brazos sin perder la posición de los hombros.",
+   errors:"Rebotar la barra sobre el pecho, despegar los glúteos del banco, perder el control de las muñecas o utilizar un recorrido que no puedas controlar.",
+   variants:"Press con mancuernas, press en máquina convergente y press con agarre cerrado."
+  };
+ }
+
+ else if(contains("inclinado")){
+  data={
+   ...data,
+   muscles:"Pectoral mayor, con énfasis en la porción clavicular",
+   secondary:["Deltoides anterior","Tríceps"],
+   movement:"Empuje diagonal",
+   execution:"Apoyá la espalda en un banco inclinado. Estabilizá los pies y llevá la carga hacia la parte superior del pecho. Empujá siguiendo una trayectoria controlada.",
+   errors:"Usar una inclinación excesiva, arquear demasiado la espalda o perder estabilidad en los hombros.",
+   variants:"Press inclinado con barra, mancuernas o máquina."
+  };
+ }
+
+ else if(contains("declinado")){
+  data={
+   ...data,
+   muscles:"Pectoral mayor",
+   secondary:["Tríceps","Deltoides anterior"],
+   movement:"Empuje diagonal descendente",
+   execution:"Estabilizá el cuerpo en el banco declinado. Bajá la carga de manera controlada hacia el pecho y empujá manteniendo los hombros estables.",
+   errors:"Perder la estabilidad, rebotar la carga o acortar excesivamente el recorrido.",
+   variants:"Press declinado con barra, mancuernas o máquina."
+  };
+ }
+
+ else if(contains("apertura","fly","cruce de polea","crossover")){
+  data={
+   ...data,
+   muscles:"Pectoral mayor",
+   secondary:["Deltoides anterior"],
+   movement:"Aducción horizontal del hombro",
+   execution:"Mantené una ligera flexión de codos. Abrí los brazos de forma controlada y luego acercalos frente al cuerpo mediante la acción de los pectorales.",
+   errors:"Transformar el movimiento en un press, utilizar impulso o llevar los hombros hacia adelante sin control.",
+   variants:"Aperturas con mancuernas, poleas o máquina contractora."
+  };
+ }
+
+ else if(contains("flexion","push up")){
+  data={
+   ...data,
+   muscles:"Pectoral mayor",
+   secondary:["Tríceps","Deltoides anterior","Serrato anterior"],
+   movement:"Empuje horizontal con peso corporal",
+   execution:"Colocá las manos apoyadas y el cuerpo alineado. Descendé flexionando los codos y empujá el suelo para regresar a la posición inicial.",
+   errors:"Dejar caer la cadera, elevar demasiado la pelvis o perder el control del movimiento.",
+   variants:"Flexiones inclinadas, tradicionales, declinadas o con apoyo de rodillas."
+  };
+ }
+
+ else if(contains("fondos")){
+  data={
+   ...data,
+   muscles:"Pectoral mayor y tríceps",
+   secondary:["Deltoides anterior"],
+   movement:"Empuje vertical con peso corporal",
+   execution:"Sostené el cuerpo en las barras paralelas. Flexioná los codos de manera controlada y empujá para volver a la posición inicial. La inclinación del torso modifica el énfasis muscular.",
+   errors:"Descender más allá de un rango cómodo, perder estabilidad o balancear el cuerpo.",
+   variants:"Fondos asistidos, en paralelas o en máquina."
+  };
+ }
+
+ /* ESPALDA */
+
+ else if(contains("dominada","pull up","chin up")){
+  data={
+   ...data,
+   muscles:"Dorsal ancho",
+   secondary:["Bíceps","Braquial","Trapecio inferior","Romboides"],
+   movement:"Tracción vertical",
+   execution:"Colgate de la barra con un agarre estable. Iniciá el movimiento controlando las escápulas y llevá el cuerpo hacia la barra. Descendé de forma controlada.",
+   errors:"Balancearse excesivamente, encoger los hombros sin control o realizar repeticiones con recorrido incompleto.",
+   variants:"Dominadas pronas, supinas, neutras y dominadas asistidas."
+  };
+ }
+
+ else if(contains("jalon","al pecho","polea alta")){
+  data={
+   ...data,
+   muscles:"Dorsal ancho",
+   secondary:["Bíceps","Braquial","Romboides","Trapecio inferior"],
+   movement:"Tracción vertical",
+   execution:"Sentate con los muslos estabilizados. TirÁ de la barra hacia la parte superior del pecho manteniendo el torso estable. Volvé lentamente a la posición inicial.",
+   errors:"Tirar detrás de la nuca sin necesidad, balancear el torso o convertir el movimiento en una extensión exagerada de espalda.",
+   variants:"Jalón con agarre ancho, cerrado, neutro o unilateral."
+  };
+ }
+
+ else if(contains("remo")){
+  data={
+   ...data,
+   muscles:"Dorsal ancho y musculatura de la espalda media",
+   secondary:["Romboides","Trapecio medio","Bíceps","Deltoides posterior"],
+   movement:"Tracción horizontal",
+   execution:"Estabilizá el tronco y llevá los codos hacia atrás acercando la carga al cuerpo. Controlá el regreso sin perder la posición de la columna.",
+   errors:"Impulsar la carga con el torso, encorvar la espalda o elevar los hombros excesivamente.",
+   variants:"Remo con barra, mancuerna, polea, máquina o pecho apoyado."
+  };
+ }
+
+ else if(contains("pullover")){
+  data={
+   ...data,
+   muscles:"Dorsal ancho",
+   secondary:["Pectoral mayor","Redondo mayor","Tríceps, porción larga"],
+   movement:"Extensión de hombro",
+   execution:"Mantené los brazos ligeramente flexionados. Mové la carga en un arco controlado desde una posición elevada hacia atrás y luego regresá sin forzar el rango articular.",
+   errors:"Flexionar y extender los codos durante el recorrido, utilizar impulso o forzar la movilidad del hombro.",
+   variants:"Pullover con mancuerna, polea o máquina."
+  };
+ }
+
+ else if(contains("peso muerto")){
+  data={
+   ...data,
+   muscles:"Erectores espinales y cadena posterior",
+   secondary:["Glúteos","Isquiotibiales","Trapecio","Dorsal ancho"],
+   movement:"Bisagra de cadera",
+   execution:"Ubicate frente a la carga, estabilizá el tronco y realizá una bisagra de cadera. Extendé caderas y rodillas de forma coordinada manteniendo la carga cerca del cuerpo.",
+   errors:"Perder la posición de la columna, alejar la carga del cuerpo o iniciar el movimiento sin estabilizar el tronco.",
+   variants:"Peso muerto convencional, rumano, sumo y con barra hexagonal."
+  };
+ }
+
+ return data;
+}
+
 
 function openExerciseFicha(key){
 
@@ -1966,9 +2125,7 @@ function openExerciseFicha(key){
 
  document.getElementById("exerciseFichaOverlay")?.remove();
 
- const secundarios=ex.secondaryMuscles?.length
-  ?ex.secondaryMuscles
-  :(ex.secondaryMuscle?[ex.secondaryMuscle]:[]);
+ const data=getExerciseFichaData(ex);
 
  const overlay=document.createElement("div");
  overlay.id="exerciseFichaOverlay";
@@ -1987,9 +2144,9 @@ function openExerciseFicha(key){
    <div class="exercise-ficha-visual">
     <div class="exercise-ficha-visual-icon">◉</div>
     <div>
-     <span class="library-count">REFERENCIA ANATÓMICA</span>
-     <h3>${esc(ex.muscle||"Grupo muscular")}</h3>
-     <p>Ilustración específica en preparación</p>
+     <span class="library-count">ANATOMÍA MUSCULAR</span>
+     <h3>${esc(data.muscles)}</h3>
+     <p>Ilustración anatómica pendiente de incorporar</p>
     </div>
    </div>
 
@@ -1998,47 +2155,49 @@ function openExerciseFicha(key){
    <div class="library-meta">
     <span class="tag">${esc(ex.muscle||"Sin grupo")}</span>
     <span class="pill">${esc(ex.equipment||"Sin equipamiento")}</span>
-    <span class="pill">${esc(ex.difficulty||"Dificultad no especificada")}</span>
+    <span class="pill">${esc(ex.difficulty||"No especificada")}</span>
    </div>
 
    <div class="exercise-ficha-section">
-    <h3>Músculo principal</h3>
-    <p>${esc(ex.muscle||"No especificado")}</p>
+    <h3>01 · Músculos principales</h3>
+    <p>${esc(data.muscles)}</p>
    </div>
 
    <div class="exercise-ficha-section">
-    <h3>Músculos secundarios</h3>
-    <p>${secundarios.length?secundarios.map(x=>esc(x)).join(", "):"Sin información cargada."}</p>
+    <h3>02 · Músculos secundarios</h3>
+    <p>${data.secondary.length
+     ?data.secondary.map(x=>esc(x)).join(", ")
+     :"Sin información cargada."}</p>
    </div>
 
    <div class="exercise-ficha-section">
-    <h3>Equipamiento</h3>
+    <h3>03 · Equipamiento</h3>
     <p>${esc(ex.equipment||"No especificado")}</p>
    </div>
 
    <div class="exercise-ficha-section">
-    <h3>Patrón de movimiento</h3>
-    <p>${esc(ex.movementPattern||"No especificado")}</p>
+    <h3>04 · Patrón de movimiento</h3>
+    <p>${esc(data.movement)}</p>
    </div>
 
    <div class="exercise-ficha-section">
-    <h3>Ejecución técnica</h3>
-    <p>${ex.description?esc(ex.description):"Todavía no hay una descripción técnica cargada para este ejercicio."}</p>
+    <h3>05 · Ejecución técnica</h3>
+    <p>${esc(data.execution)}</p>
    </div>
 
    <div class="exercise-ficha-section">
-    <h3>Errores frecuentes</h3>
-    <p>${ex.errors?esc(ex.errors):"Todavía no hay errores frecuentes cargados."}</p>
+    <h3>06 · Errores frecuentes</h3>
+    <p>${esc(data.errors)}</p>
    </div>
 
    <div class="exercise-ficha-section">
-    <h3>Variantes</h3>
-    <p>${ex.variant?esc(ex.variant):"Todavía no hay variantes cargadas."}</p>
+    <h3>07 · Variantes</h3>
+    <p>${esc(data.variants)}</p>
    </div>
 
    ${ex.region?`
     <div class="exercise-ficha-section">
-     <h3>Región corporal</h3>
+     <h3>08 · Región corporal</h3>
      <p>${esc(ex.region)}</p>
     </div>
    `:""}
@@ -2054,6 +2213,7 @@ function openExerciseFicha(key){
 
  document.body.appendChild(overlay);
 }
+
 
 document.addEventListener("click",e=>{
 
@@ -2080,16 +2240,16 @@ document.addEventListener("click",e=>{
   librarySelected=[key];
   document.getElementById("exerciseFichaOverlay")?.remove();
 
-  const library=document.getElementById("exerciseResults");
-  library?.scrollIntoView({behavior:"smooth"});
+  updateExerciseResults();
+
+  document.getElementById("exerciseResults")?.scrollIntoView({
+   behavior:"smooth"
+  });
 
   alert("Ejercicio seleccionado. Elegí la planificación y el día en el panel de selección para agregarlo.");
-  updateExerciseResults();
  }
 
 });
-
-
 
 
 function pageExercises(){
