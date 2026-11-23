@@ -120,6 +120,190 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 .exercise.drag-over{
  border:2px dashed var(--green);
 }
+
+/* TP EXERCISE LIBRARY - DARK PERFORMANCE */
+
+:root {
+ --bg:#090a0c;
+ --panel:#141619;
+ --panel2:#1c2024;
+ --line:#30353b;
+ --green:#d0d4d8;
+ --green2:#aeb4bb;
+ --text:#f3f4f5;
+ --muted:#9299a2;
+}
+
+body {
+ background:var(--bg);
+}
+
+.card {
+ background:linear-gradient(145deg,#191c20,#111316);
+ border:1px solid #30353b;
+ border-radius:16px;
+}
+
+.exercise {
+ background:linear-gradient(145deg,#202429,#15181c);
+ border:1px solid #343a41;
+ border-radius:13px;
+ transition:border-color .2s,transform .2s;
+}
+
+.exercise:hover {
+ border-color:#777f89;
+}
+
+.btn {
+ background:#d5d9de;
+ color:#101215;
+}
+
+.btn.secondary {
+ background:#24292f;
+ color:#f3f4f5;
+ border:1px solid #414850;
+}
+
+.tag {
+ background:#30363d;
+ color:#e0e4e8;
+}
+
+.pill {
+ background:#30363d;
+ color:#c4cbd2;
+}
+
+input:focus,select:focus,textarea:focus {
+ border-color:#aab1b9;
+}
+
+.library-header {
+ padding:20px;
+ background:linear-gradient(135deg,#20252b,#101215);
+ border:1px solid #353b43;
+ border-radius:17px;
+ margin-bottom:15px;
+}
+
+.library-header h1 {
+ font-size:25px;
+ letter-spacing:1px;
+}
+
+.library-search input {
+ padding:15px;
+ border-radius:12px;
+ background:#101215;
+}
+
+.library-categories {
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:9px;
+ margin:15px 0;
+}
+
+.library-category {
+ background:linear-gradient(145deg,#252a30,#14171a);
+ border:1px solid #373e46;
+ padding:15px 10px;
+ border-radius:12px;
+ color:#e9ecef;
+ text-align:left;
+ font-weight:bold;
+}
+
+.library-category small {
+ display:block;
+ color:#9299a2;
+ margin-top:5px;
+ font-weight:normal;
+}
+
+.library-card {
+ position:relative;
+ padding:14px;
+ margin:10px 0;
+ background:linear-gradient(145deg,#20252a,#131619);
+ border:1px solid #343b42;
+ border-radius:14px;
+}
+
+.library-card.selected {
+ border:1px solid #d0d5dc;
+ background:#272d33;
+}
+
+.library-card-top {
+ display:flex;
+ justify-content:space-between;
+ gap:12px;
+ align-items:flex-start;
+}
+
+.library-check {
+ width:22px;
+ height:22px;
+ accent-color:#d4d9df;
+ flex-shrink:0;
+}
+
+.library-meta {
+ display:flex;
+ flex-wrap:wrap;
+ gap:6px;
+ margin-top:10px;
+}
+
+.library-count {
+ font-size:12px;
+ color:#c3c9d0;
+}
+
+.library-selection {
+ position:sticky;
+ bottom:10px;
+ z-index:3;
+ padding:14px;
+ background:#252a30;
+ border:1px solid #555e68;
+ border-radius:14px;
+ box-shadow:0 8px 25px #0009;
+ margin-top:14px;
+}
+
+.library-filters {
+ display:grid;
+ grid-template-columns:repeat(2,minmax(0,1fr));
+ gap:8px;
+}
+
+.library-filters .field {
+ min-width:0;
+ margin:3px 0;
+}
+
+.library-section-title {
+ font-size:11px;
+ color:#9ba3ac;
+ letter-spacing:1.5px;
+ text-transform:uppercase;
+ margin:20px 0 10px;
+}
+
+.library-card p {
+ margin:6px 0;
+}
+
+@media(min-width:700px) {
+ .library-categories {
+  grid-template-columns:repeat(4,minmax(0,1fr));
+ }
+}
+
 </style>
 
 </head>
@@ -1594,6 +1778,15 @@ function allExercises(){
 
 }
 
+
+/* TP EXERCISE LIBRARY - SELECCION MULTIPLE */
+
+let librarySelected = [];
+
+function exerciseKey(e){
+ return e.custom ? "custom-"+e.id : "default-"+e.name;
+}
+
 function updateExerciseResults(){
 
  const box=document.getElementById("exerciseResults");
@@ -1606,83 +1799,187 @@ function updateExerciseResults(){
  const type=document.getElementById("typeFilter")?.value||"";
 
  const arr=allExercises().filter(e=>{
-
-  const matchesName=e.name.toLowerCase().includes(q);
-  const matchesMuscle=!muscle||e.muscle===muscle;
-  const matchesEquipment=!equip||e.equipment===equip;
-  const matchesDifficulty=!difficulty||e.difficulty===difficulty;
-  const matchesType=!type||(type==="custom"?e.custom:!e.custom);
-
-  return matchesName&&matchesMuscle&&matchesEquipment&&matchesDifficulty&&matchesType;
-
+  return (
+   e.name.toLowerCase().includes(q) &&
+   (!muscle||e.muscle===muscle) &&
+   (!equip||e.equipment===equip) &&
+   (!difficulty||e.difficulty===difficulty) &&
+   (!type||(type==="custom"?e.custom:!e.custom))
+  );
  });
 
  box.innerHTML=`
- <div class="between">
-  <h3>Resultados</h3>
-  <span class="tag">${arr.length} ejercicios</span>
- </div>
-
- ${arr.map(e=>`
-
- <div class="exercise">
-
   <div class="between">
    <div>
-    <b>${esc(e.name)}</b>
-    <p>${esc(e.muscle)} · ${esc(e.equipment||"Sin equipamiento")}</p>
+    <h2>Ejercicios disponibles</h2>
+    <span class="library-count">${arr.length} resultados</span>
    </div>
-
-   ${e.custom?`
-    <button class="btn small danger"
-    data-action="delete-custom-exercise"
-    data-id="${e.id}">Eliminar</button>
-   `:`
-    <span class="pill">Biblioteca</span>
-   `}
+   <span class="tag">${librarySelected.length} seleccionados</span>
   </div>
 
-  <div class="row">
-   <span class="tag">${esc(e.difficulty)}</span>
-  </div>
+  ${arr.map(e=>{
+   const key=exerciseKey(e);
+   const checked=librarySelected.includes(key);
 
-  ${e.secondaryMuscles?.length?`
-   <p><b>Músculos secundarios:</b> ${e.secondaryMuscles.map(m=>esc(m)).join(", ")}</p>
-  `:""}
+   return `
+    <div class="library-card ${checked?"selected":""}">
+     <div class="library-card-top">
+      <div>
+       <b>${esc(e.name)}</b>
+       <p>${esc(e.muscle)} · ${esc(e.equipment||"Sin equipamiento")}</p>
+      </div>
 
-  ${e.movementPattern?`
-   <p><b>Patrón:</b> ${esc(e.movementPattern)}</p>
-  `:""}
+      <input
+       class="library-check"
+       type="checkbox"
+       data-library-key="${esc(key)}"
+       ${checked?"checked":""}
+       aria-label="Seleccionar ${esc(e.name)}">
+     </div>
 
-  ${e.trainingType?`
-   <p><b>Tipo de entrenamiento:</b> ${esc(e.trainingType)}</p>
-  `:""}
+     <div class="library-meta">
+      <span class="tag">${esc(e.difficulty)}</span>
+      ${e.movementPattern?`<span class="pill">${esc(e.movementPattern)}</span>`:""}
+      ${e.custom?`<span class="pill">Personalizado</span>`:""}
+     </div>
 
-  ${e.region?`
-   <p><b>Región corporal:</b> ${esc(e.region)}</p>
-  `:""}
+     ${e.secondaryMuscles?.length?
+      `<p><b>Secundarios:</b> ${e.secondaryMuscles.map(m=>esc(m)).join(", ")}</p>`:""}
 
-  ${e.description?`<p><b>Descripción:</b> ${esc(e.description)}</p>`:""}
-  ${e.errors?`<p><b>Errores frecuentes:</b> ${esc(e.errors)}</p>`:""}
-  ${e.variant?`<p><b>Variante:</b> ${esc(e.variant)}</p>`:""}
+     ${e.description?`<p>${esc(e.description)}</p>`:""}
 
- </div>
-
- `).join("")||`<div class="empty">No se encontraron ejercicios con esos filtros.</div>`}
+     ${e.custom?`
+      <button class="btn small danger"
+       data-action="delete-custom-exercise"
+       data-id="${esc(e.id)}">Eliminar</button>
+     `:""}
+    </div>
+   `;
+  }).join("")||`<div class="empty">No encontramos ejercicios.</div>`}
  `;
 
+ renderLibrarySelection();
 }
+
+function renderLibrarySelection(){
+
+ const box=document.getElementById("librarySelection");
+ if(!box)return;
+
+ box.innerHTML=`
+  <div class="between">
+   <div>
+    <b>Tu selección</b>
+    <p>${librarySelected.length} ejercicios seleccionados</p>
+   </div>
+   <button class="btn secondary small"
+    data-action="library-clear">Limpiar</button>
+  </div>
+
+  <div class="field">
+   <label>Planificación</label>
+   <select id="libraryPlan">
+    <option value="">Seleccionar planificación</option>
+    ${plans.map(p=>`
+     <option value="${esc(p.id)}">${esc(p.name||"Planificación")}</option>
+    `).join("")}
+   </select>
+  </div>
+
+  <div class="field">
+   <label>Día de entrenamiento</label>
+   <select id="libraryDay">
+    <option value="">Primero elegí una planificación</option>
+   </select>
+  </div>
+
+  <button class="btn" style="width:100%"
+   data-action="library-add-selected"
+   ${librarySelected.length?"":"disabled"}>
+   Agregar ejercicios a la rutina
+  </button>
+ `;
+}
+
+
 
 function pageExercises(){
 
- return `${pageTitle("Biblioteca de ejercicios","Buscá, filtrá y organizá tus ejercicios.")}
+ return `
+ ${pageTitle("Exercise Library","TU BASE DE DATOS DE ENTRENAMIENTO")}
+
+ <div class="library-header">
+  <span class="pill">TP TRAINING PLANNER</span>
+  <h1>EXERCISE LIBRARY</h1>
+  <p>Explorá, seleccioná y organizá tus ejercicios.</p>
+  <div class="library-count">
+   ${allExercises().length} ejercicios disponibles
+  </div>
+ </div>
 
  <div class="card">
+  <div class="library-search">
+   <input id="exerciseSearch"
+    placeholder="Buscar ejercicio..."
+    oninput="updateExerciseResults()">
+  </div>
 
+  <div class="library-section-title">Grupos musculares</div>
+
+  <div class="library-categories">
+   ${muscles.map(m=>`
+    <button class="library-category"
+     type="button"
+     data-action="library-muscle"
+     data-muscle="${esc(m)}">
+     ${esc(m)}
+     <small>Explorar ejercicios</small>
+    </button>
+   `).join("")}
+  </div>
+
+  <div class="library-section-title">Filtros</div>
+
+  <div class="library-filters">
+   <div class="field">
+    <label>Grupo muscular</label>
+    <select id="muscleFilter" onchange="updateExerciseResults()">
+     <option value="">Todos</option>
+     ${options(muscles)}
+    </select>
+   </div>
+
+   <div class="field">
+    <label>Equipamiento</label>
+    <select id="equipmentFilter" onchange="updateExerciseResults()">
+     <option value="">Todos</option>
+     ${options(equipment)}
+    </select>
+   </div>
+
+   <div class="field">
+    <label>Dificultad</label>
+    <select id="difficultyFilter" onchange="updateExerciseResults()">
+     <option value="">Todas</option>
+     ${options(["Principiante","Intermedio","Avanzado"])}
+    </select>
+   </div>
+
+   <div class="field">
+    <label>Origen</label>
+    <select id="typeFilter" onchange="updateExerciseResults()">
+     <option value="">Todos</option>
+     <option value="library">Biblioteca</option>
+     <option value="custom">Personalizados</option>
+    </select>
+   </div>
+  </div>
+ </div>
+
+ <div class="card">
   <h2>Agregar ejercicio personalizado</h2>
 
   <form id="exerciseForm">
-
    <div class="row">
     ${field("Nombre del ejercicio","name","","text","required")}
     ${selectField("Grupo muscular","muscle",muscles,"Pectorales")}
@@ -1692,18 +1989,18 @@ function pageExercises(){
     ${selectField("Equipamiento","equipment",equipment,"Mancuernas")}
     ${selectField("Dificultad","difficulty",["Principiante","Intermedio","Avanzado"],"Principiante")}
    </div>
-<div class="field">
- <label>Músculos secundarios (separados por coma)</label>
- <input name="secondaryMuscles"
- placeholder="Ej: Glúteos, isquiotibiales">
-</div>
 
-<div class="row">
- ${selectField("Patrón de movimiento","movementPattern",movementPatterns,"Dominante de rodilla")}
- ${selectField("Tipo de entrenamiento","trainingType",trainingTypes,"Fuerza")}
-</div>
+   <div class="field">
+    <label>Músculos secundarios</label>
+    <input name="secondaryMuscles" placeholder="Ej: Glúteos, isquiotibiales">
+   </div>
 
-${selectField("Región corporal","region",bodyRegions,"Tren superior")}
+   <div class="row">
+    ${selectField("Patrón de movimiento","movementPattern",movementPatterns,"Dominante de rodilla")}
+    ${selectField("Tipo de entrenamiento","trainingType",trainingTypes,"Fuerza")}
+   </div>
+
+   ${selectField("Región corporal","region",bodyRegions,"Tren superior")}
    ${field("Variante","variant")}
 
    <div class="field">
@@ -1717,65 +2014,130 @@ ${selectField("Región corporal","region",bodyRegions,"Tren superior")}
    </div>
 
    <button class="btn">Guardar ejercicio</button>
-
   </form>
-
- </div>
-
- <div class="card">
-
-  <h2>Buscar ejercicios</h2>
-
-  <div class="field">
-   <label>Nombre</label>
-   <input id="exerciseSearch" placeholder="Buscar ejercicio...">
-  </div>
-
-  <div class="row">
-   <div class="field">
-    <label>Grupo muscular</label>
-    <select id="muscleFilter">
-     <option value="">Todos</option>
-     ${options(muscles)}
-    </select>
-   </div>
-
-   <div class="field">
-    <label>Equipamiento</label>
-    <select id="equipmentFilter">
-     <option value="">Todos</option>
-     ${options(equipment)}
-    </select>
-   </div>
-  </div>
-
-  <div class="row">
-   <div class="field">
-    <label>Dificultad</label>
-    <select id="difficultyFilter">
-     <option value="">Todas</option>
-     ${options(["Principiante","Intermedio","Avanzado"])}
-    </select>
-   </div>
-
-   <div class="field">
-    <label>Tipo</label>
-    <select id="typeFilter">
-     <option value="">Todos</option>
-     <option value="library">Biblioteca</option>
-     <option value="custom">Personalizados</option>
-    </select>
-   </div>
-  </div>
-
  </div>
 
  <div class="card" id="exerciseResults"></div>
 
+ <div class="library-selection" id="librarySelection"></div>
  `;
-
 }
+
  
+/* CONEXION DE EXERCISE LIBRARY CON PLANIFICACIONES */
+
+document.addEventListener("change",e=>{
+
+ if(e.target.matches("[data-library-key]")){
+
+  const key=e.target.dataset.libraryKey;
+
+  if(e.target.checked){
+   if(!librarySelected.includes(key))librarySelected.push(key);
+  }else{
+   librarySelected=librarySelected.filter(x=>x!==key);
+  }
+
+  updateExerciseResults();
+ }
+
+ if(e.target.id==="libraryPlan"){
+
+  const plan=plans.find(p=>p.id===e.target.value);
+  const dayBox=document.getElementById("libraryDay");
+
+  if(!dayBox)return;
+
+  dayBox.innerHTML=`
+   <option value="">Seleccionar día</option>
+   ${(plan?.days||[]).map((d,i)=>`
+    <option value="${esc(d.id)}">${esc(d.name||d.title||"Día "+(i+1))}</option>
+   `).join("")}
+  `;
+ }
+
+});
+
+document.addEventListener("click",e=>{
+
+ const b=e.target.closest("[data-action]");
+ if(!b)return;
+
+ if(b.dataset.action==="library-muscle"){
+
+  const filter=document.getElementById("muscleFilter");
+  if(filter){
+   filter.value=b.dataset.muscle;
+   updateExerciseResults();
+   document.getElementById("exerciseResults")?.scrollIntoView({behavior:"smooth"});
+  }
+ }
+
+ if(b.dataset.action==="library-clear"){
+  librarySelected=[];
+  updateExerciseResults();
+ }
+
+ if(b.dataset.action==="library-add-selected"){
+
+  const planId=document.getElementById("libraryPlan")?.value;
+  const dayId=document.getElementById("libraryDay")?.value;
+
+  const plan=plans.find(p=>p.id===planId);
+  const day=plan?.days.find(d=>d.id===dayId);
+
+  if(!day){
+   alert("Seleccioná una planificación y un día.");
+   return;
+  }
+
+  const selected=allExercises().filter(x=>
+   librarySelected.includes(exerciseKey(x))
+  );
+
+  if(!selected.length){
+   alert("Seleccioná al menos un ejercicio.");
+   return;
+  }
+
+  let added=0;
+
+  selected.forEach(item=>{
+
+   if(day.exercises.some(x=>x.name===item.name))return;
+
+   day.exercises.push({
+    id:uid(),
+    name:item.name,
+    muscle:item.muscle,
+    series:[
+     {weight:0,reps:10,rir:2,type:"Efectiva"},
+     {weight:0,reps:10,rir:2,type:"Efectiva"},
+     {weight:0,reps:10,rir:2,type:"Efectiva"}
+    ],
+    rest:"90 s",
+    tempo:"2-0-2",
+    technique:"Normal",
+    notes:"",
+    block:"A1"
+   });
+
+   added++;
+  });
+
+  if(!added){
+   alert("Los ejercicios seleccionados ya están en ese día.");
+   return;
+  }
+
+  librarySelected=[];
+  save();
+  alert(added+" ejercicios agregados correctamente.");
+  render();
+ }
+
+});
+
 
 /* ESTADÍSTICAS */
 
