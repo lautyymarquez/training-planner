@@ -1159,6 +1159,7 @@ ${personalRecordsCard(c)}
 
 }
 
+
 function clientPlanEditor(c){
 
  const p=ensureClientPlan(c);
@@ -1167,57 +1168,71 @@ function clientPlanEditor(c){
 
  return `${pageTitle("Rutina de "+c.name,"Esta planificación pertenece únicamente a este cliente.")}
 
- <div class="card"><div class="row">
+ <div class="card">
+  <div class="row">
+   <button class="btn secondary" data-action="back-client-plan">← Volver a la ficha</button>
+   <button class="btn secondary" data-action="rename-client-plan" data-id="${c.id}">Editar datos</button>
+   <button class="btn" data-action="cp-add-day" data-id="${c.id}">+ Agregar día</button>
+  </div>
 
- <button class="btn secondary" data-action="back-client-plan">← Volver a la ficha</button>
+  <div class="notice">Podés cambiar ejercicios, series, pesos, repeticiones, RIR, métodos y descansos. Los cambios se guardan en la ficha de este cliente.</div>
 
- <button class="btn secondary" data-action="rename-client-plan" data-id="${c.id}">Editar datos</button>
+  <div class="field">
+   <label>Nombre de la rutina</label>
+   <input id="clientPlanName" value="${esc(p.name||"Plan personalizado")}">
+  </div>
 
- <button class="btn" data-action="cp-add-day" data-id="${c.id}">+ Agregar día</button>
-
+  <button class="btn secondary" data-action="save-client-plan-name" data-id="${c.id}">Guardar nombre</button>
+  <button class="btn" data-action="send-client-whatsapp" data-id="${c.id}">📲 Enviar rutina por WhatsApp</button>
  </div>
 
- <div class="notice">Podés cambiar ejercicios, series, pesos, repeticiones, RIR, métodos y descansos. Los cambios se guardan en la ficha de este cliente.</div>
+ ${p.days.map((d,i)=>`
+  <div class="card">
+   <div class="between">
+    <div>
+     <h2>${esc(d.name||"Día "+(i+1))}</h2>
+     <span class="pill">${d.exercises.length} ejercicios</span>
+    </div>
+    <div class="row">
+     <button class="btn small secondary" data-action="cp-edit-day" data-id="${d.id}">Editar día</button>
+     <button class="btn small danger" data-action="cp-delete-day" data-id="${d.id}">×</button>
+    </div>
+   </div>
 
- <div class="field"><label>Nombre de la rutina</label><input id="clientPlanName" value="${esc(p.name||"Plan personalizado")}"></div>
+   ${d.notes?`<p>${esc(d.notes)}</p>`:""}
 
- <button class="btn secondary" data-action="save-client-plan-name" data-id="${c.id}">Guardar nombre</button>
-<button class="btn" data-action="send-client-whatsapp" data-id="${c.id}">
- 📲 Enviar rutina por WhatsApp
-</button>
- </div>
+   ${d.exercises.map((e,j)=>`
+    <div class="exercise" data-exercise-id="${e.id}" data-day-id="${d.id}" data-owner="client">
+     <div class="between">
+      <div>
+       <b>${j+1}. ${esc(e.name)}</b>
+       <p>${esc(e.muscle||"Sin grupo")} · ${esc(e.technique||"Normal")}</p>
+      </div>
+      <div class="row">
+       <span class="drag-handle">⠿</span>
+       <button class="btn small secondary" data-action="cp-edit-exercise" data-day="${d.id}" data-id="${e.id}">Editar</button>
+       <button class="btn small danger" data-action="cp-delete-exercise" data-day="${d.id}" data-id="${e.id}">×</button>
+      </div>
+     </div>
 
- ${p.days.map((d,i)=>`<div class="card">
+     <p>Descanso: ${esc(e.rest||"—")} · Tempo: ${esc(e.tempo||"—")} · Bloque: ${esc(e.block||"—")}</p>
 
- <div class="between"><div><h2>${esc(d.name||"Día "+(i+1))}</h2><span class="pill">${d.exercises.length} ejercicios</span></div>
+     ${e.series.map((s,k)=>`
+      <div class="muted">Serie ${k+1}: ${esc(s.weight??0)} kg × ${esc(s.reps??0)} rep · RIR ${esc(s.rir??"—")} · ${esc(s.type||"Efectiva")}</div>
+     `).join("")}
 
- <div class="row"><button class="btn small secondary" data-action="cp-edit-day" data-id="${d.id}">Editar día</button><button class="btn small danger" data-action="cp-delete-day" data-id="${d.id}">×</button></div></div>
+     ${e.notes?`<p>${esc(e.notes)}</p>`:""}
+    </div>
+   `).join("")}
 
- ${d.notes?`<p>${esc(d.notes)}</p>`:""}
+   <button class="btn secondary" data-action="cp-add-exercise" data-id="${d.id}">+ Agregar ejercicio</button>
+  </div>
+ `).join("")}
 
-${d.exercises.map((e,j)=>`<div class="exercise" data-exercise-id="${e.id}" data-day-id="${dayId}" data-owner="plan">
-
- <div class="between"><div><b>${j+1}. ${esc(e.name)}</b><p>${esc(e.muscle||"Sin grupo")} · ${esc(e.technique||"Normal")}</p></div>
-
-<div class="row">
-<span class="drag-handle">⠿</span>
-<button class="btn small secondary" data-action="cp-edit-exercise" data-day="${d.id}" data-id="${e.id}">Editar</button>
-
- <p>Descanso: ${esc(e.rest||"—")} · Tempo: ${esc(e.tempo||"—")} · Bloque: ${esc(e.block||"—")}</p>
-
- ${e.series.map((s,k)=>`<div class="muted">Serie ${k+1}: ${esc(s.weight??0)} kg × ${esc(s.reps??0)} rep · RIR ${esc(s.rir??"—")} · ${esc(s.type||"Efectiva")}</div>`).join("")}
-
- ${e.notes?`<p>${esc(e.notes)}</p>`:""}
-
- </div>`).join("")}
-
- <button class="btn secondary" data-action="cp-add-exercise" data-id="${d.id}">+ Agregar ejercicio</button>
-
- </div>`).join("")}
-
- ${!p.days.length?`<div class="empty">Todavía no hay días. Tocá “Agregar día” para empezar.</div>`:""}`;
-
+ ${!p.days.length?`<div class="empty">Todavía no hay días. Tocá “Agregar día” para empezar.</div>`:""}
+ `;
 }
+
 
 function openClientExerciseEditor(clientId,dayId,exerciseId){
 
