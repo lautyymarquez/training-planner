@@ -16,6 +16,68 @@
 
 <style>
 
+/* TP - MAPA ANATOMICO */
+
+.tp-anatomy{
+ margin-top:16px;
+ padding:14px;
+ background:#111714;
+ border:1px solid #29342e;
+ border-radius:14px;
+}
+
+.tp-anatomy-figures{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:8px;
+}
+
+.tp-anatomy-figure{
+ min-width:0;
+ display:flex;
+ flex-direction:column;
+ align-items:center;
+}
+
+.tp-anatomy-figure svg{
+ width:100%;
+ max-width:190px;
+ height:auto;
+}
+
+.tp-anatomy-figure span{
+ color:#aab5ad;
+ font-size:10px;
+ font-weight:700;
+ letter-spacing:1px;
+ margin-top:5px;
+}
+
+.tp-anatomy-legend{
+ display:flex;
+ justify-content:center;
+ gap:20px;
+ margin-top:12px;
+ color:#c4ccc6;
+ font-size:11px;
+}
+
+.tp-anatomy-legend span{
+ display:flex;
+ align-items:center;
+ gap:6px;
+}
+
+.tp-dot{
+ width:9px;
+ height:9px;
+ border-radius:50%;
+ display:inline-block;
+}
+
+.tp-dot.primary{background:#e34b4b}
+.tp-dot.secondary{background:#b87957}
+
 :root{--bg:#101411;--panel:#191f1b;--panel2:#202923;--line:#303b33;--green:#b5f36b;--green2:#8acb43;--text:#f2f5f1;--muted:#9ba79d;--red:#ff7777;--yellow:#f5ca67}
 
 *{box-sizing:border-box}
@@ -2620,6 +2682,130 @@ function getExerciseFichaData(ex){
 
 
 
+/* TP - MAPA ANATOMICO MUSCULAR */
+
+function renderAnatomyMap(ex,data){
+
+ const norm=s=>String(s||"").toLowerCase()
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g,"")
+  .replace(/[^a-z0-9 ]/g," ")
+  .replace(/\s+/g," ").trim();
+
+ const primary=norm(ex.muscle+" "+data.muscles);
+ const secondary=(data.secondary||[]).map(norm);
+
+ const regions={
+  chest:["pectoral","pecho"],
+  back:["espalda","dorsal","romboide","trapecio"],
+  shoulders:["hombro","deltoide","supraespinoso"],
+  biceps:["biceps","braquial"],
+  triceps:["triceps","anc oneo","ancóneo"],
+  forearms:["antebrazo","braquiorradial","flexores de los dedos","flexores de muñeca","extensores de muñeca"],
+  abs:["abdominal","oblicuo","transverso"],
+  quads:["cuadriceps","recto femoral","vasto"],
+  hamstrings:["isquiotibial","semitendinoso","semimembranoso"],
+  glutes:["gluteo","glúteo"],
+  calves:["gemelo","gastrocnemio","soleo","sóleo"]
+ };
+
+ const detect=(text)=>{
+  const found=[];
+  Object.entries(regions).forEach(([region,words])=>{
+   if(words.some(w=>text.includes(norm(w))))found.push(region);
+  });
+  return found;
+ };
+
+ const main=detect(primary);
+ const secondaryRegions=[...new Set(secondary.flatMap(detect))]
+  .filter(r=>!main.includes(r));
+
+ if(primary.includes("cuerpo completo")){
+  main.push(...Object.keys(regions));
+ }
+
+ const shapes={
+  front:{
+   chest:`<ellipse cx="100" cy="91" rx="18" ry="12"/><ellipse cx="140" cy="91" rx="18" ry="12"/>`,
+   shoulders:`<ellipse cx="76" cy="75" rx="11" ry="13"/><ellipse cx="164" cy="75" rx="11" ry="13"/>`,
+   biceps:`<ellipse cx="68" cy="111" rx="7" ry="19"/><ellipse cx="172" cy="111" rx="7" ry="19"/>`,
+   triceps:`<ellipse cx="68" cy="111" rx="7" ry="19"/><ellipse cx="172" cy="111" rx="7" ry="19"/>`,
+   forearms:`<ellipse cx="58" cy="151" rx="6" ry="22"/><ellipse cx="182" cy="151" rx="6" ry="22"/>`,
+   abs:`<rect x="108" y="107" width="24" height="43" rx="9"/>`,
+   quads:`<ellipse cx="108" cy="190" rx="12" ry="31"/><ellipse cx="132" cy="190" rx="12" ry="31"/>`,
+   hamstrings:`<ellipse cx="108" cy="190" rx="12" ry="31"/><ellipse cx="132" cy="190" rx="12" ry="31"/>`,
+   glutes:`<ellipse cx="108" cy="147" rx="13" ry="11"/><ellipse cx="132" cy="147" rx="13" ry="11"/>`,
+   calves:`<ellipse cx="108" cy="255" rx="8" ry="24"/><ellipse cx="132" cy="255" rx="8" ry="24"/>`,
+   back:`<rect x="94" y="77" width="52" height="65" rx="17"/>`
+  },
+  back:{
+   chest:`<ellipse cx="100" cy="91" rx="18" ry="12"/><ellipse cx="140" cy="91" rx="18" ry="12"/>`,
+   shoulders:`<ellipse cx="76" cy="75" rx="11" ry="13"/><ellipse cx="164" cy="75" rx="11" ry="13"/>`,
+   biceps:`<ellipse cx="68" cy="111" rx="7" ry="19"/><ellipse cx="172" cy="111" rx="7" ry="19"/>`,
+   triceps:`<ellipse cx="68" cy="111" rx="7" ry="19"/><ellipse cx="172" cy="111" rx="7" ry="19"/>`,
+   forearms:`<ellipse cx="58" cy="151" rx="6" ry="22"/><ellipse cx="182" cy="151" rx="6" ry="22"/>`,
+   abs:`<rect x="108" y="107" width="24" height="43" rx="9"/>`,
+   quads:`<ellipse cx="108" cy="190" rx="12" ry="31"/><ellipse cx="132" cy="190" rx="12" ry="31"/>`,
+   hamstrings:`<ellipse cx="108" cy="190" rx="12" ry="31"/><ellipse cx="132" cy="190" rx="12" ry="31"/>`,
+   glutes:`<ellipse cx="108" cy="147" rx="13" ry="11"/><ellipse cx="132" cy="147" rx="13" ry="11"/>`,
+   calves:`<ellipse cx="108" cy="255" rx="8" ry="24"/><ellipse cx="132" cy="255" rx="8" ry="24"/>`,
+   back:`<path d="M94 76 Q120 66 146 76 L145 137 Q120 151 95 137Z"/>`
+  }
+ };
+
+ const figure=(view)=>{
+  const active=Object.keys(regions).map(region=>{
+   let fill="#343b40";
+   if(main.includes(region))fill="#e34b4b";
+   else if(secondaryRegions.includes(region))fill="#b87957";
+
+   return `<g fill="${fill}" stroke="#20262a" stroke-width="1.5">
+    ${shapes[view][region]}
+   </g>`;
+  }).join("");
+
+  return `
+   <svg viewBox="0 0 240 300" role="img" aria-label="Mapa anatómico ${view}">
+    <g fill="#343b40" stroke="#20262a" stroke-width="2">
+     <circle cx="120" cy="29" r="17"/>
+     <path d="M108 47 L132 47 L140 59
+      Q165 60 178 76 L169 129
+      L153 143 L151 160
+      L145 171 L147 217
+      L139 282 L124 282 L120 224
+      L116 282 L101 282 L93 217
+      L93 171 L87 160 L87 143
+      L71 129 L62 76 Q75 60 100 59Z"/>
+     <path d="M72 72 L48 91 L37 151 L47 154
+      L66 112 L83 85Z"/>
+     <path d="M168 72 L192 91 L203 151 L193 154
+      L174 112 L157 85Z"/>
+    </g>
+    ${active}
+   </svg>`;
+ };
+
+ return `
+  <div class="tp-anatomy">
+   <div class="tp-anatomy-figures">
+    <div class="tp-anatomy-figure">
+     ${figure("front")}
+     <span>VISTA FRONTAL</span>
+    </div>
+    <div class="tp-anatomy-figure">
+     ${figure("back")}
+     <span>VISTA POSTERIOR</span>
+    </div>
+   </div>
+   <div class="tp-anatomy-legend">
+    <span><i class="tp-dot primary"></i> Principal</span>
+    <span><i class="tp-dot secondary"></i> Secundario</span>
+   </div>
+  </div>`;
+}
+
+
 /* ABRIR FICHA TECNICA */
 
 function openExerciseFicha(key){
@@ -2646,11 +2832,9 @@ function openExerciseFicha(key){
    </div>
 
    <div class="exercise-ficha-visual">
-    <div class="exercise-ficha-visual-icon">◉</div>
     <div>
      <span class="library-count">ANATOMÍA MUSCULAR</span>
-     <h3>${esc(data.muscles)}</h3>
-     <p>Ilustración anatómica pendiente de incorporar</p>
+     ${renderAnatomyMap(ex,data)}
     </div>
    </div>
 
