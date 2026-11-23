@@ -304,6 +304,100 @@ input:focus,select:focus,textarea:focus {
  }
 }
 
+/* FICHAS TECNICAS */
+
+.exercise-ficha-overlay {
+ position:fixed;
+ inset:0;
+ z-index:1000;
+ background:#000d;
+ overflow-y:auto;
+ padding:15px;
+ display:flex;
+ justify-content:center;
+ align-items:flex-start;
+}
+
+.exercise-ficha {
+ width:100%;
+ max-width:650px;
+ margin:20px auto;
+ padding:20px;
+ background:#15191d;
+ border:1px solid #3b424a;
+ border-radius:18px;
+ box-shadow:0 15px 50px #000b;
+}
+
+.exercise-ficha h1 {
+ margin-top:20px;
+ font-size:25px;
+}
+
+.exercise-ficha-visual {
+ min-height:145px;
+ margin:20px 0;
+ padding:20px;
+ display:flex;
+ align-items:center;
+ gap:18px;
+ background:linear-gradient(135deg,#292f36,#171b20);
+ border:1px solid #424a53;
+ border-radius:14px;
+}
+
+.exercise-ficha-visual-icon {
+ width:85px;
+ height:85px;
+ flex-shrink:0;
+ display:grid;
+ place-items:center;
+ border-radius:50%;
+ background:#383f47;
+ color:#e1e5e9;
+ font-size:45px;
+}
+
+.exercise-ficha-visual h3 {
+ margin:7px 0;
+ font-size:17px;
+}
+
+.exercise-ficha-visual p {
+ margin:0;
+}
+
+.exercise-ficha-section {
+ padding:15px 0;
+ border-bottom:1px solid #30363d;
+}
+
+.exercise-ficha-section h3 {
+ color:#e4e8ec;
+ margin-bottom:7px;
+}
+
+.exercise-ficha-section p {
+ margin:0;
+ line-height:1.6;
+}
+
+@media(max-width:450px) {
+ .exercise-ficha {
+  padding:15px;
+ }
+
+ .exercise-ficha-visual {
+  padding:14px;
+ }
+
+ .exercise-ficha-visual-icon {
+  width:65px;
+  height:65px;
+  font-size:34px;
+ }
+}
+
 </style>
 
 </head>
@@ -1787,6 +1881,7 @@ function exerciseKey(e){
  return e.custom ? "custom-"+e.id : "default-"+e.name;
 }
 
+
 function updateExerciseResults(){
 
  const box=document.getElementById("exerciseResults");
@@ -1838,7 +1933,7 @@ function updateExerciseResults(){
      </div>
 
      <div class="library-meta">
-      <span class="tag">${esc(e.difficulty)}</span>
+      <span class="tag">${esc(e.difficulty||"No especificada")}</span>
       ${e.movementPattern?`<span class="pill">${esc(e.movementPattern)}</span>`:""}
       ${e.custom?`<span class="pill">Personalizado</span>`:""}
      </div>
@@ -1846,13 +1941,14 @@ function updateExerciseResults(){
      ${e.secondaryMuscles?.length?
       `<p><b>Secundarios:</b> ${e.secondaryMuscles.map(m=>esc(m)).join(", ")}</p>`:""}
 
-     ${e.description?`<p>${esc(e.description)}</p>`:""}
-
-     ${e.custom?`
-      <button class="btn small danger"
-       data-action="delete-custom-exercise"
-       data-id="${esc(e.id)}">Eliminar</button>
-     `:""}
+     <div class="row" style="margin-top:12px">
+      <button class="btn secondary small"
+       type="button"
+       data-action="exercise-ficha"
+       data-key="${esc(key)}">
+       Ver ficha técnica
+      </button>
+     </div>
     </div>
    `;
   }).join("")||`<div class="empty">No encontramos ejercicios.</div>`}
@@ -1861,45 +1957,138 @@ function updateExerciseResults(){
  renderLibrarySelection();
 }
 
-function renderLibrarySelection(){
+/* FICHAS TECNICAS DE EJERCICIOS */
 
- const box=document.getElementById("librarySelection");
- if(!box)return;
+function openExerciseFicha(key){
 
- box.innerHTML=`
-  <div class="between">
-   <div>
-    <b>Tu selección</b>
-    <p>${librarySelected.length} ejercicios seleccionados</p>
+ const ex=allExercises().find(x=>exerciseKey(x)===key);
+ if(!ex)return;
+
+ document.getElementById("exerciseFichaOverlay")?.remove();
+
+ const secundarios=ex.secondaryMuscles?.length
+  ?ex.secondaryMuscles
+  :(ex.secondaryMuscle?[ex.secondaryMuscle]:[]);
+
+ const overlay=document.createElement("div");
+ overlay.id="exerciseFichaOverlay";
+ overlay.className="exercise-ficha-overlay";
+
+ overlay.innerHTML=`
+  <div class="exercise-ficha">
+
+   <div class="between">
+    <span class="pill">TP EXERCISE LIBRARY</span>
+    <button class="btn secondary small"
+     type="button"
+     data-ficha-close>Cerrar ✕</button>
    </div>
-   <button class="btn secondary small"
-    data-action="library-clear">Limpiar</button>
-  </div>
 
-  <div class="field">
-   <label>Planificación</label>
-   <select id="libraryPlan">
-    <option value="">Seleccionar planificación</option>
-    ${plans.map(p=>`
-     <option value="${esc(p.id)}">${esc(p.name||"Planificación")}</option>
-    `).join("")}
-   </select>
-  </div>
+   <div class="exercise-ficha-visual">
+    <div class="exercise-ficha-visual-icon">◉</div>
+    <div>
+     <span class="library-count">REFERENCIA ANATÓMICA</span>
+     <h3>${esc(ex.muscle||"Grupo muscular")}</h3>
+     <p>Ilustración específica en preparación</p>
+    </div>
+   </div>
 
-  <div class="field">
-   <label>Día de entrenamiento</label>
-   <select id="libraryDay">
-    <option value="">Primero elegí una planificación</option>
-   </select>
-  </div>
+   <h1>${esc(ex.name)}</h1>
 
-  <button class="btn" style="width:100%"
-   data-action="library-add-selected"
-   ${librarySelected.length?"":"disabled"}>
-   Agregar ejercicios a la rutina
-  </button>
+   <div class="library-meta">
+    <span class="tag">${esc(ex.muscle||"Sin grupo")}</span>
+    <span class="pill">${esc(ex.equipment||"Sin equipamiento")}</span>
+    <span class="pill">${esc(ex.difficulty||"Dificultad no especificada")}</span>
+   </div>
+
+   <div class="exercise-ficha-section">
+    <h3>Músculo principal</h3>
+    <p>${esc(ex.muscle||"No especificado")}</p>
+   </div>
+
+   <div class="exercise-ficha-section">
+    <h3>Músculos secundarios</h3>
+    <p>${secundarios.length?secundarios.map(x=>esc(x)).join(", "):"Sin información cargada."}</p>
+   </div>
+
+   <div class="exercise-ficha-section">
+    <h3>Equipamiento</h3>
+    <p>${esc(ex.equipment||"No especificado")}</p>
+   </div>
+
+   <div class="exercise-ficha-section">
+    <h3>Patrón de movimiento</h3>
+    <p>${esc(ex.movementPattern||"No especificado")}</p>
+   </div>
+
+   <div class="exercise-ficha-section">
+    <h3>Ejecución técnica</h3>
+    <p>${ex.description?esc(ex.description):"Todavía no hay una descripción técnica cargada para este ejercicio."}</p>
+   </div>
+
+   <div class="exercise-ficha-section">
+    <h3>Errores frecuentes</h3>
+    <p>${ex.errors?esc(ex.errors):"Todavía no hay errores frecuentes cargados."}</p>
+   </div>
+
+   <div class="exercise-ficha-section">
+    <h3>Variantes</h3>
+    <p>${ex.variant?esc(ex.variant):"Todavía no hay variantes cargadas."}</p>
+   </div>
+
+   ${ex.region?`
+    <div class="exercise-ficha-section">
+     <h3>Región corporal</h3>
+     <p>${esc(ex.region)}</p>
+    </div>
+   `:""}
+
+   <button class="btn" style="width:100%;margin-top:15px"
+    type="button"
+    data-ficha-add="${esc(key)}">
+    Agregar a una rutina
+   </button>
+
+  </div>
  `;
+
+ document.body.appendChild(overlay);
 }
+
+document.addEventListener("click",e=>{
+
+ const fichaButton=e.target.closest("[data-action='exercise-ficha']");
+
+ if(fichaButton){
+  openExerciseFicha(fichaButton.dataset.key);
+  return;
+ }
+
+ if(e.target.closest("[data-ficha-close]")){
+  document.getElementById("exerciseFichaOverlay")?.remove();
+  return;
+ }
+
+ const addButton=e.target.closest("[data-ficha-add]");
+
+ if(addButton){
+  const key=addButton.dataset.fichaAdd;
+  const ex=allExercises().find(x=>exerciseKey(x)===key);
+
+  if(!ex)return;
+
+  librarySelected=[key];
+  document.getElementById("exerciseFichaOverlay")?.remove();
+
+  const library=document.getElementById("exerciseResults");
+  library?.scrollIntoView({behavior:"smooth"});
+
+  alert("Ejercicio seleccionado. Elegí la planificación y el día en el panel de selección para agregarlo.");
+  updateExerciseResults();
+ }
+
+});
+
 
 
 
