@@ -1960,7 +1960,8 @@ function updateExerciseResults(){
 
 
 
-/* TP - BASE TECNICA DE LOS EJERCICIOS */
+
+/* TP - FICHAS TECNICAS INDIVIDUALES */
 
 function getExerciseFichaData(ex){
 
@@ -1980,10 +1981,10 @@ function getExerciseFichaData(ex){
   secondary:ex.secondaryMuscles?.length
    ?ex.secondaryMuscles
    :(ex.secondaryMuscle?[ex.secondaryMuscle]:[]),
-  movement:"Movimiento específico por identificar",
-  execution:"Mantené una postura estable y realizá el movimiento de forma controlada, respetando tu movilidad y capacidad técnica.",
-  errors:"Utilizar impulso, perder la estabilidad corporal o realizar un recorrido que no puedas controlar.",
-  variants:"Existen variantes según el equipamiento, el agarre y la posición corporal."
+  movement:"Movimiento específico",
+  execution:"Realizá el movimiento de forma controlada, manteniendo una postura estable y respetando tu movilidad.",
+  errors:"Utilizar impulso, perder estabilidad o realizar un recorrido que no puedas controlar.",
+  variants:"Variantes según el equipamiento, agarre, posición y recorrido."
  };
 
  const set=(movement,execution,errors,variants,secondary)=>{
@@ -1999,22 +2000,58 @@ function getExerciseFichaData(ex){
  if(m==="pectorales"){
 
   if(has("flexion","push up")){
-   set("Empuje horizontal",
-    "Colocá las manos apoyadas y el cuerpo alineado. Descendé flexionando los codos y empujá el suelo para regresar.",
-    "Dejar caer la cadera, elevar demasiado la pelvis o perder el control del recorrido.",
-    "Flexiones inclinadas, tradicionales, declinadas y diamante.",
+   set("Empuje horizontal con peso corporal",
+    "Colocá las manos a una distancia ligeramente superior al ancho de hombros. Mantené el cuerpo alineado, descendé flexionando los codos y empujá para regresar.",
+    "Dejar caer la cadera, elevar demasiado la pelvis o separar excesivamente los codos.",
+    "Flexión inclinada, tradicional, declinada, diamante y con apoyo de rodillas.",
     ["Tríceps","Deltoides anterior","Serrato anterior"]);
-  }else if(has("apertura","cruce de poleas","crossover")){
+  }
+
+  else if(has("apertura","cruce","crossover","contractora","pec deck")){
    set("Aducción horizontal del hombro",
-    "Mantené una ligera flexión de codos. Abrí los brazos de forma controlada y acercalos frente al cuerpo.",
-    "Utilizar impulso, flexionar excesivamente los codos o perder el control de los hombros.",
-    "Aperturas con mancuernas, poleas y máquina contractora.",
+    "Mantené los codos ligeramente flexionados. Abrí los brazos hasta un recorrido cómodo y acercalos frente al pecho sin perder el control.",
+    "Estirar completamente los codos, utilizar impulso o forzar el estiramiento.",
+    "Aperturas con mancuernas, poleas, máquina y cruces en distintas alturas.",
     ["Deltoides anterior"]);
-  }else{
-   set("Empuje horizontal o diagonal",
-    "Estabilizá el cuerpo y los apoyos. Descendé la carga de forma controlada y empujá siguiendo una trayectoria estable.",
-    "Rebotar la carga, perder estabilidad o utilizar un recorrido que no puedas controlar.",
-    "Press con barra, mancuernas, máquinas y variantes con distintos ángulos.",
+  }
+
+  else if(has("inclinado")){
+   set("Empuje diagonal ascendente",
+    "Apoyá la espalda en el banco inclinado. Descendé la carga hacia la zona superior del pecho y empujá siguiendo una trayectoria estable.",
+    "Elevar los hombros, arquear excesivamente la espalda o rebotar la carga.",
+    "Press inclinado con barra, mancuernas y máquina.",
+    ["Deltoides anterior","Tríceps"]);
+  }
+
+  else if(has("declinado")){
+   set("Empuje diagonal descendente",
+    "Estabilizá el cuerpo en el banco declinado. Descendé la carga hacia el pecho y empujá manteniendo el control.",
+    "Perder la posición sobre el banco o realizar rebotes.",
+    "Press declinado con barra, mancuernas y máquina.",
+    ["Tríceps","Deltoides anterior"]);
+  }
+
+  else if(has("pullover")){
+   set("Extensión de hombro",
+    "Mantené los codos ligeramente flexionados. Llevá la carga hacia atrás de forma controlada y regresá sin forzar el hombro.",
+    "Modificar excesivamente el ángulo de los codos o arquear la zona lumbar.",
+    "Pullover con mancuerna, polea y máquina.",
+    ["Dorsal ancho","Tríceps largo","Redondo mayor"]);
+  }
+
+  else if(has("press")){
+   set("Empuje horizontal",
+    "Estabilizá los apoyos y mantené las escápulas controladas. Descendé la carga hacia el pecho y empujá hasta extender los brazos sin perder la posición.",
+    "Rebotar la carga, perder estabilidad o separar excesivamente los codos.",
+    "Press con barra, mancuernas, máquina y variantes de agarre.",
+    ["Tríceps","Deltoides anterior"]);
+  }
+
+  else{
+   set("Aducción y empuje del hombro",
+    "Controlá la posición de los hombros y realizá el recorrido manteniendo tensión y estabilidad.",
+    "Utilizar impulso o perder el control del recorrido.",
+    "Variantes con barra, mancuernas, poleas y máquinas.",
     ["Tríceps","Deltoides anterior"]);
   }
  }
@@ -2023,29 +2060,67 @@ function getExerciseFichaData(ex){
 
  else if(m==="espalda"){
 
-  if(has("dominada","pull up","chin up","jalon")){
-   set("Tracción vertical",
-    "Iniciá el movimiento controlando las escápulas. Llevá los codos hacia abajo y regresá lentamente.",
-    "Balancearse excesivamente, encoger los hombros sin control o acortar el recorrido.",
-    "Agarre prono, supino, neutro y variantes unilaterales.",
+  if(has("dominada","pull up","chin up")){
+   set("Tracción vertical con peso corporal",
+    "Iniciá desde una posición estable. Controlá las escápulas y llevá los codos hacia abajo para elevar el cuerpo. Descendé de manera controlada.",
+    "Balancearse excesivamente, acortar el recorrido o perder el control de los hombros.",
+    "Dominada prona, supina, neutra y asistida.",
     ["Bíceps","Braquial","Romboides","Trapecio inferior"]);
-  }else if(has("remo")){
-   set("Tracción horizontal",
-    "Estabilizá el tronco y llevá los codos hacia atrás acercando la carga al cuerpo. Controlá el regreso.",
-    "Impulsar la carga con el torso, encorvar la espalda o elevar excesivamente los hombros.",
-    "Remo con barra, mancuerna, polea, máquina y pecho apoyado.",
-    ["Bíceps","Romboides","Trapecio medio","Deltoides posterior"]);
-  }else if(has("pullover")){
+  }
+
+  else if(has("jalon","polea al pecho","lat pulldown")){
+   set("Tracción vertical",
+    "Sujetá la barra con un agarre cómodo. Llevá los codos hacia abajo y acercá la barra a la zona superior del pecho. Regresá lentamente.",
+    "Tirar detrás de la nuca, balancear el tronco o utilizar impulso.",
+    "Jalón prono, supino, neutro, unilateral y con distintos agarres.",
+    ["Bíceps","Braquial","Romboides"]);
+  }
+
+  else if(has("remo")){
+   if(has("pecho apoyado","chest supported")){
+    set("Tracción horizontal con apoyo",
+     "Apoyá el pecho en el soporte y llevá los codos hacia atrás acercando la carga al torso. Controlá el regreso.",
+     "Despegar el pecho del apoyo o elevar los hombros.",
+     "Remo con pecho apoyado, máquina y mancuernas.",
+     ["Bíceps","Romboides","Trapecio medio","Deltoides posterior"]);
+   }else{
+    set("Tracción horizontal",
+     "Estabilizá el tronco y llevá los codos hacia atrás. Acercá la carga al cuerpo y regresá lentamente.",
+     "Impulsar la carga con el torso, encorvar la espalda o elevar los hombros.",
+     "Remo con barra, mancuerna, polea, máquina y variantes unilaterales.",
+     ["Bíceps","Romboides","Trapecio medio","Deltoides posterior"]);
+   }
+  }
+
+  else if(has("pullover","brazos rectos")){
    set("Extensión de hombro",
-    "Mantené los codos ligeramente flexionados. Mové la carga en un arco controlado sin forzar el hombro.",
-    "Utilizar impulso o cambiar excesivamente el ángulo de los codos.",
-    "Pullover con mancuerna, polea o máquina.",
-    ["Redondo mayor","Pectoral mayor","Tríceps"]);
-  }else{
-   set("Trabajo de musculatura posterior",
-    "Realizá el movimiento manteniendo el tronco estable y controlando la trayectoria de la carga.",
-    "Perder la postura o utilizar impulso excesivo.",
-    "Variantes con barra, mancuernas, poleas y máquinas.",
+    "Mantené los codos ligeramente flexionados y llevá los brazos hacia abajo mediante el movimiento del hombro.",
+    "Flexionar y extender los codos durante el recorrido o utilizar impulso.",
+    "Pullover en polea, máquina y mancuerna.",
+    ["Dorsal ancho","Redondo mayor","Tríceps largo"]);
+  }
+
+  else if(has("face pull","pajaro","posterior")){
+   set("Tracción hacia la cara y retracción escapular",
+    "Tirá de la cuerda hacia la zona de la cara separando las manos y controlando el movimiento de las escápulas.",
+    "Arquear la espalda o convertir el ejercicio en un tirón de todo el cuerpo.",
+    "Face pull con cuerda, polea y variantes de pájaros.",
+    ["Deltoides posterior","Romboides","Trapecio medio"]);
+  }
+
+  else if(has("peso muerto")){
+   set("Bisagra de cadera y extensión del tronco",
+    "Mantené la carga cerca del cuerpo, estabilizá el tronco y extendé caderas y rodillas de forma coordinada.",
+    "Redondear la espalda, alejar la carga o perder la estabilidad.",
+    "Peso muerto convencional, sumo, con trap bar y desde bloques.",
+    ["Glúteos","Isquiotibiales","Erectores espinales"]);
+  }
+
+  else{
+   set("Tracción y control escapular",
+    "Mantené el tronco estable y realizá el movimiento controlando la posición de los hombros y las escápulas.",
+    "Encoger los hombros sin control o utilizar impulso.",
+    "Variantes con polea, barra, mancuernas y máquinas.",
     ["Bíceps","Romboides","Trapecio"]);
   }
  }
@@ -2056,50 +2131,101 @@ function getExerciseFichaData(ex){
 
   if(has("press","militar","arnold")){
    set("Empuje vertical",
-    "Estabilizá el tronco y empujá la carga por encima de la cabeza siguiendo una trayectoria controlada.",
+    "Estabilizá el tronco y empujá la carga por encima de la cabeza. Descendé hasta un recorrido cómodo y controlado.",
     "Arquear excesivamente la zona lumbar o perder el control de la carga.",
-    "Press militar con barra, mancuernas, Arnold y máquina.",
+    "Press militar, Arnold, con barra, mancuernas y máquina.",
     ["Tríceps","Trapecio","Serrato anterior"]);
-  }else if(has("lateral")){
+  }
+
+  else if(has("lateral")){
    set("Abducción del hombro",
-    "Elevá los brazos hacia los lados con los codos ligeramente flexionados. Controlá la subida y la bajada.",
-    "Balancear el cuerpo o utilizar impulso.",
-    "Elevaciones laterales con mancuernas, polea o máquina.",
+    "Elevá los brazos hacia los lados con los codos ligeramente flexionados. Controlá tanto la subida como la bajada.",
+    "Balancear el cuerpo, elevar excesivamente los hombros o utilizar impulso.",
+    "Elevación lateral con mancuernas, polea, máquina y variante inclinada.",
     ["Supraespinoso","Trapecio"]);
-  }else if(has("frontal")){
+  }
+
+  else if(has("frontal")){
    set("Flexión del hombro",
-    "Elevá la carga hacia adelante manteniendo el tronco estable.",
+    "Elevá la carga hacia adelante manteniendo el tronco estable y los codos ligeramente flexionados.",
     "Impulsar la carga o arquear la espalda.",
-    "Elevación frontal con disco, barra, mancuerna o polea.",
+    "Elevación frontal con disco, barra, mancuerna y polea.",
     ["Pectoral mayor"]);
-  }else{
-   set("Trabajo de deltoides y control escapular",
-    "Mové los brazos de forma controlada, manteniendo la estabilidad del tronco y los hombros.",
-    "Encoger los hombros o utilizar impulso.",
-    "Pájaros, face pull, remo y variantes con polea o máquina.",
-    ["Deltoides posterior","Romboides","Trapecio"]);
+  }
+
+  else if(has("pajaro","posterior","reverse fly")){
+   set("Abducción horizontal del hombro",
+    "Inclina ligeramente el tronco o utilizá el apoyo de una máquina. Separá los brazos hacia los lados y regresá lentamente.",
+    "Impulsar la carga o encoger excesivamente los hombros.",
+    "Pájaros con mancuernas, polea y máquina inversa.",
+    ["Romboides","Trapecio medio"]);
+  }
+
+  else if(has("encogimiento","shrug")){
+   set("Elevación escapular",
+    "Elevá los hombros de forma controlada y descendé lentamente, manteniendo los brazos relajados.",
+    "Realizar círculos con los hombros o utilizar impulso.",
+    "Encogimientos con barra, mancuernas y máquina.",
+    ["Trapecio superior","Elevador de la escápula"]);
+  }
+
+  else{
+   set("Movimiento del hombro y control escapular",
+    "Realizá el recorrido manteniendo el tronco estable y controlando la posición de los hombros.",
+    "Elevar los hombros sin control o utilizar impulso.",
+    "Variantes con mancuernas, poleas y máquinas.",
+    ["Deltoides anterior","Deltoides posterior","Trapecio"]);
   }
  }
 
  /* BÍCEPS */
 
  else if(m==="biceps"){
-  if(has("martillo")){
+
+  if(has("martillo","hammer")){
    set("Flexión del codo con agarre neutro",
-    "Sujetá las mancuernas con las palmas enfrentadas. Flexioná los codos y controlá el descenso.",
-    "Balancear el torso o perder la posición de las muñecas.",
-    "Curl martillo con mancuernas, cuerda o variante cruzada.",
+    "Sujetá las mancuernas con las palmas enfrentadas. Flexioná los codos manteniendo las muñecas estables y descendé lentamente.",
+    "Balancear el torso o adelantar excesivamente los codos.",
+    "Curl martillo con mancuernas, cuerda y variante cruzada.",
     ["Braquial","Braquiorradial"]);
-  }else if(has("inverso")){
+  }
+
+  else if(has("inverso")){
    set("Flexión del codo con agarre pronado",
-    "Sujetá la barra con las palmas hacia abajo y flexioná los codos manteniendo las muñecas estables.",
+    "Sujetá la barra con las palmas hacia abajo. Flexioná los codos manteniendo las muñecas estables.",
     "Utilizar impulso o doblar excesivamente las muñecas.",
-    "Curl inverso con barra, barra EZ o mancuernas.",
+    "Curl inverso con barra, barra EZ y mancuernas.",
     ["Braquiorradial","Braquial"]);
-  }else{
+  }
+
+  else if(has("concentrado")){
+   set("Flexión del codo con apoyo",
+    "Apoyá el brazo sobre la cara interna del muslo y flexioná el codo acercando la mancuerna al hombro.",
+    "Separar el brazo del apoyo o utilizar impulso.",
+    "Curl concentrado unilateral y variantes con polea.",
+    ["Braquial"]);
+  }
+
+  else if(has("scott","predicador")){
+   set("Flexión del codo con brazo apoyado",
+    "Apoyá los brazos sobre el banco y flexioná los codos sin despegar los brazos del soporte.",
+    "Extender bruscamente los codos o utilizar cargas que no puedas controlar.",
+    "Curl Scott con barra, barra EZ y mancuernas.",
+    ["Braquial","Braquiorradial"]);
+  }
+
+  else if(has("inclinado")){
+   set("Flexión del codo con hombro extendido",
+    "Apoyá la espalda en el banco inclinado y dejá los brazos en una posición cómoda. Flexioná los codos sin mover excesivamente los hombros.",
+    "Adelantar los hombros o utilizar impulso.",
+    "Curl inclinado con mancuernas y variantes unilaterales.",
+    ["Braquial"]);
+  }
+
+  else{
    set("Flexión del codo",
-    "Mantené los brazos estables y flexioná los codos para acercar la carga al cuerpo. Descendé lentamente.",
-    "Balancear el torso o adelantar los codos sin control.",
+    "Mantené los brazos estables y flexioná los codos acercando la carga al cuerpo. Descendé de forma controlada.",
+    "Balancear el torso, mover excesivamente los hombros o perder la posición de las muñecas.",
     "Curl con barra, mancuernas, polea, banco Scott y variantes unilaterales.",
     ["Braquial","Braquiorradial"]);
   }
@@ -2108,11 +2234,46 @@ function getExerciseFichaData(ex){
  /* TRÍCEPS */
 
  else if(m==="triceps"){
-  set("Extensión del codo",
-   "Mantené los brazos estables y extendé los codos para desplazar la carga. Regresá lentamente.",
-   "Mover excesivamente los hombros, separar los codos sin control o utilizar impulso.",
-   "Extensión en polea, cuerda, barra, mancuerna y máquina.",
-   ["Ancóneo"]);
+
+  if(has("frances","sobre la cabeza","overhead")){
+   set("Extensión de codo por encima de la cabeza",
+    "Mantené los brazos elevados y flexioná los codos para llevar la carga detrás de la cabeza. Extendé sin mover excesivamente los hombros.",
+    "Abrir excesivamente los codos o arquear la zona lumbar.",
+    "Extensión francesa con mancuerna, barra EZ, cuerda y polea.",
+    ["Deltoides posterior"]);
+  }
+
+  else if(has("patada")){
+   set("Extensión de codo con brazo posterior",
+    "Estabilizá el brazo junto al torso y extendé el codo hasta alinear el antebrazo. Regresá lentamente.",
+    "Mover el brazo completo o utilizar impulso.",
+    "Patada de tríceps con mancuerna y polea.",
+    ["Deltoides posterior"]);
+  }
+
+  else if(has("fondos","dips")){
+   set("Empuje y extensión del codo",
+    "Sostené el cuerpo con los brazos y descendé flexionando los codos hasta un recorrido cómodo. Empujá para regresar.",
+    "Descender más allá de tu movilidad o perder el control de los hombros.",
+    "Fondos asistidos, en paralelas y en máquina.",
+    ["Pectorales","Deltoides anterior"]);
+  }
+
+  else if(has("polea","cuerda","pushdown","barra")){
+   set("Extensión de codo en polea",
+    "Mantené los codos cerca del torso y extendé los antebrazos hacia abajo. Regresá lentamente.",
+    "Separar los codos, balancear el cuerpo o utilizar los hombros.",
+    "Extensión con cuerda, barra recta, barra V y agarre unilateral.",
+    ["Ancóneo"]);
+  }
+
+  else{
+   set("Extensión del codo",
+    "Mantené los brazos estables y extendé los codos desplazando la carga de forma controlada.",
+    "Mover excesivamente los hombros o utilizar impulso.",
+    "Extensiones en polea, barra, mancuerna y máquina.",
+    ["Ancóneo"]);
+  }
  }
 
  /* CUÁDRICEPS */
@@ -2121,16 +2282,50 @@ function getExerciseFichaData(ex){
 
   if(has("extension")){
    set("Extensión de rodilla",
-    "Ajustá la máquina y extendé las rodillas de forma controlada. Regresá lentamente.",
-    "Utilizar impulso o realizar repeticiones sin control.",
-    "Extensión bilateral y unilateral.",
+    "Ajustá la máquina para que el eje coincida con la articulación de la rodilla. Extendé las piernas y regresá lentamente.",
+    "Utilizar impulso o dejar caer la carga durante el descenso.",
+    "Extensión bilateral, unilateral y diferentes máquinas.",
     ["Recto femoral","Vasto medial","Vasto lateral","Vasto intermedio"]);
-  }else{
-   set("Movimiento dominante de rodilla",
-    "Estabilizá los apoyos y flexioná caderas y rodillas de manera coordinada. Empujá el suelo para regresar.",
-    "Perder el equilibrio, colapsar las rodillas hacia adentro o perder el control del tronco.",
-    "Sentadilla, prensa, búlgara, zancadas y step up.",
+  }
+
+  else if(has("sentadilla","squat")){
+   set("Patrón dominante de rodilla",
+    "Colocá los pies en una posición estable. Flexioná caderas y rodillas de forma coordinada y empujá el suelo para regresar.",
+    "Perder el equilibrio, colapsar las rodillas hacia adentro o perder la estabilidad del tronco.",
+    "Sentadilla trasera, frontal, goblet, hack y multipower.",
     ["Glúteo mayor","Aductores","Isquiotibiales"]);
+  }
+
+  else if(has("prensa","leg press")){
+   set("Empuje de piernas",
+    "Apoyá completamente la espalda y colocá los pies de forma estable. Flexioná las rodillas de manera controlada y empujá sin bloquearlas bruscamente.",
+    "Despegar la pelvis del respaldo o bajar más allá de tu movilidad.",
+    "Prensa inclinada, horizontal y unilateral.",
+    ["Glúteo mayor","Aductores"]);
+  }
+
+  else if(has("zancada","lunge","estocada","bulgara","split squat")){
+   set("Flexión y extensión unilateral de rodilla y cadera",
+    "Adoptá una posición escalonada. Descendé controladamente flexionando ambas rodillas y empujá para regresar.",
+    "Perder el equilibrio, acortar excesivamente el recorrido o perder la alineación de la rodilla.",
+    "Zancadas, búlgaras, split squat y variantes caminando.",
+    ["Glúteo mayor","Aductores"]);
+  }
+
+  else if(has("step up","subida al cajon")){
+   set("Extensión unilateral de cadera y rodilla",
+    "Apoyá todo el pie sobre la superficie. Impulsá el cuerpo mediante la pierna de apoyo y descendé de manera controlada.",
+    "Impulsarte excesivamente con la pierna de atrás o perder el equilibrio.",
+    "Step up bajo, alto, con mancuernas y unilateral.",
+    ["Glúteo mayor","Isquiotibiales"]);
+  }
+
+  else{
+   set("Extensión de rodilla y trabajo de tren inferior",
+    "Estabilizá los apoyos y controlá la flexión y extensión de las rodillas durante todo el movimiento.",
+    "Perder el equilibrio o realizar repeticiones sin control.",
+    "Variantes con barra, mancuernas, máquinas y peso corporal.",
+    ["Glúteo mayor","Aductores"]);
   }
  }
 
@@ -2138,18 +2333,36 @@ function getExerciseFichaData(ex){
 
  else if(m==="isquiotibiales"){
 
-  if(has("curl")){
+  if(has("curl","nordico","nórdico")){
    set("Flexión de rodilla",
     "Estabilizá la pelvis y flexioná las rodillas acercando los talones hacia los glúteos. Controlá el regreso.",
-    "Elevar la pelvis sin control, utilizar impulso o dejar caer la carga.",
-    "Curl femoral sentado, acostado, unilateral y nórdico.",
+    "Elevar la pelvis sin control o dejar caer la carga durante la fase de retorno.",
+    "Curl sentado, acostado, unilateral y nórdico asistido.",
     ["Gastrocnemio"]);
-  }else{
-   set("Bisagra y extensión de cadera",
-    "Llevá la cadera hacia atrás manteniendo el tronco estable. Extendé la cadera para regresar.",
-    "Redondear la espalda o hiperextender la zona lumbar.",
-    "Peso muerto rumano, unilateral, buenos días y pull through.",
+  }
+
+  else if(has("peso muerto rumano","rumano","stiff","buenos dias")){
+   set("Bisagra de cadera",
+    "Desplazá la cadera hacia atrás manteniendo la carga cerca del cuerpo y la espalda estable. Extendé la cadera para regresar.",
+    "Redondear la espalda, alejar la carga o convertir el movimiento en una sentadilla.",
+    "Peso muerto rumano con barra, mancuernas, unilateral y buenos días.",
     ["Glúteo mayor","Erectores espinales"]);
+  }
+
+  else if(has("pull through")){
+   set("Extensión de cadera en polea",
+    "Colocá la polea detrás del cuerpo. Llevá la cadera hacia atrás y extendela para regresar a la posición erguida.",
+    "Flexionar excesivamente las rodillas o arquear la zona lumbar.",
+    "Pull through con cuerda y distintas posiciones de apoyo.",
+    ["Glúteo mayor","Erectores espinales"]);
+  }
+
+  else{
+   set("Flexión de rodilla y extensión de cadera",
+    "Controlá la posición de la pelvis y realizá el movimiento sin perder la estabilidad del tronco.",
+    "Utilizar impulso o compensar con la zona lumbar.",
+    "Curl femoral, peso muerto rumano y variantes unilaterales.",
+    ["Glúteo mayor","Gastrocnemio"]);
   }
  }
 
@@ -2157,60 +2370,153 @@ function getExerciseFichaData(ex){
 
  else if(m==="gluteos"){
 
-  if(has("abduccion","caminata lateral")){
+  if(has("hip thrust","empuje de cadera")){
+   set("Extensión de cadera con apoyo",
+    "Apoyá la parte superior de la espalda en el banco. Flexioná las rodillas y elevá la pelvis extendiendo la cadera. Descendé controladamente.",
+    "Hiperextender la zona lumbar o perder la estabilidad de los pies.",
+    "Hip thrust con barra, mancuerna, máquina y unilateral.",
+    ["Isquiotibiales","Glúteo medio"]);
+  }
+
+  else if(has("puente")){
+   set("Extensión de cadera",
+    "Acostate boca arriba con los pies apoyados. Elevá la pelvis contrayendo los glúteos y regresá lentamente.",
+    "Arquear la zona lumbar o separar los pies sin control.",
+    "Puente bilateral, unilateral y con carga.",
+    ["Isquiotibiales"]);
+  }
+
+  else if(has("abduccion","caminata lateral")){
    set("Abducción de cadera",
     "Separá las piernas contra la resistencia manteniendo la pelvis estable. Regresá lentamente.",
     "Balancear el tronco o girar excesivamente la pelvis.",
-    "Abducción en máquina, polea o banda elástica.",
+    "Abducción en máquina, polea, banda y caminata lateral.",
     ["Glúteo medio","Glúteo menor"]);
-  }else if(has("patada")){
+  }
+
+  else if(has("patada")){
    set("Extensión de cadera",
-    "Estabilizá el tronco y llevá la pierna hacia atrás mediante la extensión de cadera.",
+    "Estabilizá el tronco y llevá la pierna hacia atrás mediante la extensión de cadera. Controlá el regreso.",
     "Arquear la zona lumbar o utilizar impulso.",
-    "Patada en polea, máquina o banda.",
+    "Patada en polea, máquina y banda elástica.",
     ["Glúteo mayor","Isquiotibiales"]);
-  }else if(has("hip thrust","puente")){
-   set("Extensión de cadera",
-    "Elevá la pelvis extendiendo la cadera y regresá de forma controlada.",
-    "Hiperextender la zona lumbar o perder la estabilidad de los pies.",
-    "Hip thrust con barra, mancuerna, máquina y puente de glúteos.",
-    ["Isquiotibiales","Glúteo medio"]);
-  }else{
-   set("Extensión de cadera y trabajo de tren inferior",
-    "Estabilizá el tronco y controlá la posición de la pelvis, las rodillas y los apoyos.",
-    "Perder el equilibrio o utilizar impulso.",
-    "Sentadilla, peso muerto sumo, step up y variantes unilaterales.",
-    ["Cuádriceps","Isquiotibiales","Aductores"]);
+  }
+
+  else if(has("sentadilla","squat","bulgara","zancada","lunge")){
+   set("Extensión de cadera y rodilla",
+    "Estabilizá los apoyos y descendé flexionando caderas y rodillas. Empujá el suelo para regresar.",
+    "Perder el equilibrio o perder el control de la alineación de las rodillas.",
+    "Sentadilla, búlgara, zancadas y variantes unilaterales.",
+    ["Cuádriceps","Aductores"]);
+  }
+
+  else if(has("peso muerto","rumano","sumo")){
+   set("Bisagra de cadera",
+    "Llevá la cadera hacia atrás manteniendo el tronco estable. Extendé la cadera para regresar.",
+    "Redondear la espalda o hiperextender la zona lumbar.",
+    "Peso muerto rumano, sumo, convencional y unilateral.",
+    ["Isquiotibiales","Erectores espinales"]);
+  }
+
+  else{
+   set("Extensión y estabilización de cadera",
+    "Controlá la posición de la pelvis y realizá el movimiento manteniendo los apoyos estables.",
+    "Utilizar impulso o perder la estabilidad de la pelvis.",
+    "Variantes con polea, máquinas, bandas y peso libre.",
+    ["Glúteo medio","Isquiotibiales"]);
   }
  }
 
  /* GEMELOS */
 
  else if(m==="gemelos"){
-  set("Flexión plantar del tobillo",
-   "Apoyá el antepié y elevá los talones de forma controlada. Descendé lentamente.",
-   "Realizar rebotes o acortar demasiado el recorrido.",
-   "Elevación de pie, sentado, en prensa y unilateral.",
-   ["Gastrocnemio","Sóleo"]);
+
+  if(has("sentado","seated")){
+   set("Flexión plantar con rodilla flexionada",
+    "Apoyá el antepié y elevá los talones. Descendé lentamente hasta un estiramiento cómodo.",
+    "Realizar rebotes o acortar demasiado el recorrido.",
+    "Elevación de gemelos sentado bilateral y unilateral.",
+    ["Sóleo","Gastrocnemio"]);
+  }
+
+  else{
+   set("Flexión plantar del tobillo",
+    "Apoyá el antepié y elevá los talones de forma controlada. Mantené brevemente la posición superior y descendé lentamente.",
+    "Realizar rebotes, flexionar las rodillas sin intención o acortar el recorrido.",
+    "Elevación de pie, en prensa, unilateral y en máquina.",
+    ["Gastrocnemio","Sóleo"]);
+  }
  }
 
  /* ABDOMINALES */
 
  else if(m==="abdominales"){
 
-  if(has("pallof","woodchopper","rotacion")){
-   set("Estabilidad o rotación del tronco",
-    "Estabilizá la pelvis y controlá el movimiento del tronco frente a la resistencia.",
-    "Girar sin control o utilizar impulso.",
-    "Pallof press, woodchopper y rotaciones en polea.",
+  if(has("pallof")){
+   set("Antirrotación del tronco",
+    "Colocate de costado respecto a la polea. Sujetá el agarre frente al pecho y extendé los brazos sin permitir que el tronco rote.",
+    "Girar la pelvis, inclinar el tronco o utilizar una resistencia que no puedas controlar.",
+    "Pallof press de pie, arrodillado y con banda.",
     ["Oblicuos","Transverso del abdomen"]);
-  }else if(has("plancha","hollow","dead bug","bird dog")){
-   set("Estabilidad del tronco",
-    "Mantené la columna y la pelvis estables. Controlá la respiración y evitá compensaciones.",
-    "Dejar caer la cadera o arquear la zona lumbar.",
-    "Plancha frontal, lateral, dead bug, bird dog y hollow hold.",
+  }
+
+  else if(has("plancha lateral")){
+   set("Estabilidad lateral del tronco",
+    "Apoyá el antebrazo y mantené el cuerpo alineado. Elevá la pelvis y sostené la posición controlando la respiración.",
+    "Dejar caer la cadera o rotar el tronco.",
+    "Plancha lateral con rodillas apoyadas, completa y con elevación de pierna.",
+    ["Oblicuos","Cuadrado lumbar","Glúteo medio"]);
+  }
+
+  else if(has("plancha")){
+   set("Estabilidad anterior del tronco",
+    "Apoyá antebrazos y pies. Mantené el cuerpo alineado y la pelvis estable mientras respirás con normalidad.",
+    "Dejar caer la cadera, elevar demasiado los glúteos o contener la respiración.",
+    "Plancha frontal, con rodillas apoyadas, con brazos extendidos y dinámica.",
     ["Transverso del abdomen","Oblicuos","Multífidos"]);
-  }else{
+  }
+
+  else if(has("dead bug","bicho muerto")){
+   set("Estabilidad lumbopélvica",
+    "Acostate boca arriba con brazos y piernas elevados. Extendé brazo y pierna contrarios sin perder el control de la pelvis.",
+    "Arquear la zona lumbar o acelerar el movimiento.",
+    "Bicho muerto básico, alternado y con resistencia.",
+    ["Transverso del abdomen","Oblicuos"]);
+  }
+
+  else if(has("bird dog","superman")){
+   set("Estabilidad posterior y lumbopélvica",
+    "Desde cuadrupedia, extendé brazo y pierna contrarios manteniendo la pelvis estable. Regresá y alterná.",
+    "Rotar la pelvis o elevar la pierna más allá de lo que podés controlar.",
+    "Bird dog alternado, con pausas y variantes de estabilidad.",
+    ["Multífidos","Erectores espinales","Glúteos"]);
+  }
+
+  else if(has("hollow")){
+   set("Estabilidad anterior del tronco",
+    "Acostate boca arriba y elevá ligeramente los hombros y las piernas. Mantené la zona lumbar estable contra el suelo.",
+    "Perder el contacto lumbar con el suelo o forzar la posición.",
+    "Hollow hold agrupado, una pierna extendida y completo.",
+    ["Transverso del abdomen","Oblicuos"]);
+  }
+
+  else if(has("ruso","russian twist","rotacion")){
+   set("Rotación del tronco",
+    "Mantené la pelvis estable y rotá el tronco de un lado al otro de forma controlada.",
+    "Mover únicamente los brazos o utilizar impulso excesivo.",
+    "Giros rusos con peso, sin carga y rotaciones en polea.",
+    ["Oblicuos","Recto abdominal"]);
+  }
+
+  else if(has("woodchopper","leñador")){
+   set("Rotación diagonal del tronco",
+    "Sujetá el agarre con ambas manos y desplazalo en diagonal mediante una rotación controlada del tronco.",
+    "Realizar el movimiento exclusivamente con los brazos o perder la estabilidad de la pelvis.",
+    "Woodchopper alto, bajo y en distintas posiciones.",
+    ["Oblicuos","Transverso del abdomen"]);
+  }
+
+  else{
    set("Flexión del tronco",
     "Realizá la flexión de forma controlada, evitando tirar del cuello y utilizar impulso.",
     "Tirar de la cabeza o convertir el movimiento en una flexión excesiva de cadera.",
@@ -2229,18 +2535,30 @@ function getExerciseFichaData(ex){
     "Mover el hombro para compensar o utilizar impulso.",
     "Pronación y supinación con mancuerna o polea.",
     ["Pronador redondo","Supinador","Braquiorradial"]);
-  }else if(has("farmer","caminata","agarre","pinza","sujecion","colgado")){
+  }
+
+  else if(has("farmer","caminata","agarre","pinza","sujecion","colgado")){
    set("Fuerza de agarre",
-    "Sostené la carga manteniendo las muñecas estables y los hombros controlados.",
-    "Perder la postura o dejar que la muñeca colapse.",
+    "Sostené la carga manteniendo las muñecas estables y los hombros controlados. Si caminás, mantené una postura erguida.",
+    "Perder la postura, dejar colapsar las muñecas o balancear excesivamente la carga.",
     "Farmer walk, agarre estático, pinza de discos y agarres colgados.",
     ["Flexores de los dedos","Braquiorradial"]);
-  }else{
-   set("Flexión o extensión de muñeca",
-    "Estabilizá el antebrazo y realizá el movimiento de muñeca de forma controlada.",
+  }
+
+  else if(has("extension")){
+   set("Extensión de muñeca",
+    "Estabilizá el antebrazo y extendé la muñeca de forma controlada. Regresá lentamente.",
     "Utilizar impulso o mover todo el antebrazo.",
+    "Extensión de muñeca con mancuerna, barra y polea.",
+    ["Extensores de muñeca"]);
+  }
+
+  else{
+   set("Flexión de muñeca",
+    "Estabilizá el antebrazo y flexioná la muñeca desplazando la carga de forma controlada.",
+    "Utilizar impulso o mover excesivamente el antebrazo.",
     "Curl de muñeca, curl inverso y wrist roller.",
-    ["Flexores de muñeca","Extensores de muñeca"]);
+    ["Flexores de muñeca","Braquiorradial"]);
   }
  }
 
@@ -2248,19 +2566,39 @@ function getExerciseFichaData(ex){
 
  else if(m==="cuerpo completo"){
 
-  if(has("clean","snatch","jerk")){
+  if(has("clean","cargada","snatch","arranque","jerk","envion")){
    set("Movimiento olímpico",
-    "Estos movimientos requieren aprendizaje técnico específico. Conviene aprenderlos con supervisión cualificada.",
+    "Estos movimientos requieren aprendizaje técnico específico. Trabajá primero las posiciones, la coordinación y las progresiones con supervisión cualificada.",
     "Intentar mover cargas sin dominar la técnica o perder el control de la recepción.",
     "Variantes desde bloques, posición colgante y progresiones técnicas.",
     ["Glúteos","Cuádriceps","Espalda","Hombros"]);
-  }else if(has("swing")){
+  }
+
+  else if(has("swing")){
    set("Bisagra de cadera explosiva",
     "Impulsá la kettlebell mediante una extensión coordinada de cadera. Los brazos acompañan el movimiento.",
     "Convertirlo en una sentadilla o hiperextender la zona lumbar.",
     "Kettlebell swing y variantes técnicas.",
     ["Glúteos","Isquiotibiales","Erectores espinales"]);
-  }else{
+  }
+
+  else if(has("burpee")){
+   set("Movimiento global con transición al suelo",
+    "Desde una posición erguida, descendé hasta apoyar las manos, llevá los pies atrás, regresá y completá la repetición de forma controlada.",
+    "Perder la estabilidad lumbar o acelerar las transiciones sin controlar los apoyos.",
+    "Burpee sin salto, con salto y variantes adaptadas.",
+    ["Pectorales","Cuádriceps","Glúteos","Zona media"]);
+  }
+
+  else if(has("salto","jump","sprint")){
+   set("Acción explosiva del tren inferior",
+    "Prepará los apoyos y coordiná la acción de caderas, rodillas y tobillos. Priorizá aterrizajes controlados y una técnica adecuada.",
+    "Perder la alineación de las piernas o aterrizar sin control.",
+    "Variantes bilaterales, unilaterales y de distinta dirección.",
+    ["Glúteos","Cuádriceps","Gemelos"]);
+  }
+
+  else{
    set("Movimiento global",
     "Coordiná las distintas regiones corporales manteniendo una postura estable y controlando la carga.",
     "Perder la postura o descuidar la coordinación.",
@@ -2279,6 +2617,7 @@ function getExerciseFichaData(ex){
 
  return data;
 }
+
 
 
 /* ABRIR FICHA TECNICA */
