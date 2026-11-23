@@ -103,7 +103,23 @@ canvas{width:100%;max-height:230px}
 footer{text-align:center;color:var(--muted);font-size:11px;padding:20px}
 
 @media(min-width:700px){main{padding:25px}.series{grid-template-columns:repeat(4,1fr)}}
+.drag-handle{
+ display:inline-block;
+ padding:8px;
+ cursor:grab;
+ color:var(--green);
+ font-size:22px;
+ touch-action:none;
+ user-select:none;
+}
 
+.exercise.dragging{
+ opacity:.4;
+}
+
+.exercise.drag-over{
+ border:2px dashed var(--green);
+}
 </style>
 
 </head>
@@ -506,7 +522,7 @@ function planEditor(p){
 
  ${d.notes?`<p>${esc(d.notes)}</p>`:""}
 
- ${d.exercises.map((e,j)=>planExerciseCard(e,j)).join("")}
+${d.exercises.map((e,j)=>planExerciseCard(e,j,d.id)).join("")}
 
  <button class="btn secondary" data-action="add-exercise" data-id="${d.id}">+ Agregar ejercicio</button>
 
@@ -518,11 +534,19 @@ function planEditor(p){
 
 function planExerciseCard(e,j){
 
- return `<div class="exercise">
+ <div class="exercise" data-exercise-id="${e.id}" data-day-id="${dayId}" data-owner="plan">
 
- <div class="between"><div><b>${j+1}. ${esc(e.name)}</b><div class="muted">${esc(e.muscle||"Sin grupo muscular")} · ${esc(e.technique||"Normal")}</div></div>
+ <div class="between">
+ <div><b>${j+1}. ${esc(e.name)}</b>
+ <div class="muted">${esc(e.muscle||"Sin grupo muscular")} · ${esc(e.technique||"Normal")}</div>
+ </div>
 
- <div class="row"><button class="btn small secondary" data-action="edit-exercise" data-id="${e.id}">Editar</button><button class="btn small danger" data-action="delete-exercise" data-id="${e.id}">×</button></div></div>
+ <div class="row">
+ <span class="drag-handle" title="Arrastrar">⠿</span>
+ <button class="btn small secondary" data-action="edit-exercise" data-id="${e.id}">Editar</button>
+ <button class="btn small danger" data-action="delete-exercise" data-id="${e.id}">×</button>
+ </div>
+ </div>
 
  <div class="muted">Descanso: ${esc(e.rest||"—")} · Tempo: ${esc(e.tempo||"—")} · Bloque: ${esc(e.block||"—")}</div>
 
@@ -531,7 +555,6 @@ function planExerciseCard(e,j){
  ${e.notes?`<p>${esc(e.notes)}</p>`:""}
 
  </div>`;
-
 }
 
 /* CLIENTES */
@@ -1170,11 +1193,13 @@ function clientPlanEditor(c){
 
  ${d.notes?`<p>${esc(d.notes)}</p>`:""}
 
- ${d.exercises.map((e,j)=>`<div class="exercise">
+${d.exercises.map((e,j)=>`<div class="exercise" data-exercise-id="${e.id}" data-day-id="${dayId}" data-owner="plan">
 
  <div class="between"><div><b>${j+1}. ${esc(e.name)}</b><p>${esc(e.muscle||"Sin grupo")} · ${esc(e.technique||"Normal")}</p></div>
 
- <div class="row"><button class="btn small secondary" data-action="cp-edit-exercise" data-day="${d.id}" data-id="${e.id}">Editar</button><button class="btn small danger" data-action="cp-delete-exercise" data-day="${d.id}" data-id="${e.id}">×</button></div></div>
+<div class="row">
+<span class="drag-handle">⠿</span>
+<button class="btn small secondary" data-action="cp-edit-exercise" data-day="${d.id}" data-id="${e.id}">Editar</button>
 
  <p>Descanso: ${esc(e.rest||"—")} · Tempo: ${esc(e.tempo||"—")} · Bloque: ${esc(e.block||"—")}</p>
 
@@ -1914,7 +1939,83 @@ function sendClientRoutineWhatsApp(c){
  window.open(url,"_blank");
 
 }
+/* REORDENAR EJERCICIOS */
 
+let draggedExercise = null;
+let dragContainer = null;
+
+document.addEventListener("pointerdown", e => {
+ const handle = e.target.closest(".drag-handle");
+ if (!handle) return;
+
+ const card = handle.closest(".exercise");
+ if (!card) return;
+
+ draggedExercise = card;
+ dragContainer = card.parentElement;
+
+ card.classList.add("dragging");
+ e.preventDefault();
+});
+
+document.addEventListener("pointermove", e => {
+ if (!draggedExercise || !dragContainer) return;
+
+ const target = document.elementFromPoint(e.clientX,e.clientY)
+  ?.closest(".exercise[data-exercise-id]");
+
+ if (!target || target === draggedExercise) return;
+ if (target.parentElement !== dragContainer) return;
+
+ const rect = target.getBoundingClientRect();
+ const after = e.clientY > rect.top + rect.height / 2;
+
+ dragContainer.insertBefore(
+  draggedExercise,
+  after ? target.nextSibling : target
+ );
+});
+
+document.addEventListener("pointerup", () => {
+ if (!draggedExercise) return;
+
+ const card = draggedExercise;
+ const owner = card.dataset.owner;
+ const dayId = card.dataset.dayId;
+
+ card.classList.remove("dragging");
+
+ const ids = Array.from(dragContainer.children)
+  .filter(el => el.classList.contains("exercise"))
+  .map(el => el.dataset.exerciseId);
+
+ if (owner === "plan") {
+  const day = plans.flatMap(p => p.days).find(d => d.id === dayId);
+
+  if (day) {
+   const exercises = new Map(day.exercises.map(e => [e.id,e]));
+   day.exercises = ids.map(id => exercises.get(id)).filter(Boolean);
+   save();
+   render();
+  }
+ }
+
+ if (owner === "client") {
+  const client = getClient(selectedClient);
+  const plan = client ? ensureClientPlan(client) : null;
+  const day = plan?.days.find(d => d.id === dayId);
+
+  if (day) {
+   const exercises = new Map(day.exercises.map(e => [e.id,e]));
+   day.exercises = ids.map(id => exercises.get(id)).filter(Boolean);
+   save();
+   renderClientPlan();
+  }
+ }
+
+ draggedExercise = null;
+ dragContainer = null;
+});
 /* ACCIONES GENERALES */
 
 document.addEventListener("click",e=>{
