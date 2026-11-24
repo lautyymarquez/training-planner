@@ -16,6 +16,54 @@
 
 <style>
 
+/* PANEL FLOTANTE DE SELECCIONADOS */
+
+.library-selection{
+ display:none;
+}
+
+.library-selection.is-visible{
+ display:block;
+ position:fixed;
+ bottom:16px;
+ right:16px;
+ width:min(360px,calc(100% - 32px));
+ max-height:55vh;
+ z-index:999;
+}
+
+.library-selection-card{
+ max-height:55vh;
+ overflow-y:auto;
+ overscroll-behavior:contain;
+ box-shadow:0 8px 30px rgba(0,0,0,.45);
+ border:1px solid #3b5145;
+}
+
+.library-selected-list{
+ max-height:150px;
+ overflow-y:auto;
+ margin:12px 0;
+}
+
+.library-selected-list .between{
+ padding:8px 0;
+ border-bottom:1px solid #333;
+}
+
+@media(max-width:600px){
+ .library-selection.is-visible{
+  right:10px;
+  bottom:10px;
+  width:calc(100% - 20px);
+  max-height:45vh;
+ }
+
+ .library-selection-card{
+  max-height:45vh;
+ }
+}
+
 /* TP - BASE VISUAL DARK PERFORMANCE */
 
 :root{
@@ -2158,6 +2206,7 @@ function exerciseKey(e){
 }
 
 
+
 /* PANEL DE EJERCICIOS SELECCIONADOS */
 
 function renderLibrarySelection(){
@@ -2169,60 +2218,67 @@ function renderLibrarySelection(){
   librarySelected.includes(exerciseKey(x))
  );
 
+ // Ocultar cuando no hay ejercicios seleccionados
+ if(!selected.length){
+  box.innerHTML="";
+  box.classList.remove("is-visible");
+  return;
+ }
+
+ box.classList.add("is-visible");
+
  box.innerHTML=`
-  <div class="card">
+  <div class="card library-selection-card">
+
    <div class="between">
     <h3>Ejercicios seleccionados</h3>
     <span class="tag">${selected.length} seleccionados</span>
    </div>
 
-   ${selected.length?`
-    <div class="library-selected-list">
-     ${selected.map(e=>`
-      <div class="between">
-       <span>${esc(e.name)}</span>
-       <button class="btn small secondary"
-        data-action="library-remove"
-        data-key="${esc(exerciseKey(e))}">
-        Quitar
-       </button>
-      </div>
+   <div class="library-selected-list">
+    ${selected.map(e=>`
+     <div class="between">
+      <span>${esc(e.name)}</span>
+      <button class="btn small secondary"
+       data-action="library-remove"
+       data-key="${esc(exerciseKey(e))}">
+       Quitar
+      </button>
+     </div>
+    `).join("")}
+   </div>
+
+   <div class="field">
+    <label>Planificación</label>
+    <select id="libraryPlan">
+     <option value="">Seleccionar planificación</option>
+     ${plans.map(p=>`
+      <option value="${esc(p.id)}">${esc(p.name)}</option>
      `).join("")}
-    </div>
+    </select>
+   </div>
 
-    <div class="field">
-     <label>Planificación</label>
-     <select id="libraryPlan">
-      <option value="">Seleccionar planificación</option>
-      ${plans.map(p=>`
-       <option value="${esc(p.id)}">${esc(p.name)}</option>
-      `).join("")}
-     </select>
-    </div>
+   <div class="field">
+    <label>Día de entrenamiento</label>
+    <select id="libraryDay">
+     <option value="">Seleccionar día</option>
+    </select>
+   </div>
 
-    <div class="field">
-     <label>Día de entrenamiento</label>
-     <select id="libraryDay">
-      <option value="">Seleccionar día</option>
-     </select>
-    </div>
+   <button class="btn" data-action="library-add-selected">
+    Agregar a rutina existente
+   </button>
 
-    <button class="btn" data-action="library-add-selected">
-     Agregar a rutina existente
-    </button>
+   <button class="btn secondary"
+    data-action="library-create-plan">
+    + Crear nueva planificación
+   </button>
 
-    <button class="btn secondary"
-     data-action="library-create-plan">
-     + Crear nueva planificación
-    </button>
+   <button class="btn secondary"
+    data-action="library-clear">
+    Limpiar selección
+   </button>
 
-    <button class="btn secondary"
-     data-action="library-clear">
-     Limpiar selección
-    </button>
-   `:`
-    <p class="empty">Seleccioná ejercicios para comenzar a armar tu rutina.</p>
-   `}
   </div>
  `;
 }
