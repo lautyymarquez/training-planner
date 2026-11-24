@@ -1105,35 +1105,78 @@ function pagePlans(){
  </div>
 
  ${plans.length?plans.map(p=>`<div class="card"><div class="between"><div><h3>${esc(p.name)}</h3><span class="tag">${esc(p.goal||"Sin objetivo")}</span> <span class="pill">${p.frequency||p.days.length} días</span><p>${p.days.length} días · ${p.days.reduce((n,d)=>n+d.exercises.length,0)} ejercicios</p></div><button class="btn" data-action="open-plan" data-id="${p.id}">Abrir</button></div></div>`).join(""):`<div class="empty">Todavía no creaste planificaciones.</div>`}`;
-if(a==="create-periodization"){
- const p=getPlan(id);
- if(!p)return;
 
- if(p.periodization){
-  alert("Esta planificación ya tiene un macrociclo.");
-  return;
- }
-
- const name=prompt("Nombre del macrociclo",p.name+" - Macrociclo");
- if(name===null)return;
-
- const duration=prompt("Duración en semanas", "12");
- if(duration===null)return;
-
- const weeks=Math.max(1,Math.min(52,Number(duration)||12));
-
- p.periodization={
-  id:uid(),
-  name:name.trim()||"Macrociclo",
-  startDate:dateNow(),
-  durationWeeks:weeks,
-  mesocycles:[]
- };
-
- save();
- render();
- return;
 }
+
+
+/* GENERADOR DE MESOCICLOS Y MICROCICLOS */
+
+function buildMesocycles(p){
+
+ if(!p || !p.periodization)return;
+
+ const totalWeeks=Math.max(1,Number(p.periodization.durationWeeks)||12);
+ const count=Math.min(3,totalWeeks);
+ const base=Math.floor(totalWeeks/count);
+ const remainder=totalWeeks%count;
+
+ const phases=[
+  {
+   name:"Adaptación",
+   objective:"Preparación y adaptación progresiva."
+  },
+  {
+   name:"Desarrollo",
+   objective:"Desarrollo progresivo de las capacidades."
+  },
+  {
+   name:"Consolidación",
+   objective:"Consolidación del trabajo y evaluación."
+  }
+ ];
+
+ let currentWeek=1;
+
+ p.periodization.mesocycles=[];
+
+ for(let i=0;i<count;i++){
+
+  const duration=base+(i<remainder?1:0);
+  const phase=phases[i];
+
+  const mesocycle={
+   id:uid(),
+   name:phase.name,
+   objective:phase.objective,
+   startWeek:currentWeek,
+   durationWeeks:duration,
+   weeks:[]
+  };
+
+  for(let w=0;w<duration;w++){
+
+   const routine=p.days.map(d=>({
+    ...clone(d),
+    id:uid(),
+    exercises:d.exercises.map(e=>({
+     ...clone(e),
+     id:uid(),
+     series:e.series.map(s=>({...s}))
+    }))
+   }));
+
+   mesocycle.weeks.push({
+    id:uid(),
+    number:currentWeek,
+    name:"Semana "+currentWeek,
+    routine:routine
+   });
+
+   currentWeek++;
+  }
+
+  p.periodization.mesocycles.push(mesocycle);
+ }
 }
 
 function planEditor(p){
@@ -1152,27 +1195,55 @@ function planEditor(p){
   <button class="btn" data-action="add-day" data-id="${p.id}">+ Agregar día</button>
  </div>
 
- <div class="card">
-  <div class="between">
-   <h2>Periodización</h2>
-   <span class="tag">Planificación avanzada</span>
-  </div>
 
-  ${p.periodization?`
-   <h3>${esc(p.periodization.name||"Macrociclo")}</h3>
-   <p>Duración: ${Number(p.periodization.durationWeeks)||12} semanas</p>
-   <p>Inicio: ${esc(p.periodization.startDate||"Sin definir")}</p>
-   <span class="pill">Macrociclo creado</span>
+<div class="card">
+ <div class="between">
+  <h2>Periodización</h2>
+  <span class="tag">Planificación avanzada</span>
+ </div>
+
+ ${p.periodization?`
+  <h3>${esc(p.periodization.name||"Macrociclo")}</h3>
+  <p>Duración: ${Number(p.periodization.durationWeeks)||12} semanas</p>
+  <p>Inicio: ${esc(p.periodization.startDate||"Sin definir")}</p>
+
+  ${p.periodization.mesocycles?.length?`
+   <span class="pill">Macrociclo estructurado</span>
+   ${p.periodization.mesocycles.map(m=>`
+    <div class="card">
+     <h3>${esc(m.name)}</h3>
+     <p>${esc(m.objective)}</p>
+     <span class="pill">Semanas ${m.startWeek}–${m.startWeek+m.durationWeeks-1}</span>
+     <p>${m.durationWeeks} semanas</p>
+
+     ${m.weeks.map(w=>`
+      <div class="between">
+       <div>
+        <b>${esc(w.name)}</b>
+        <div class="muted">${w.routine.reduce((n,d)=>n+d.exercises.length,0)} ejercicios programados</div>
+       </div>
+       <span class="pill">Semana ${w.number}</span>
+      </div>
+     `).join("")}
+    </div>
+   `).join("")}
   `:`
-   <p class="muted">
-    Organizá tu planificación en macrociclos, mesociclos y microciclos.
-    Tu rutina base seguirá siendo independiente.
-   </p>
-   <button class="btn" data-action="create-periodization" data-id="${p.id}">
-    + Crear macrociclo
+   <p class="muted">Este macrociclo todavía no tiene mesociclos.</p>
+   <button class="btn" data-action="generate-mesocycles" data-id="${p.id}">
+    Generar mesociclos y semanas
    </button>
   `}
- </div>
+ `:`
+  <p class="muted">
+   Organizá tu planificación en macrociclos, mesociclos y microciclos.
+   Tu rutina base seguirá siendo independiente.
+  </p>
+  <button class="btn" data-action="create-periodization" data-id="${p.id}">
+   + Crear macrociclo
+  </button>
+ `}
+</div>
+
 
  ${p.days.map((d,i)=>`
   <div class="card">
@@ -4092,6 +4163,55 @@ document.addEventListener("click",e=>{
  if(a==="new-client"){page="clientes";render();document.getElementById("clientForm")?.scrollIntoView();return}
 
  if(a==="open-plan"){selectedPlan=id;page="planes";render();return}
+
+if(a==="create-periodization"){
+
+ const p=getPlan(id);
+ if(!p)return;
+
+ if(p.periodization){
+  alert("Esta planificación ya tiene un macrociclo.");
+  return;
+ }
+
+ const name=prompt("Nombre del macrociclo",p.name+" - Macrociclo");
+ if(name===null)return;
+
+ const duration=prompt("Duración en semanas","12");
+ if(duration===null)return;
+
+ const weeks=Math.max(1,Math.min(52,Math.floor(Number(duration)||12)));
+
+ p.periodization={
+  id:uid(),
+  name:name.trim()||"Macrociclo",
+  startDate:dateNow(),
+  durationWeeks:weeks,
+  mesocycles:[]
+ };
+
+ buildMesocycles(p);
+
+ save();
+ render();
+ return;
+}
+
+if(a==="generate-mesocycles"){
+
+ const p=getPlan(id);
+ if(!p || !p.periodization)return;
+
+ if(p.periodization.mesocycles?.length){
+  alert("Este macrociclo ya tiene mesociclos.");
+  return;
+ }
+
+ buildMesocycles(p);
+ save();
+ render();
+ return;
+}
 
 if(a==="create-periodization"){
  const p=getPlan(id);
