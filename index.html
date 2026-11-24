@@ -4093,6 +4093,36 @@ document.addEventListener("click",e=>{
 
  if(a==="open-plan"){selectedPlan=id;page="planes";render();return}
 
+if(a==="create-periodization"){
+ const p=getPlan(id);
+ if(!p)return;
+
+ if(p.periodization){
+  alert("Esta planificación ya tiene un macrociclo.");
+  return;
+ }
+
+ const name=prompt("Nombre del macrociclo",p.name+" - Macrociclo");
+ if(name===null)return;
+
+ const duration=prompt("Duración en semanas","12");
+ if(duration===null)return;
+
+ const weeks=Math.max(1,Math.min(52,Number(duration)||12));
+
+ p.periodization={
+  id:uid(),
+  name:name.trim()||"Macrociclo",
+  startDate:dateNow(),
+  durationWeeks:weeks,
+  mesocycles:[]
+ };
+
+ save();
+ render();
+ return;
+}
+
  if(a==="back-plans"){selectedPlan=null;render();return}
 
  if(a==="back-clients"){selectedClient=null;render();return}
