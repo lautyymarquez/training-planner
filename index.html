@@ -2149,12 +2149,82 @@ function allExercises(){
 }
 
 
-/* TP EXERCISE LIBRARY - SELECCION MULTIPLE */
+/* TP biblioteca de ejercicios - SELECCION MULTIPLE */
 
 let librarySelected = [];
 
 function exerciseKey(e){
  return e.custom ? "custom-"+e.id : "default-"+e.name;
+}
+
+
+/* PANEL DE EJERCICIOS SELECCIONADOS */
+
+function renderLibrarySelection(){
+
+ const box=document.getElementById("librarySelection");
+ if(!box)return;
+
+ const selected=allExercises().filter(x=>
+  librarySelected.includes(exerciseKey(x))
+ );
+
+ box.innerHTML=`
+  <div class="card">
+   <div class="between">
+    <h3>Ejercicios seleccionados</h3>
+    <span class="tag">${selected.length} seleccionados</span>
+   </div>
+
+   ${selected.length?`
+    <div class="library-selected-list">
+     ${selected.map(e=>`
+      <div class="between">
+       <span>${esc(e.name)}</span>
+       <button class="btn small secondary"
+        data-action="library-remove"
+        data-key="${esc(exerciseKey(e))}">
+        Quitar
+       </button>
+      </div>
+     `).join("")}
+    </div>
+
+    <div class="field">
+     <label>Planificación</label>
+     <select id="libraryPlan">
+      <option value="">Seleccionar planificación</option>
+      ${plans.map(p=>`
+       <option value="${esc(p.id)}">${esc(p.name)}</option>
+      `).join("")}
+     </select>
+    </div>
+
+    <div class="field">
+     <label>Día de entrenamiento</label>
+     <select id="libraryDay">
+      <option value="">Seleccionar día</option>
+     </select>
+    </div>
+
+    <button class="btn" data-action="library-add-selected">
+     Agregar a rutina existente
+    </button>
+
+    <button class="btn secondary"
+     data-action="library-create-plan">
+     + Crear nueva planificación
+    </button>
+
+    <button class="btn secondary"
+     data-action="library-clear">
+     Limpiar selección
+    </button>
+   `:`
+    <p class="empty">Seleccioná ejercicios para comenzar a armar tu rutina.</p>
+   `}
+  </div>
+ `;
 }
 
 
@@ -3461,6 +3531,60 @@ document.addEventListener("click",e=>{
 
  const b=e.target.closest("[data-action]");
  if(!b)return;
+
+if(b.dataset.action==="library-remove"){
+ librarySelected=librarySelected.filter(
+  x=>x!==b.dataset.key
+ );
+ updateExerciseResults();
+ return;
+}
+
+if(b.dataset.action==="library-create-plan"){
+
+ const selected=allExercises().filter(x=>
+  librarySelected.includes(exerciseKey(x))
+ );
+
+ if(!selected.length){
+  alert("Seleccioná al menos un ejercicio.");
+  return;
+ }
+
+ const name=prompt("Nombre de la nueva planificación:");
+ if(!name?.trim())return;
+
+ const frequency=Number(prompt(
+  "¿Cuántos días por semana? (2 a 6)",
+  "3"
+ ));
+
+ if(!Number.isInteger(frequency)||frequency<2||frequency>6){
+  alert("Ingresá una frecuencia válida entre 2 y 6.");
+  return;
+ }
+
+ const p={
+  id:uid(),
+  name:name.trim(),
+  goal:"Otro",
+  frequency,
+  days:Array.from({length:frequency},(_,i)=>({
+   id:uid(),
+   name:"Día "+(i+1),
+   notes:"",
+   exercises:[]
+  }))
+ };
+
+ plans.push(p);
+ save();
+ updateExerciseResults();
+
+ alert("Planificación creada. Ahora elegí el día para agregar los ejercicios.");
+
+ return;
+}
 
  if(b.dataset.action==="library-muscle"){
 
