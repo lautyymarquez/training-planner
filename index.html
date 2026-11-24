@@ -1105,33 +1105,104 @@ function pagePlans(){
  </div>
 
  ${plans.length?plans.map(p=>`<div class="card"><div class="between"><div><h3>${esc(p.name)}</h3><span class="tag">${esc(p.goal||"Sin objetivo")}</span> <span class="pill">${p.frequency||p.days.length} días</span><p>${p.days.length} días · ${p.days.reduce((n,d)=>n+d.exercises.length,0)} ejercicios</p></div><button class="btn" data-action="open-plan" data-id="${p.id}">Abrir</button></div></div>`).join(""):`<div class="empty">Todavía no creaste planificaciones.</div>`}`;
+if(a==="create-periodization"){
+ const p=getPlan(id);
+ if(!p)return;
 
+ if(p.periodization){
+  alert("Esta planificación ya tiene un macrociclo.");
+  return;
+ }
+
+ const name=prompt("Nombre del macrociclo",p.name+" - Macrociclo");
+ if(name===null)return;
+
+ const duration=prompt("Duración en semanas", "12");
+ if(duration===null)return;
+
+ const weeks=Math.max(1,Math.min(52,Number(duration)||12));
+
+ p.periodization={
+  id:uid(),
+  name:name.trim()||"Macrociclo",
+  startDate:dateNow(),
+  durationWeeks:weeks,
+  mesocycles:[]
+ };
+
+ save();
+ render();
+ return;
+}
 }
 
 function planEditor(p){
 
  return `${pageTitle(p.name,"Editor de planificación general")}
 
- <div class="card"><div class="row"><button class="btn secondary" data-action="back-plans">← Volver</button><button class="btn secondary" data-action="rename-plan" data-id="${p.id}">Editar datos</button><button class="btn danger" data-action="delete-plan" data-id="${p.id}">Eliminar</button></div>
+ <div class="card">
+  <div class="row">
+   <button class="btn secondary" data-action="back-plans">← Volver</button>
+   <button class="btn secondary" data-action="rename-plan" data-id="${p.id}">Editar datos</button>
+   <button class="btn danger" data-action="delete-plan" data-id="${p.id}">Eliminar</button>
+  </div>
 
- <p>Objetivo: ${esc(p.goal)} · Frecuencia: ${p.frequency} días</p>
+  <p>Objetivo: ${esc(p.goal)} · Frecuencia: ${p.frequency} días</p>
 
- <button class="btn" data-action="add-day" data-id="${p.id}">+ Agregar día</button></div>
+  <button class="btn" data-action="add-day" data-id="${p.id}">+ Agregar día</button>
+ </div>
 
- ${p.days.map((d,i)=>`<div class="card">
+ <div class="card">
+  <div class="between">
+   <h2>Periodización</h2>
+   <span class="tag">Planificación avanzada</span>
+  </div>
 
- <div class="between"><div><h2>${esc(d.name||"Día "+(i+1))}</h2><span class="pill">${d.exercises.length} ejercicios</span></div><div class="row"><button class="btn small secondary" data-action="edit-day" data-id="${d.id}">Editar día</button><button class="btn small danger" data-action="delete-day" data-id="${d.id}">×</button></div></div>
+  ${p.periodization?`
+   <h3>${esc(p.periodization.name||"Macrociclo")}</h3>
+   <p>Duración: ${Number(p.periodization.durationWeeks)||12} semanas</p>
+   <p>Inicio: ${esc(p.periodization.startDate||"Sin definir")}</p>
+   <span class="pill">Macrociclo creado</span>
+  `:`
+   <p class="muted">
+    Organizá tu planificación en macrociclos, mesociclos y microciclos.
+    Tu rutina base seguirá siendo independiente.
+   </p>
+   <button class="btn" data-action="create-periodization" data-id="${p.id}">
+    + Crear macrociclo
+   </button>
+  `}
+ </div>
 
- ${d.notes?`<p>${esc(d.notes)}</p>`:""}
+ ${p.days.map((d,i)=>`
+  <div class="card">
+   <div class="between">
+    <div>
+     <h2>${esc(d.name||"Día "+(i+1))}</h2>
+     <span class="pill">${d.exercises.length} ejercicios</span>
+    </div>
+    <div class="row">
+     <button class="btn small secondary" data-action="edit-day" data-id="${d.id}">Editar día</button>
+     <button class="btn small danger" data-action="delete-day" data-id="${d.id}">×</button>
+    </div>
+   </div>
 
-${d.exercises.map((e,j)=>planExerciseCard(e,j,d.id)).join("")}
+   ${d.notes?`<p>${esc(d.notes)}</p>`:""}
 
- <button class="btn secondary" data-action="add-exercise" data-id="${d.id}">+ Agregar ejercicio</button>
+   ${d.exercises.map((e,j)=>planExerciseCard(e,j,d.id)).join("")}
 
- </div>`).join("")}
+   <button class="btn secondary" data-action="add-exercise" data-id="${d.id}">
+    + Agregar ejercicio
+   </button>
+  </div>
+ `).join("")}
 
- <div class="card"><h3>Resumen del plan</h3><p>Series efectivas programadas: <b>${p.days.reduce((n,d)=>n+d.exercises.reduce((a,e)=>a+e.series.filter(s=>s.type==="Efectiva").length,0),0)}</b></p></div>`;
-
+ <div class="card">
+  <h3>Resumen del plan</h3>
+  <p>Series efectivas programadas:
+   <b>${p.days.reduce((n,d)=>n+d.exercises.reduce((a,e)=>a+e.series.filter(s=>s.type==="Efectiva").length,0),0)}</b>
+  </p>
+ </div>`;
 }
 
 
