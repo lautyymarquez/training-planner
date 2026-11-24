@@ -4743,45 +4743,116 @@ if(f.id==="clientForm"){
 
 });
 
-/* EDITOR DE EJERCICIOS DE PLAN GENERAL */
 
-function openExerciseEditor(exerciseId,dayId){
+/* EDITOR DE EJERCICIOS: RUTINA GENERAL Y MICROCICLOS */
 
- const existing=exerciseId?plans.flatMap(p=>p.days).flatMap(d=>d.exercises).find(x=>x.id===exerciseId):null;
+function openExerciseEditor(exerciseId,dayId,weekId){
 
- const targetDay=dayId||plans.find(p=>p.id===selectedPlan)?.days.find(d=>d.exercises.some(e=>e.id===exerciseId))?.id;
+ const allWeeks=plans
+  .flatMap(p=>p.periodization?.mesocycles||[])
+  .flatMap(m=>m.weeks||[]);
 
- const d=plans.flatMap(p=>p.days).find(x=>x.id===targetDay);
+ const week=weekId
+  ?allWeeks.find(w=>w.id===weekId)
+  :null;
+
+ const sourceDays=weekId
+  ?(week?.routine||[])
+  :plans.flatMap(p=>p.days);
+
+ const existing=exerciseId
+  ?sourceDays.flatMap(d=>d.exercises).find(x=>x.id===exerciseId)
+  :null;
+
+ const targetDay=dayId||
+  sourceDays.find(d=>d.exercises.some(e=>e.id===exerciseId))?.id;
+
+ const d=sourceDays.find(x=>x.id===targetDay);
 
  if(!existing&&!d)return;
 
- const ex=existing||{id:uid(),name:"",muscle:"Pectorales",series:[{weight:0,reps:10,rir:2,type:"Efectiva"}],rest:"90 s",tempo:"2-0-2",technique:"Normal",notes:"",block:"A1"};
+ const ex=existing||{
+  id:uid(),
+  name:"",
+  muscle:"Pectorales",
+  series:[{weight:0,reps:10,rir:2,type:"Efectiva"}],
+  rest:"90 s",
+  tempo:"2-0-2",
+  technique:"Normal",
+  notes:"",
+  block:"A1"
+ };
 
- const content=`<div class="card" id="exerciseEditor"><div class="between"><h2>${existing?"Editar ejercicio":"Agregar ejercicio"}</h2><button class="btn secondary" data-action="close-editor">Cerrar</button></div>
+ const content=`
+ <div class="card" id="exerciseEditor">
+  <div class="between">
+   <h2>${existing?"Editar ejercicio":"Agregar ejercicio"}</h2>
+   <button class="btn secondary" data-action="close-editor">Cerrar</button>
+  </div>
 
- <form id="planExerciseForm" data-exercise="${existing?.id||""}" data-day="${d?.id||targetDay||""}">
+  <form id="planExerciseForm"
+   data-exercise="${existing?.id||""}"
+   data-day="${d?.id||targetDay||""}"
+   data-week="${week?.id||""}">
 
- <div class="row"><div class="field"><label>Ejercicio</label><input name="name" list="exerciseOptions" value="${esc(ex.name)}" required><datalist id="exerciseOptions">${allExercises().map(x=>`<option value="${esc(x.name)}">`).join("")}</datalist></div>
+   <div class="row">
+    <div class="field">
+     <label>Ejercicio</label>
+     <input name="name" list="exerciseOptions" value="${esc(ex.name)}" required>
+     <datalist id="exerciseOptions">
+      ${allExercises().map(x=>`<option value="${esc(x.name)}">`).join("")}
+     </datalist>
+    </div>
 
- <div class="field"><label>Grupo muscular</label><select name="muscle">${muscles.map(x=>`<option ${x===ex.muscle?"selected":""}>${x}</option>`).join("")}</select></div></div>
+    <div class="field">
+     <label>Grupo muscular</label>
+     <select name="muscle">
+      ${muscles.map(x=>`<option ${x===ex.muscle?"selected":""}>${x}</option>`).join("")}
+     </select>
+    </div>
+   </div>
 
- <div class="row">${field("Bloque","block",ex.block||"A1")}${field("Descanso","rest",ex.rest||"90 s")}${field("Tempo","tempo",ex.tempo||"2-0-2")}</div>
+   <div class="row">
+    ${field("Bloque","block",ex.block||"A1")}
+    ${field("Descanso","rest",ex.rest||"90 s")}
+    ${field("Tempo","tempo",ex.tempo||"2-0-2")}
+   </div>
 
- <div class="field"><label>Método de entrenamiento</label><select name="technique">${methods.map(x=>`<option ${x===ex.technique?"selected":""}>${x}</option>`).join("")}</select></div>
+   <div class="field">
+    <label>Método de entrenamiento</label>
+    <select name="technique">
+     ${methods.map(x=>`<option ${x===ex.technique?"selected":""}>${x}</option>`).join("")}
+    </select>
+   </div>
 
- <div class="field"><label>Observaciones</label><textarea name="notes">${esc(ex.notes||"")}</textarea></div>
+   <div class="field">
+    <label>Observaciones</label>
+    <textarea name="notes">${esc(ex.notes||"")}</textarea>
+   </div>
 
- <h3>Series individuales</h3><div id="seriesEditor">${ex.series.map((s,i)=>seriesEditorRow(s,i)).join("")}</div>
+   <h3>Series individuales</h3>
+   <div id="seriesEditor">
+    ${ex.series.map((s,i)=>seriesEditorRow(s,i)).join("")}
+   </div>
 
- <button type="button" class="btn secondary" data-action="add-series">+ Agregar serie</button>
+   <button type="button" class="btn secondary" data-action="add-series">
+    + Agregar serie
+   </button>
 
- <hr><button class="btn">Guardar ejercicio</button></form></div>`;
+   <hr>
+   <button class="btn">Guardar ejercicio</button>
+  </form>
+ </div>`;
+
+ document.getElementById("exerciseEditor")?.remove();
 
  document.getElementById("app").insertAdjacentHTML("beforeend",content);
 
- document.getElementById("exerciseEditor").scrollIntoView({behavior:"smooth"});
-
+ document.getElementById("exerciseEditor").scrollIntoView({
+  behavior:"smooth"
+ });
 }
+
 
 function seriesEditorRow(s,i){
 
@@ -4859,7 +4930,28 @@ document.addEventListener("submit",e=>{
 
  const ex={id:f.dataset.exercise||uid(),name:d.name,muscle:d.muscle,block:d.block,rest:d.rest,tempo:d.tempo,technique:d.technique,notes:d.notes,series};
 
- if(f.id==="planExerciseForm"){
+
+if(f.id==="planExerciseForm"){
+
+ const weekId=f.dataset.week;
+
+ if(weekId){
+
+  const week=plans
+   .flatMap(p=>p.periodization?.mesocycles||[])
+   .flatMap(m=>m.weeks||[])
+   .find(w=>w.id===weekId);
+
+  const day=week?.routine.find(d=>d.id===f.dataset.day);
+
+  if(!day)return;
+
+  const index=day.exercises.findIndex(x=>x.id===ex.id);
+
+  if(index>=0)day.exercises[index]=ex;
+  else day.exercises.push(ex);
+
+ }else{
 
   let found=false;
 
@@ -4867,21 +4959,30 @@ document.addEventListener("submit",e=>{
 
    const i=day.exercises.findIndex(x=>x.id===ex.id);
 
-   if(i>=0){day.exercises[i]=ex;found=true}
+   if(i>=0){
+    day.exercises[i]=ex;
+    found=true;
+   }
 
   }));
 
   if(!found){
 
-   const day=plans.flatMap(p=>p.days).find(x=>x.id===f.dataset.day);
+   const day=plans.flatMap(p=>p.days)
+    .find(x=>x.id===f.dataset.day);
 
    if(day)day.exercises.push(ex);
 
   }
 
-  save();document.getElementById("exerciseEditor")?.remove();render();
-
  }
+
+ save();
+ document.getElementById("exerciseEditor")?.remove();
+ render();
+
+}
+
 
  if(f.id==="clientExerciseForm"){
 
